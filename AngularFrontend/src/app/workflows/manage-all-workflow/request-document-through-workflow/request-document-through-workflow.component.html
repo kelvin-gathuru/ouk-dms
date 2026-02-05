@@ -1,0 +1,164 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        <span class="mb-0 page-title">
+          {{ "REQUEST_DOCUMENT_THROUGH_WORKFLOW" | translate }}
+          <app-page-help-text
+            code="REQUEST_DOCUMENT_THROUGH_WORKFLOW"
+          ></app-page-help-text>
+        </span>
+      </div>
+    </div>
+    <form [formGroup]="reqDocumentWorkflowForm">
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <div class="row">
+            <div class="col-sm-4 mt-2">
+              <mat-select
+                panelClass="mat-select-control"
+                class="form-control"
+                formControlName="workflowId"
+                placeholder="{{ 'SELECT_WORKFLOW' | translate }}"
+              >
+                @for (workflow of workflows; track workflow.id) {
+                <mat-option [value]="workflow.id">
+                  {{ workflow.name }}
+                </mat-option>
+                }
+              </mat-select>
+              @if ( reqDocumentWorkflowForm.get('workflowId')?.touched &&
+              reqDocumentWorkflowForm.get('workflowId')?.errors?.['required'] )
+              {
+              <div class="text-danger">
+                {{ "WORKFLOW_IS_REQUIRED" | translate }}
+              </div>
+              }
+            </div>
+            <div class="col-sm-4 mt-2">
+              <mat-select
+                panelClass="mat-select-control"
+                class="form-control"
+                formControlName="categoryId"
+                placeholder="{{ 'REQUESTED_DOCUMENT_CATEGORY' | translate }}"
+              >
+                <mat-select-trigger>
+                  <div class="d-flex align-items-center">
+                    <mat-icon class="text-warning me-1">folder</mat-icon>
+                    <span>{{
+                      reqDocumentWorkflowForm.get("categoryId")?.value?.name
+                    }}</span>
+                  </div>
+                </mat-select-trigger>
+                <mat-option value="">-- {{ "NONE" | translate }} --</mat-option>
+                @for (category of allCategories; track $index; let i = $index) {
+                <mat-option [value]="category">
+                  <div
+                    class="country-item"
+                    [ngStyle]="{
+                      'margin-left.px': (category.deafLevel ?? 0) * 20
+                    }"
+                  >
+                    @if(category.deafLevel == 0) {
+                    <div class="d-flex align-items-center">
+                      <mat-icon class="text-warning me-1">folder</mat-icon>
+                      <b>{{ category.name }}</b>
+                    </div>
+                    } @else {
+                    <div
+                      [matTooltip]="category.name"
+                      class="d-flex align-items-center"
+                    >
+                      <mat-icon class="text-warning me-1">folder</mat-icon>
+                      {{ category.name }}
+                    </div>
+                    }
+                  </div>
+                </mat-option>
+                }
+              </mat-select>
+              @if ( reqDocumentWorkflowForm.get('categoryId')?.touched &&
+              reqDocumentWorkflowForm.get('categoryId')?.errors?.['required'] )
+              {
+              <div class="text-danger">
+                {{ "CATEGORY_IS_REQUIRED" | translate }}
+              </div>
+              }
+            </div>
+            <div class="col-sm-4 mt-2">
+              <mat-select
+                panelClass="mat-select-control"
+                class="form-control"
+                formControlName="storageSettingId"
+                placeholder="{{ 'SELECT_STORAGE' | translate }}"
+              >
+                @for (storageSetting of storageSettings; track $index) {
+                <mat-option [value]="storageSetting.id">
+                  {{
+                    storageSetting.storageType
+                      | storageType : storageSetting.name
+                  }}
+                </mat-option>
+                }
+              </mat-select>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 mt-2">
+                <label class="form-label text-danger" for="name"
+                  >{{ "REQUESTED_DOCUMENT_NAME" | translate }}
+                  <sup>*</sup></label
+                >
+                <input
+                  formControlName="name"
+                  name="name"
+                  type="text"
+                  class="form-control"
+                />
+                @if ( reqDocumentWorkflowForm.get('name')?.touched &&
+                reqDocumentWorkflowForm.get('name')?.errors?.['required'] ) {
+                <div class="text-danger">
+                  {{ "DOCUMENT_NAME_IS_REQUIRED" | translate }}
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 mt-2">
+              <label class="form-label" for="comment">{{
+                "INSTRUCTION_TO_UPLOAD_DOCUMENT" | translate
+              }}</label>
+              <textarea
+                formControlName="comment"
+                name="comment"
+                type="text"
+                class="form-control"
+              ></textarea>
+            </div>
+          </div>
+          <div class="row">
+            <div class="mt-2 col-md-12">
+              <button
+                class="success me-2"
+                matButton="filled"
+                (click)="createReqDocumentWorkflow()"
+              >
+                <mat-icon class="medium-icon align-middle">save</mat-icon>
+                {{ "SAVE" | translate }}
+              </button>
+              <button
+                type="button"
+                class="error"
+                matButton="filled"
+                [routerLink]="['/workflow-settings']"
+              >
+                <mat-icon class="medium-icon align-middle">cancel</mat-icon>
+                {{ "CANCEL" | translate }}
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </form>
+  </div>
+</section>

@@ -1,0 +1,1 @@
+var e=t=>{let n=t.get("retentionPeriodInDays")?.value?parseInt(t.get("retentionPeriodInDays")?.value,10):null,r=t.get("onExpiryAction")?.value?parseInt(t.get("onExpiryAction")?.value.toString(),10):0;return n&&n>=0&&r===0?{retentionPeriodAndAction:!0}:null};export{e as a};

@@ -1,0 +1,21 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        <span class="mb-0 page-title">{{
+          "AI_DOCUMENT_GENERATOR" | translate
+          }}
+          <app-page-help-text [code]="'AI_DOCUMENT_GENERATOR'"></app-page-help-text>
+        </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <app-ai-document-generator-form></app-ai-document-generator-form>
+      </div>
+      <div class="col-md-6">
+        <app-ai-document-generator-preview></app-ai-document-generator-preview>
+      </div>
+    </div>
+  </div>
+</section>

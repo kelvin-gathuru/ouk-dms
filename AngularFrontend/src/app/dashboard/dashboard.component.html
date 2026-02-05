@@ -1,0 +1,26 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="row d-flex">
+      <div class="col-md-12 mb-4">
+        @defer (on viewport) {
+        <app-document-by-category-chart />
+        } @placeholder {
+        <div class="text-center p-5 border rounded bg-light">
+          <span class="spinner-border spinner-border-sm"></span>
+          Loading Document by Category...
+        </div>
+        }
+      </div>
+      <div class="col-md-12 mb-4">
+        @defer (on viewport) {
+        <app-calender-view />
+        } @placeholder {
+        <div class="text-center p-5 border rounded bg-light">
+          <span class="spinner-border spinner-border-sm"></span>
+          Loading Calendar View...
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>

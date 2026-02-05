@@ -1,0 +1,19 @@
+.doc-preview-container {
+  width: 100%;
+  height: calc(100vh - 100px);
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 10px;
+  background-color: white;
+}
+
+.spinner-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.docx-container {
+  font-family: Arial, sans-serif;
+  color: #333;
+  line-height: 1.6;
+}

@@ -1,0 +1,224 @@
+<div class="row">
+  <div class="col-md-12">
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <form [formGroup]="aiPromtForm">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group ">
+                <label [dir]="langDir"> {{'SELECT_AI_PROMPT_TEMPLATE' | translate }} </label>
+                <mat-select [dir]="langDir" panelClass="mat-select-control" class="form-control"
+                  formControlName="aIPromptTemplateId" placeholder="{{ 'SELECT_AI_PROMPT_TEMPLATE' | translate }}"
+                  (selectionChange)="onAiPromptTemplateChange($event)">
+                  <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
+                  @for(aiPromptTemplate of aiPromptTemplates; track aiPromptTemplate.id){
+                  <mat-option [value]="aiPromptTemplate.id">
+                    {{ aiPromptTemplate.name }}
+                  </mat-option>
+                  }
+                </mat-select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              @for(keyword of keywords.controls; let i=$index; track i){
+              <div formArrayName="keywords">
+                <ng-container [formGroupName]="i">
+                  <div class="form-group ">
+                    <label [dir]="langDir"> {{keyword.get('keyword')?.value | titlecase}} </label>
+                    <input [dir]="langDir" formControlName="keywordValue" (input)="onInputChange(i,$event)"
+                      class="form-control form-control-sm">
+                  </div>
+                </ng-container>
+              </div>
+              }
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label [dir]="langDir" class="text-danger">
+                  {{'PROMPT_INPUT' | translate }} *
+                  <span class="text-danger">
+                    {{'REPLACE_WORD' | translate }}
+                  </span>
+                </label>
+                <textarea [dir]="langDir" formControlName="promptInput" rows="6" class="form-control form-control-sm">
+                </textarea>
+                @if(aiPromtForm.get('promptInput')?.dirty && aiPromtForm.get('promptInput')?.touched){
+
+                @if(aiPromtForm.get('promptInput')?.errors?.['required']){
+                <div class="text-danger">
+                  {{'REPLACE_WORD' | translate }}
+                </div>
+                }
+                @if(aiPromtForm.get('promptInput')?.errors?.['keywordExists']){
+                <div class="text-danger">
+                  {{'REPLACE_WORD' | translate }}
+                </div>
+                }
+                }
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label [dir]="langDir"> {{'AI_LANGUAGE' | translate }} </label>
+                <mat-select [dir]="langDir" panelClass="mat-select-control" class="form-control"
+                  formControlName="language" placeholder=" {{ 'SELECT_LANGUAGE' | translate }}">
+                  <mat-option value="az-AZ">Azerbaijani (Azerbaijan)</mat-option>
+                  <mat-option value="ar-AE">Arabic</mat-option>
+                  <mat-option value="cmn-CN">Chinese (Mandarin)</mat-option>
+                  <mat-option value="hr-HR">Croatian (Croatia)</mat-option>
+                  <mat-option value="cs-CZ">Czech (Czech Republic)</mat-option>
+                  <mat-option value="da-DK">Danish (Denmark)</mat-option>
+                  <mat-option value="nl-NL">Dutch (Netherlands)</mat-option>
+                  <mat-option value="en-US">English (USA)</mat-option>
+                  <mat-option value="en-GB">English (UK)</mat-option>
+                  <mat-option value="et-EE">Estonian (Estonia)</mat-option>
+                  <mat-option value="fi-FI">Finnish (Finland)</mat-option>
+                  <mat-option value="fr-FR">French (France)</mat-option>
+                  <mat-option value="de-DE">German (Germany)</mat-option>
+                  <mat-option value="el-GR">Greek (Greece)</mat-option>
+                  <mat-option value="he-IL">Hebrew (Israel)</mat-option>
+                  <mat-option value="hi-IN">Hindi (India)</mat-option>
+                  <mat-option value="hu-HU">Hungarian (Hungary)</mat-option>
+                  <mat-option value="is-IS">Icelandic (Iceland)</mat-option>
+                  <mat-option value="id-ID">Indonesian (Indonesia)</mat-option>
+                  <mat-option value="it-IT">Italian (Italy)</mat-option>
+                  <mat-option value="ja-JP">Japanese (Japan)</mat-option>
+                  <mat-option value="kk-KZ">Kazakh (Kazakhistan)</mat-option>
+                  <mat-option value="ko-KR">Korean (South Korea)</mat-option>
+                  <mat-option value="lt-LT">Lithuanian (Lithuania)</mat-option>
+                  <mat-option value="ms-MY">Malay (Malaysia)</mat-option>
+                  <mat-option value="nb-NO">Norwegian (Norway)</mat-option>
+                  <mat-option value="fa_IR">Persian</mat-option>
+                  <mat-option value="pl-PL">Polish (Poland)</mat-option>
+                  <mat-option value="pt-BR">Portuguese (Brazil)</mat-option>
+                  <mat-option value="pt-PT">Portuguese (Portugal)</mat-option>
+                  <mat-option value="ro-RO">Romanian (Romania)</mat-option>
+                  <mat-option value="ru-RU">Russian (Russia)</mat-option>
+                  <mat-option value="sk-SK">Slovak (Slovakia)</mat-option>
+                  <mat-option value="sl-SI">Slovenian (Slovenia)</mat-option>
+                  <mat-option value="es-ES">Spanish (Spain)</mat-option>
+                  <mat-option value="es-MX">Spanish (Mexico)</mat-option>
+                  <mat-option value="sw-KE">Swahili (Kenya)</mat-option>
+                  <mat-option value="sv-SE">Swedish (Sweden)</mat-option>
+                  <mat-option value="tr-TR">Turkish (Turkey)</mat-option>
+                  <mat-option value="th-TH">Thai (Thailand)</mat-option>
+                  <mat-option value="vi-VN">Vietnamese (Vietnam)</mat-option>
+                </mat-select>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label [dir]="langDir"> {{'MAXIMUM_LENGTH' | translate }} </label>
+                <input [dir]="langDir" formControlName="maximumLength" class="form-control form-control-sm"
+                  type="number">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <label [dir]="langDir"> {{'CREATIVITY' | translate }} </label>
+              <mat-select [dir]="langDir" panelClass="mat-select-control" class="form-control"
+                formControlName="creativity" placeholder="{{ 'CREATIVITY' | translate }}">
+                <mat-option value="0.25">
+                  Economic
+                </mat-option>
+                <mat-option value="0.5">
+                  Average
+                </mat-option>
+                <mat-option value="0.75">
+                  Good
+                </mat-option>
+                <mat-option value="1">
+                  Premium
+                </mat-option>
+              </mat-select>
+            </div>
+            <div class="col-sm-6">
+              <label [dir]="langDir"> {{'TONE_OF_VOICE' | translate }} </label>
+              <mat-select [dir]="langDir" panelClass="mat-select-control" class="form-control"
+                formControlName="toneOfVoice" placeholder="{{ 'TONE_OF_VOICE' | translate }}">
+                <mat-option value="Professional" selected="">
+                  Professional
+                </mat-option>
+                <mat-option value="Funny">
+                  Funny
+                </mat-option>
+                <mat-option value="Casual">
+                  Casual
+                </mat-option>
+                <mat-option value="Excited">
+                  Excited
+                </mat-option>
+                <mat-option value="Witty">
+                  Witty
+                </mat-option>
+                <mat-option value="Sarcastic">
+                  Sarcastic
+                </mat-option>
+                <mat-option value="Feminine">
+                  Feminine
+                </mat-option>
+                <mat-option value="Masculine">
+                  Masculine
+                </mat-option>
+                <mat-option value="Bold">
+                  Bold
+                </mat-option>
+                <mat-option value="Dramatic">
+                  Dramatic
+                </mat-option>
+                <mat-option value="Grumpy">
+                  Grumpy
+                </mat-option>
+                <mat-option value="Secretive">
+                  Secretive
+                </mat-option>
+                <mat-option value="other">
+                  other
+                </mat-option>
+              </mat-select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group ">
+                <label [dir]="langDir"> {{'SELECT_MODEL' | translate }} </label>
+                <mat-select [dir]="langDir" panelClass="mat-select-control" class="form-control"
+                  formControlName="selectedModel" placeholder="{{ 'SELECT_AI_MODEL' | translate }}">
+                  <mat-option value="google/gemini-flash-1.5">Gemini 1.5 Flash (Google)</mat-option>
+                  <mat-option value="google/gemini-pro-1.5">Gemini 1.5 Pro (Google)</mat-option>
+                  <mat-option value="openai/gpt-4o">GPT-4o (OpenAI)</mat-option>
+                  <mat-option value="openai/gpt-4o-mini">GPT-4o Mini (OpenAI)</mat-option>
+                  <mat-option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet (Anthropic)</mat-option>
+                  <mat-option value="meta-llama/llama-3.1-70b-instruct">Llama 3.1 70B (Meta)</mat-option>
+                  <mat-option value="mistralai/mistral-large">Mistral Large (Mistral)</mat-option>
+                  <mat-option value="allenai/olmo-3.1-32b-think:free">AllenAI Olmo 3.1 32B (Free)</mat-option>
+                </mat-select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="mt-2 col-md-12">
+              <button [dir]="langDir" class="success" matButton="filled" (click)="generate()" cdkFocusInitial>
+                <mat-icon class="medium-icon">bolt</mat-icon>
+                {{ "GENERATE" | translate }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+@if(isLoadingResults) {
+<div class="spinner-container">
+  <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+  </mat-progress-spinner>
+</div>
+}

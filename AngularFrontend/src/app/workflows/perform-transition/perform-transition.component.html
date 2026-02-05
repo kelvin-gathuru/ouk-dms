@@ -1,0 +1,98 @@
+<mat-dialog-content>
+  <div class="d-flex">
+    <div class="me-auto p-2">
+      <span class="mb-3 page-title">
+        {{ "REQUEST_DOCUMENT_THROUGH_WORKFLOW" | translate }}
+        <app-page-help-text code="REQUEST_DOCUMENT_THROUGH_WORKFLOW"></app-page-help-text>
+      </span>
+    </div>
+    <div class="d-flex justify-content-end mb-2">
+      <mat-icon class="close-icon text-danger cursor-pointer " (click)="closeDialog()">cancel</mat-icon>
+    </div>
+  </div>
+
+  <div [formGroup]="performDocumentWorkflowForm">
+    <!-- Upload Document -->
+    @if(data.isUploadDocumentVersion){
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label>{{ "DOCUMENT_UPLOAD" | translate }}</label>
+          <input class="form-control" #file (change)="upload(file.files)" type="file" />
+          @if(performDocumentWorkflowForm.get('url')?.touched &&
+          performDocumentWorkflowForm.get('url')?.errors?.['required']){
+          <div class="text-danger">
+            {{ "DOCUMENT_IS_REQUIRED" | translate }}
+          </div>
+          }
+          @if(performDocumentWorkflowForm.get('extension')?.touched &&
+          performDocumentWorkflowForm.get('extension')?.errors?.['required']){
+          <div class="text-danger">
+            {{ "DOCUMENT_TYPE_IS_NOT_ALLOW" | translate }}
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- Signature Section -->
+    @if(signatureDisplay){
+    <div class="row">
+      <label for="signature" class="form-label text-danger"> {{ "ADD_YOUR_SIGNATURE" | translate }}
+        <sup>*</sup></label>
+      <div class="col-md-12">
+        <div class="signature-container bg-white">
+          <canvas #canvas></canvas>
+        </div>
+      </div>
+      <label for="or" class="text-danger d-flex justify-content-center align-items-center m-2 w-100">{{ "OR" |
+        translate }}</label>
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="signature">
+            {{ "UPLOAD_YOUR_SIGNATURE" | translate }}</label>
+          <input type="file" accept="image/png, image/jpeg" (change)="onFileSelected($event)"
+            class="form-control signature-upload" />
+        </div>
+      </div>
+      <div class="mt-2 col-md-12">
+        <button type="button" class="error" matButton="filled" (click)="clearSignature()">
+          <mat-icon class="medium-icon align-middle">cancel</mat-icon>
+          {{ "CLEAR" | translate }}
+        </button>
+      </div>
+    </div>
+    }
+    <!-- Comment -->
+    <div class="row">
+      <div class="col-sm-12 mt-2">
+        <label class="form-label">{{ "REMARK" | translate }}</label>
+        <textarea formControlName="comment" name="comment" class="form-control"></textarea>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="row mt-2">
+      <div class="col-md-12">
+        <button class="success me-2" matButton="filled" (click)="createPerformDocumentWorkflow()">
+          <mat-icon class="medium-icon">save</mat-icon>
+          {{ "SAVE" | translate }}
+        </button>
+        <button type="button" class="error" matButton="filled" (click)="closeDialog()">
+          <mat-icon class="medium-icon">cancel</mat-icon>
+          {{ "CANCEL" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loader -->
+  @if(isLoading){
+  <div class="spinner-container">
+    <mat-progress-spinner class="example-margin" diameter="60" strokeWidth="5" [mode]="mode" [value]="progress">
+    </mat-progress-spinner>
+  </div>
+  }
+
+</mat-dialog-content>

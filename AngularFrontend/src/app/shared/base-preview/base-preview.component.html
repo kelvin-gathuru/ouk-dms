@@ -1,0 +1,61 @@
+<div class="file-preview-toolbar d-flex">
+  @if (!currentDoc.isFromPublicPreview) {
+  <span class="back-arrow">
+    <mat-icon class="medium-icon fs-5 align-middle" (click)="closeToolbar()">arrow_back</mat-icon>
+  </span>
+  }
+  @let documentNumber = currentDoc.documentNumber ? currentDoc.documentNumber +'-' :'';
+  @let documentName = currentDoc.name ? currentDoc.name : 'No Name';
+  @let documentLimitTo = documentName | limitTo: 100;
+  <span matTooltip="{{documentName}}" class="file-name flex-grow-1">{{documentNumber}}{{documentLimitTo}}</span>
+  @if(isDownloadFlag){
+  <span (click)="downloadDocument(currentDoc)" class="back-arrow">
+    <mat-icon class="medium-icon fs-5 align-middle">download</mat-icon>
+  </span>
+  }
+</div>
+@switch(type) {
+@case('image') {
+<app-image-preview [documentBlob]="documentUrl" [document]="currentDoc"></app-image-preview>
+}
+@case('csv') {
+<app-csv-preview [documentBlob]="documentUrl" [document]="currentDoc"></app-csv-preview>
+}
+@case('office') {
+<app-office-viewer [documentBlob]="documentUrl" [document]="currentDoc"></app-office-viewer>
+}
+@case('json') {
+<app-json-preview [documentBlob]="documentUrl" [document]="currentDoc"></app-json-preview>
+}
+@case('pdf') {
+<app-pdf-viewer [documentBlob]="documentUrl" [document]="currentDoc" (loadPdf)="onLoadPdf($event)"></app-pdf-viewer>
+}
+@case('text') {
+<app-text-preview [document]="currentDoc"></app-text-preview>
+}
+@case('audio') {
+<app-audio-preview [documentBlob]="documentUrl" [document]="currentDoc"></app-audio-preview>
+}
+@case('video') {
+<app-video-preview [documentBlob]="documentUrl" [document]="currentDoc"></app-video-preview>
+}
+@case('youtube') {
+<app-youtube-video-viewer [document]="currentDoc"></app-youtube-video-viewer>
+}
+@case('vimeo') {
+<app-vimeo-video-viewer [document]="currentDoc"></app-vimeo-video-viewer>
+}
+@case('other') {
+<app-no-preview></app-no-preview>
+}
+@default {
+<app-no-preview></app-no-preview>
+}
+}
+@if(isLoading) {
+<div class="spinner-container">
+  <mat-progress-spinner class="example-margin" [mode]="mode" diameter="60" strokeWidth="5"
+    [value]="downloadCountPercentage">
+  </mat-progress-spinner>
+</div>
+}

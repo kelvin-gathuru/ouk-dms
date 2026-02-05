@@ -1,0 +1,261 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="row align-items-center">
+      <!-- Left-hand side: Title -->
+      <div class="col-md-6 col mb-2">
+        <span class="mb-0 page-title">{{ "ARCHIVE_FOLDERS" | translate }}</span>
+        <app-page-help-text [code]="'ARCHIVE_FOLDERS'"></app-page-help-text>
+      </div>
+      <!-- Right-hand side: Buttons -->
+      <div class="col-md-6 col-auto d-flex justify-content-end mb-2">
+        <button class="error" matButton="filled" (click)="onRefresh()">
+          <mat-icon class="medium-icon fs-5 align-middle">refresh</mat-icon>
+          <span class="d-none d-lg-inline ms-1">{{ "REFRESH" | translate }}</span>
+        </button>
+      </div>
+    </div>
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <div class="row align-items-center justify-content-between">
+          <div class="col-md-auto col-sm-auto">
+            <div class="d-flex align-items-center" style="height: 30px">
+              @if (archiveFoldersViewStore.newCategoryPath().length > 0) {
+              <a [dir]="langDir" role="button" class="d-flex align-items-center pl-3 height-30 text-decoration-none"
+                (click)="onHomeClick()">
+                <span class="material-icons folder_shared text-primary">
+                  home
+                </span>
+                {{ "HOME" | translate }}
+              </a>
+              <mat-icon class="material-icons-outlined small-arrow align-middle">arrow_right</mat-icon>
+              } @else {
+              <span [dir]="langDir" role="button" class="d-flex align-items-center pl-3 height-30 fw-bolder">
+                <span class="material-icons folder_shared text-primary">
+                  home
+                </span>
+                {{ "HOME" | translate }}
+              </span>
+              }
+              @for(path of archiveFoldersViewStore.newCategoryPath();let last = $last; track path.id) {
+              @if (!last) {
+              <button [dir]="langDir" type="button" [title]="path.name" (click)="onFolderClickFromPath(path)"
+                class="btn btn-link text-decoration-none">
+                {{ path.name }}
+              </button>
+              <mat-icon class="material-icons-outlined small-arrow align-middle">arrow_right</mat-icon>
+              } @else {
+              <span [dir]="langDir" class="fw-bolder">
+                {{ path.name }}
+              </span>
+              }
+              }
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="table-responsive">
+              <table [dir]="langDir" class="table table-pos table_color">
+                @let orderBy = (archiveFoldersViewStore.documentResourceParameter() &&
+                archiveFoldersViewStore.documentResourceParameter().orderBy)
+                ? archiveFoldersViewStore.documentResourceParameter().orderBy.split(' ')
+                : ['name', 'asc'];
+                <thead matSort matSortDisableClear [matSortActive]="orderBy[0]"
+                  [matSortDirection]="orderBy[1] === 'asc' ? 'asc' : 'desc'" (matSortChange)="sortData($event)">
+                  <tr>
+                    <th style="width: 50%" mat-sort-header="name">
+                      {{ "NAME" | translate }}
+                    </th>
+                    <th style="width: 5%"></th>
+                    <th style="width: 10%" mat-sort-header="documentNumber">
+                      {{ "DOCUMENT_NO" | translate }}
+                    </th>
+                    <th style="width: 15%" mat-sort-header="createdBy">
+                      {{ "CREATED_BY" | translate }}
+                    </th>
+                    <th style="width: 15%" mat-sort-header="createdDate">
+                      {{ "CREATED_AT" | translate }}
+                    </th>
+                    <th style="width: 5%">{{ "ACTIONS" | translate }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @if (archiveFoldersViewStore.categories() &&
+                  archiveFoldersViewStore.categories().length > 0) {
+                  @for(category of archiveFoldersViewStore.sortedCategories(); track category.id) {
+                  <tr>
+                    <td>
+                      <a role="button" class="d-flex align-items-center pl-3 height-30 text-decoration-none"
+                        (click)="onFolderClick(category)">
+                        @if(category.isShared){
+                        <span class="material-icons">
+                          <span class="folder_shared">
+                            <img src="/images/share-icon.svg" class="shared-icon" />
+                          </span>
+                        </span>
+                        } @else {
+                        <span class="material-icons folder_shared">
+                          folder
+                        </span>
+                        }
+                        <span class="m-1">
+                          {{ category.name }}
+                        </span>
+                      </a>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                      <span class="d-flex align-items-center pl-3 height-30">{{
+                        category.createdUserName
+                        }}</span>
+                    </td>
+                    <td>
+                      <span class="d-flex align-items-center pl-3 height-30">{{ category.createdDate | utcToLocalTime :
+                        "short" }}
+                      </span>
+                    </td>
+                    <td>
+                      <ng-container>
+                        <button matMiniFab *hasClaim="['RESTORE_FOLDER','DELETE_CATEGORY']" [matMenuTriggerFor]="folderMenu"
+                          class="primary">
+                          <mat-icon class="fs-4 align-middle">more_vert</mat-icon>
+                        </button>
+                        <mat-menu #folderMenu="matMenu">
+                          <button *hasClaim="'RESTORE_FOLDER'" class="btn btn-light btn-sm" mat-menu-item
+                            (click)="restoreFolder(category)" type="button">
+                            <mat-icon>restore_from_trash</mat-icon>
+                            {{ "RESTORE" | translate }}
+                          </button>
+                          <button *hasClaim="'DELETE_CATEGORY'" mat-menu-item (click)="deleteFolder(category)"
+                            type="button">
+                            <mat-icon>delete</mat-icon>
+                            {{ "DELETE" | translate }}
+                          </button>
+                        </mat-menu>
+                      </ng-container>
+                    </td>
+                  </tr>
+                  }
+                  } @if (archiveFoldersViewStore.sortedDocuments().length > 0) {
+                  @for(document of archiveFoldersViewStore.sortedDocuments(); track document.id) {
+                  <tr>
+                    <td>
+                      <a role="button" class="d-flex align-items-center pl-3 text-decoration-none"
+                        (click)="onDocumentView(document)">
+                        <img src="{{ document.extension | imagePath }}" [alt]="document.name" class="me-2 list-img"
+                          loading="lazy" />
+                        {{ document.name }}
+                      </a>
+                    </td>
+                    <td>
+                      <div class="d-flex">
+                        @let workflowName = document.workflowsDetail |
+                        workflowCombine;
+                        @if(workflowName) {
+                        <span matTooltip="{{ 'CURRENT_WORKFLOW' | translate }}-{{
+                            workflowName
+                          }}">
+                          <mat-icon>activity</mat-icon>
+                        </span>
+                        }
+                        @if(document.signBy) {
+                        <span [attr.aria-label]="'SIGN_BY' | translate"
+                          matTooltip="{{ 'SIGN_BY' | translate }}-{{ document.signBy }}">
+                          <mat-icon>edit</mat-icon>
+                        </span>
+                        }
+                      </div>
+                    </td>
+                    <td>
+                      <span class="d-flex align-items-center pl-3 document-number height-30">
+                        {{ document.documentNumber }}
+                        &nbsp;&nbsp;
+                      </span>
+                    </td>
+                    <td>
+                      <span class="d-flex align-items-center pl-3 height-30">
+                        {{ document.createdBy }}</span>
+                    </td>
+                    <td>
+                      <span class="d-flex align-items-center pl-3 height-30">
+                        {{ document.createdDate | utcToLocalTime : "short" }}
+                      </span>
+                    </td>
+                    <td>
+                      <button matMiniFab [dir]="langDir" *hasClaim="[
+                      'CREATE_SHAREABLE_LINK',
+                      'DOWNLOAD_DOCUMENT',
+                      'VIEW_VERSION_HISTORY',
+                      'SEND_EMAIL',
+                      'DELETE_DOCUMENT'
+                      ]" [matMenuTriggerFor]="menu" class="primary">
+                        <mat-icon class="fs-4 align-middle">more_vert</mat-icon>
+                      </button>
+                      <mat-menu [dir]="langDir" #menu="matMenu">
+                        <button [dir]="langDir" *hasClaim="'CREATE_SHAREABLE_LINK'" mat-menu-item
+                          class="btn btn-light btn-sm" (click)="onCreateShareableLink(document)" type="button">
+                          <mat-icon>link</mat-icon>
+                          {{ "GET_SHAREABLE_LINK" | translate }}
+                        </button>
+                        <button [dir]="langDir" class="btn btn-light btn-sm" *hasClaim="'DOWNLOAD_DOCUMENT'"
+                          mat-menu-item (click)="downloadDocument(document)" type="button">
+                          <mat-icon>download</mat-icon>
+                          {{ "DOWNLOAD" | translate }}
+                        </button>
+                        <button [dir]="langDir" class="btn btn-light btn-sm" mat-menu-item
+                          *hasClaim="'VIEW_VERSION_HISTORY'" (click)="onVersionHistoryClick(document)">
+                          <mat-icon> history</mat-icon>
+                          {{ "VERSION_HISOTRY" | translate }}
+                        </button>
+                        <button [dir]="langDir" class="btn btn-light btn-sm" *hasClaim="'SEND_EMAIL'" mat-menu-item
+                          (click)="sendEmail(document)" type="button">
+                          <mat-icon>forward_to_inbox</mat-icon>
+                          {{ "SEND_EMAIL" | translate }}
+                        </button>
+                        <button [dir]="langDir" *hasClaim="'DELETE_DOCUMENT'" mat-menu-item
+                          (click)="deleteDocument(document)" type="button">
+                          <mat-icon>delete</mat-icon>
+                          {{ "DELETE" | translate }}
+                        </button>
+                      </mat-menu>
+                    </td>
+                  </tr>
+                  }
+                  }
+                  @if(
+                  !archiveFoldersViewStore.isLoading() &&
+                  archiveFoldersViewStore.categories().length === 0 &&
+                  archiveFoldersViewStore.documents().length === 0
+                  ){
+                  <tr>
+                    <td colspan="6">
+                      <p [dir]="langDir" class="text-danger">
+                        {{ "NO_FILES_OR_FOLDERS_FOUND" | translate }}
+                      </p>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+              @if(archiveFoldersViewStore.isLoading()) {
+              <div class="loading-text">
+                Loading...
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>
+@if(archiveFoldersViewStore.isLoading()) {
+<div class="spinner-container">
+<mat-progress-spinner
+      mode="indeterminate"
+      diameter="60"
+      strokeWidth="5">
+    </mat-progress-spinner>
+</div>
+}

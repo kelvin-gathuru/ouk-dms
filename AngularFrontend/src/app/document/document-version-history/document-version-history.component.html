@@ -1,0 +1,97 @@
+<mat-dialog-content>
+  <div class="d-flex">
+    <div class="me-auto p-2">
+      <span class="mb-3 page-title">
+        {{ data.name | limitTo : "10" }}'s {{ "VERSION_HISTORY" | translate }}
+        <app-page-help-text [code]="'VERSION_HISTORY'"></app-page-help-text>
+      </span>
+    </div>
+    <div class="d-flex justify-content-end mb-2">
+      <mat-icon class="close-icon text-danger cursor-pointer " (click)="closeDialog()">cancel</mat-icon>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-pos table_color">
+      <thead>
+        <tr>
+          <th>{{ "VERSION_NO" | translate }}</th>
+          <th>{{ "MODIFIED_DATE" | translate }}</th>
+          <th>{{ "CREATED_BY" | translate }}</th>
+          <th>{{ "SIGNBY" | translate }}</th>
+          <th>{{ "SIGNDATE" | translate }}</th>
+          <th>{{ "COMMENT" | translate }}</th>
+          <th>{{ "ACTIONS" | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (version of data.documentVersions; track $index) {
+        <tr>
+          <td>{{ version.versionNumber }}</td>
+          <td>{{ version.modifiedDate | utcToLocalTime : "full" }}</td>
+          <td>
+            {{ version.createdByUser }}
+          </td>
+          <td>
+            @if(version.signBy){
+            {{ version.signBy }}
+            }
+          </td>
+          <td>
+            @if(version.signBy){
+            {{ version.signDate | utcToLocalTime : "short" }}
+            }
+          </td>
+          <td>
+            @if(version.comment) {
+            <span (click)="showComment(version.comment)" role="button" class="me-2 text-primary" matTooltip="Comment">
+              <mat-icon> chat</mat-icon>
+            </span>
+            }
+          </td>
+          <td>
+            @if(version.isCurrentVersion) {
+            <span class="badge bg-success">{{ "CURRENT_VERSION" | translate }}
+            </span>
+            }@else {
+            <div>
+              <span (click)="onDocumentView(version)" class="material-icons-outlined me-2 text-primary"
+                matTooltip="view" role="button">
+                <mat-icon> visibility</mat-icon>
+              </span>
+              @if(!data.isAssignUser) {
+              <ng-container *hasClaim="'ALL_DOWNLOAD_DOCUMENT'">
+                <span (click)="downloadDocument(version)" role="button" class="me-2 text-primary" matTooltip="Download">
+                  <mat-icon> download</mat-icon>
+                </span>
+              </ng-container>
+              <ng-container *hasClaim="'ALL_RESTORE_VERSION'">
+                <span (click)="restoreDocumentVersion(version)" role="button" matTooltip="Restore to Current Version"
+                  class="material-icons-outlined text-primary">
+                  <mat-icon> restore</mat-icon>
+                </span>
+              </ng-container>
+              } @if(data.isAssignUser) {
+              <span *hasClaim="'ASSIGNED_DOWNLOAD_DOCUMENT'" (click)="downloadDocument(version)" role="button"
+                class="me-2 text-primary" matTooltip="Download">
+                <mat-icon> download</mat-icon>
+              </span>
+              <span *hasClaim="'ASSIGNED_RESTORE_VERSION'" (click)="restoreDocumentVersion(version)" role="button"
+                matTooltip="Restore to Current Version" class="material-icons-outlined text-primary">
+                <mat-icon> restore</mat-icon>
+              </span>
+              }
+            </div>
+            }
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  @if(isLoading || isLoadingResults) {
+  <div class="spinner-container">
+    <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+    </mat-progress-spinner>
+  </div>
+  }
+</mat-dialog-content>

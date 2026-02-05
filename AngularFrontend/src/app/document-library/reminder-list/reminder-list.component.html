@@ -1,0 +1,110 @@
+<mat-dialog-content>
+  <div class="d-flex">
+    <div class="me-auto p-2">
+      <span class="mb-3 page-title">
+        {{ "REMINDERS" | translate }}
+        <app-page-help-text [code]="'REMINDERS'"></app-page-help-text>
+      </span>
+    </div>
+    <div class="d-flex justify-content-end mb-2">
+      <mat-icon class="close-icon text-danger cursor-pointer " (click)="closeDialog()">cancel</mat-icon>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="table-responsive">
+        <div class="grid-height-reminder">
+          <table mat-table [dataSource]="dataSource" matSort matSortActive="createdDate" matSortDirection="desc">
+            <ng-container matColumnDef="action">
+              <th class="table-column-fix-250" mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let reminder">
+                <button matMiniFab *hasClaim="'EDIT_REMINDER'" class="primary me-2" (click)="onDetail(reminder)"
+                  type="button">
+                  <mat-icon class="medium-icon fs-5 align-middle">info</mat-icon>
+                </button>
+                <button matMiniFab *hasClaim="'DELETE_REMINDER'" class="error" (click)="deleteReminder(reminder)"
+                  type="button">
+                  <mat-icon class="medium-icon fs-5 align-middle">delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="documentName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "DOCUMENT" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let reminder">
+                {{ reminder.documentName }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="startDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "START_DATE" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let reminder">
+                {{ reminder.startDate | utcToLocalTime : "full" }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="endDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "END_DATE" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let reminder">
+                {{ reminder.endDate | utcToLocalTime : "full" }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="subject">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "SUBJECT" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let reminder">
+                {{ reminder.subject | limitTo : "100" }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="message">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "MESSAGE" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let reminder">
+                {{ reminder.message | limitTo : 150 }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="frequency">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "FREQUENCY" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let reminder">
+                {{ reminder.frequency | frequency | translate }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="footer">
+              <td mat-footer-cell colspan="7" *matFooterCellDef>
+                <mat-paginator [length]="reminderResource.totalCount" [pageSize]="reminderResource.pageSize"
+                  [pageSizeOptions]="[10, 20, 30]">
+                </mat-paginator>
+              </td>
+            </ng-container>
+            <tr *matNoDataRow>
+              <td colspan="7">
+                <div class="m-2">
+                  <b> {{ "NO_DATA_FOUND" | translate }}</b>
+                </div>
+              </td>
+            </tr>
+            <tr class="grid-header-color" mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr mat-footer-row *matFooterRowDef="footerToDisplayed; sticky: true"></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  @let loading = dataSource.loading$ | async; @if(loading) {
+  <div class="spinner-container">
+    <!-- <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div> -->
+    <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+    </mat-progress-spinner>
+  </div>
+  }
+</mat-dialog-content>

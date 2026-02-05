@@ -1,0 +1,10 @@
+.video-container {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    margin-top: 20px;
+    iframe {
+        height: 60vh;
+        width: 60vw;
+    }
+}

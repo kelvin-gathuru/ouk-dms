@@ -1,0 +1,229 @@
+/* DashboardLayout.css */
+:root {
+  --sidebar-width: 260px;
+  --header-height: 70px;
+  --primary-color: #15803d;
+  --primary-light: #dcfce7;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border-color: #e2e8f0;
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --transition: all 0.2s ease-in-out;
+}
+
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Sidebar overlay for mobile */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+}
+
+.sidebar-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Main content area */
+.main-content {
+  flex: 1;
+  margin-left: 0;
+  transition: var(--transition);
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* Content wrapper */
+.content-wrapper {
+  flex: 1;
+  padding: 1.5rem;
+  margin-top: var(--header-height);
+  transition: var(--transition);
+  width: 100%;
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Responsive behavior */
+@media (min-width: 992px) {
+  .dashboard-layout.sidebar-visible .main-content {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+  }
+
+  .dashboard-layout:not(.sidebar-visible) .main-content {
+    margin-left: var(--sidebar-collapsed-width);
+    width: calc(100% - var(--sidebar-collapsed-width));
+  }
+}
+
+/* Animation for mobile sidebar */
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+/* Print styles */
+@media print {
+  .main-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  .content-wrapper {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Utility classes */
+.card {
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.card-header {
+  border-bottom: 1px solid var(--border-color);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-header h5 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Status badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.status-badge svg {
+  margin-right: 0.35rem;
+  width: 14px;
+  height: 14px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Responsive tables */
+.table-responsive {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  background: var(--card-bg);
+}
+
+.table {
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.table thead th {
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  padding: 0.75rem 1.5rem;
+}
+
+.table tbody td {
+  padding: 1rem 1.5rem;
+  vertical-align: middle;
+  border-color: var(--border-color);
+}
+
+.table tbody tr:not(:last-child) td {
+  border-bottom: 1px solid var(--border-color);
+}

@@ -1,0 +1,22 @@
+<mat-dialog-content>
+  <div class="d-flex">
+    <div class="me-auto p-2">
+      <span class="mb-3 page-title">
+        {{ data.name }}
+        <mat-icon *hasClaim="'MANAGE_PAGE_HELPER'"
+          class="cursor-pointer text-primary medium-icon fs-5 mb-1 align-middle"
+          (click)="editPageHelper()">edit</mat-icon>
+      </span>
+    </div>
+    <div class="d-flex justify-content-end mb-2">
+      <mat-icon class="close-icon text-danger cursor-pointer " (click)="onCancel()">cancel</mat-icon>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card-body">
+        <app-text-editor [hideToolBar]="true" [disabled]="true" [(ngModel)]="data.description"></app-text-editor>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>

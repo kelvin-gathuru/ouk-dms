@@ -1,0 +1,78 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        <span class="mb-0 page-title">{{ "ARCHIVE_RETENTION_PERIOD" | translate }}
+          <app-page-help-text code="ARCHIVE_RETENTION_PERIOD"></app-page-help-text>
+        </span>
+      </div>
+    </div>
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <form [formGroup]="archieveRetentionPeriodForm" (ngSubmit)="onSubmit()">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>{{ "RETENTION_PERIOD" | translate }}</label>
+                <mat-select panelClass="mat-select-control" class="form-control" formControlName="retentionPeriodInDays"
+                  placeholder="{{ 'RETENTION_PERIOD' | translate }}">
+                  <mat-option value="30">
+                    {{ "30_DAYS" | translate }}
+                  </mat-option>
+                  <mat-option value="60">
+                    {{ "60_DAYS" | translate }}
+                  </mat-option>
+                  <mat-option value="90">
+                    {{ "90_DAYS" | translate }}
+                  </mat-option>
+                  <mat-option value="180">
+                    {{ "180_DAYS" | translate }}
+                  </mat-option>
+                  <mat-option value="365">
+                    {{ "365_DAYS" | translate }}
+                  </mat-option>
+                  <mat-option value="730">
+                    {{ "2_YEARS" | translate }}
+                  </mat-option>
+                  <mat-option value="1095">
+                    {{ "3_YEARS" | translate }}
+                  </mat-option>
+                  <mat-option value="1825">
+                    {{ "5_YEARS" | translate }}
+                  </mat-option>
+                </mat-select>
+                @if(archieveRetentionPeriodForm.get('retentionPeriodInDays')
+                ?.touched &&
+                archieveRetentionPeriodForm.get('retentionPeriodInDays')
+                ?.errors){
+                @if(archieveRetentionPeriodForm.get('retentionPeriodInDays')
+                ?.errors?.['required']){
+                <div class="text-danger">
+                  {{ "RETENTION_PERIOD_IS_REQUIRED" | translate }}
+                </div>
+                }
+                }
+              </div>
+            </div>
+            <div class="col-md-6 mt-4">
+              <div class="form-group">
+                <mat-slide-toggle formControlName="isEnabled" color="primary">
+                  {{ "RETENTION_ENABLED" | translate }}
+                </mat-slide-toggle>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mt-5">
+              <button type="submit" class="success me-2" matButton="filled">
+                <!-- <i-feather name="save" class="small-icon"></i-feather> -->
+                <mat-icon class="medium-icon fs-5 align-middle">save</mat-icon>
+                {{ "SAVE" | translate }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>

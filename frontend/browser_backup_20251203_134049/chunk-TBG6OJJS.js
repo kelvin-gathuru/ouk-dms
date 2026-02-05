@@ -1,0 +1,1 @@
+import{ja as n}from"./chunk-KZMFGXDY.js";var i=class r{transform(e,...t){if(e===3)return"Cancelled";if(e===2)return"Completed";if(e===1)return"In Progress";if(e===0)return"Initiated"}static \u0275fac=function(t){return new(t||r)};static \u0275pipe=n({name:"workflowInstanceStatus",type:r,pure:!0})};export{i as a};

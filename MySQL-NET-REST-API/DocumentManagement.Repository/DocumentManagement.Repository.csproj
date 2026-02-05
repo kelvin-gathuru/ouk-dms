@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="WorkflowStepRole\**" />
+    <Compile Remove="WorkflowStepUser\**" />
+    <EmbeddedResource Remove="WorkflowStepRole\**" />
+    <EmbeddedResource Remove="WorkflowStepUser\**" />
+    <None Remove="WorkflowStepRole\**" />
+    <None Remove="WorkflowStepUser\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Screen\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.11.0" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DocumentManagement.Common\DocumentManagement.Common.csproj" />
+    <ProjectReference Include="..\DocumentManagement.Data\DocumentManagement.Data.csproj" />
+    <ProjectReference Include="..\DocumentManagement.Domain\DocumentManagement.Domain.csproj" />
+    <ProjectReference Include="..\DocumentManagement.Helper\DocumentManagement.Helper.csproj" />
+  </ItemGroup>
+
+</Project>

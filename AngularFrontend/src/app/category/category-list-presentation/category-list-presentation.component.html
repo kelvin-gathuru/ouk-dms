@@ -1,0 +1,124 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        <span [dir]="langDir" class="mb-0 page-title">{{ "DOCUMENT_CATEGORIES" | translate }}
+          <app-page-help-text [code]="'DOCUMENT_CATEGORIES'"></app-page-help-text>
+        </span>
+      </div>
+      <div class="d-flex justify-content-end">
+        <button [dir]="langDir" *hasClaim="'CREATE_CATEGORY'" class="primary" matButton="filled"
+          (click)="manageCategory(null)">
+          <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+          <span class="d-none d-lg-inline ms-1">{{ "ADD_DOCUMENT_CATEGORY" | translate }}</span>
+        </button>
+      </div>
+    </div>
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <div class="table-responsive">
+          <div class="grid-height-large">
+            @if(categories && categories.length > 0){
+            <div class="my-2 mx-5">
+              <mat-tree [dir]="langDir" #tree [dataSource]="categories" [childrenAccessor]="childrenAccessor">
+                <!-- This is the tree node template for leaf nodes -->
+                <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+                  <!-- use a disabled button to provide padding for tree leaf -->
+                  <button mat-icon-button disabled></button>
+                  @if(!node.isShared){
+                  <span class="material-icons folder_shared"> folder </span>
+                  } @else {
+                  <span class="material-icons">
+                    <span class="folder_shared">
+                      <img src="/images/share-icon.svg" class="shared-icon" />
+                    </span>
+                  </span>
+                  }
+                  <a style="cursor: pointer; text-decoration: none"
+                    (click)="manageCategory(node)" class="link-primary me-4">
+                    <span class="m-1 fwbolder"> {{ node.name }}</span>
+                  </a>
+                  <div class="d-flex gap-2">
+                    <a matTooltip="{{'ARCHIVE_CATEGORY' | translate }}" *hasClaim="[
+                        'ALL_ARCHIVE_FOLDER',
+                        'ASSIGNED_ARCHIVE_FOLDER'
+                      ]" (click)="deleteCategory(node)" class="btn p-0 border-0 bg-transparent">
+                      <mat-icon class="text-danger medium-icon fs-5 align-middle">archive</mat-icon>
+                    </a>
+                    <a matTooltip="{{'ADD_SUBCATEGORY' | translate }}" *hasClaim="'EDIT_CATEGORY'"
+                      (click)="addSubCategory(node)" class="btn p-0 border-0 bg-transparent">
+                      <mat-icon class="text-success medium-icon fs-5 align-middle">add</mat-icon>
+                    </a>
+                    <a matTooltip="{{'SHARED_CATEGORY' | translate }}"
+                      *hasClaim="['ALL_SHARE_FOLDER', 'ASSIGNED_SHARE_FOLDER']" (click)="manageCategoryPermission(node)"
+                      class="btn p-0 border-0 bg-transparent">
+                      <mat-icon class="text-primary medium-icon fs-5 align-middle">share</mat-icon>
+                    </a>
+                  </div>
+                  <span *hasClaim="[
+                      'CREATE_CATEGORY',
+                      'ALL_ARCHIVE_FOLDER',
+                      'ASSIGNED_ARCHIVE_FOLDER',
+                      'ALL_SHARE_FOLDER',
+                      'ASSIGNED_SHARE_FOLDER',
+                      'EDIT_CATEGORY'
+                    ]" class="link-primary fs-6 me-4">
+                  </span>
+                </mat-tree-node>
+                <!-- This is the tree node template for expandable nodes -->
+                <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodeToggle
+                  [cdkTreeNodeTypeaheadLabel]="node.name">
+                  <button matMiniFab class="neutral me-2" matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+                    <mat-icon class="mat-icon-rtl-mirror">
+                      {{
+                      tree.isExpanded(node) ? "expand_more" : "chevron_right"
+                      }}
+                    </mat-icon>
+                  </button>
+                  @if(!node.isShared){
+                  <span class="material-icons folder_shared"> folder </span>
+                  } @else {
+                  <span class="material-icons">
+                    <span class="folder_shared">
+                      <img src="/images/share-icon.svg" class="shared-icon" />
+                    </span>
+                  </span>
+                  }
+                  <a style="cursor: pointer; text-decoration: none"
+                    (click)="manageCategory(node)" class="link-primary me-4">
+                    <span class="m-1 fwbolder"> {{ node.name }} </span>
+                  </a>
+                  <a matTooltip="{{'ARCHIVE_CATEGORY' | translate }}" *hasClaim="[
+                      'ALL_ARCHIVE_FOLDER',
+                      'ASSIGNED_ARCHIVE_FOLDER'
+                    ]" (click)="deleteCategory(node)" class="btn p-0 border-0 bg-transparent">
+                    <mat-icon class="text-danger medium-icon fs-5 align-middle me-2">archive</mat-icon>
+                  </a>
+                  <a matTooltip="{{'ADD_SUBCATEGORY' | translate }}" *hasClaim="'EDIT_CATEGORY'"
+                    (click)="addSubCategory(node)" class="btn p-0 border-0 bg-transparent">
+                    <mat-icon class="text-success medium-icon fs-5 align-middle me-2">add</mat-icon>
+                  </a>
+                  <a matTooltip="{{'SHARED_CATEGORY' | translate }}"
+                    *hasClaim="['ALL_SHARE_FOLDER', 'ASSIGNED_SHARE_FOLDER']" (click)="manageCategoryPermission(node)"
+                    class="btn p-0 border-0 bg-transparent">
+                    <mat-icon class="text-primary medium-icon fs-5 align-middle">share</mat-icon>
+                  </a>
+                  <span *hasClaim="[
+                      'CREATE_CATEGORY',
+                      'ALL_ARCHIVE_FOLDER',
+                      'ASSIGNED_ARCHIVE_FOLDER',
+                      'ALL_SHARE_FOLDER',
+                      'ASSIGNED_SHARE_FOLDER',
+                      'EDIT_CATEGORY'
+                    ]" class="link-primary fs-6 me-4">
+                  </span>
+                </mat-tree-node>
+              </mat-tree>
+            </div>
+            }
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>

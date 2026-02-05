@@ -1,0 +1,21 @@
+@media (max-width: 768px) {
+  .graph-container {
+    width: 100%;
+    overflow: auto;
+  }
+
+  .dialog-title {
+    font-size: 1rem;
+    word-break: break-word;
+  }
+
+  .edge-label {
+    font-size: 12px;
+  }
+
+  .ngx-graph-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+}

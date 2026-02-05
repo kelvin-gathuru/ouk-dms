@@ -1,0 +1,1 @@
+import{p as o}from"./chunk-H5HZ6YB3.js";function i(x){return new Promise(a=>{let e=new FileReader;e.onload=()=>a(!0),e.onerror=()=>a(!1),e.readAsArrayBuffer(x)})}function t(x){return o(this,null,function*(){return(yield i(x))?(console.log("File is valid and safe for upload."),!0):(console.error("File is corrupted."),!1)})}export{t as a};

@@ -1,0 +1,146 @@
+<mat-dialog-content>
+  <div class="d-flex">
+    <div class="me-auto p-2">
+      <span class="mb-3 page-title">
+        {{ "SHAREABLE_LINK" | translate }}
+        <app-page-help-text [code]="'SHAREABLE_LINK'"></app-page-help-text>
+      </span>
+    </div>
+    <div class="d-flex justify-content-end mb-2">
+      <mat-icon class="close-icon text-danger cursor-pointer " (click)="closeDialog()">cancel</mat-icon>
+    </div>
+  </div>
+  <form [formGroup]="documentLinkForm" class="form-group">
+    @if (isEditMode) {
+    <div class="mb-3">
+      <div class="row align-items-center justify-content-between">
+        <div class="col-md col">
+          <label for="link" class="form-label">{{ "LINK_SHARING_IS_ON" | translate }}</label>
+        </div>
+        <div class="col-auto col-m-auto">
+          <button (click)="deleteDocumentLink()" class="text-danger btn">
+            <mat-icon class="fs-4 align-middle">delete</mat-icon>
+          </button>
+          <button (click)="openLinkSettings()" class="text-success btn">
+            <mat-icon class="fs-4 align-middle">settings</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-md-12">
+          <div class="input-group">
+            <input formControlName="linkCode" type="text" id="link" class="form-control form-control-sm" readonly />
+            <button type="button" class="success" matButton="filled" matTooltip="Copy"
+              (click)="copyToClipboard(documentLinkForm.get('linkCode')?.value)">
+              <mat-icon class="medium-icon fs-5 align-middle me-1">content_copy</mat-icon>
+              {{'COPY' | translate}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+    @if (!isEditMode || isResetLink) {
+    <div class="mb-2">
+      <div>
+        <section>
+          <label for="isLinkExpiryTime" class="form-label">{{ "LINK_EXPIRATION" | translate}}</label>
+          <p>
+            <mat-checkbox color="primary" formControlName="isLinkExpiryTime"></mat-checkbox>
+            <label for="isLinkExpiryTime">{{ "IS_LINK_VALID_UNTIL" | translate}}</label>
+          </p>
+          @if (documentLinkForm.get('isLinkExpiryTime')?.value) {
+          <ng-container>
+            <div class="input-group mb-3">
+              <input class="form-control" matInput formControlName="linkExpiryDate"
+                placeholder="{{'MM_DD_YYYY' | translate}}" [matDatepicker]="linkExpiryDatePicker" [min]="minDate" />
+              <div class="input-group-append">
+                <button class="btn btn-primary calendar-button" type="button" (click)="linkExpiryDatePicker.open()">
+                  <mat-icon class="medium-icon fs-5 align-middle">calendar_today</mat-icon>
+                </button>
+              </div>
+              <mat-datepicker #linkExpiryDatePicker></mat-datepicker>
+            </div>
+
+            <div class="input-group mb-3">
+              <input class="form-control timepicker-input" formControlName="linkExpiryTime" [format]="24"
+                placeholder="{{ 'EXPIRY_TIME' | translate }}" [ngxTimepicker]="timePicker" [disableClick]="true"
+                readonly />
+              <div class="input-group-append">
+                <button class="btn btn-primary calendar-button" ngxMaterialTimepickerToggleIcon type="button"
+                  (click)="timePicker.open()">
+                  <mat-icon class="medium-icon fs-5 align-middle">access_time</mat-icon>
+                </button>
+              </div>
+              <ngx-material-timepicker #timePicker></ngx-material-timepicker>
+            </div>
+          </ng-container>
+          }
+          @if (documentLinkForm.get('isLinkExpiryTime')?.touched &&
+          documentLinkForm.hasError('linkExpiryDateValidator')) {
+          <div class="text-danger">
+            {{ "EXPIRY_DATE_AND_TIME_ARE_REQUIRED" | translate }}
+          </div>
+          }
+          @if (documentLinkForm.get('linkExpiryTime')?.hasError('required') &&
+          documentLinkForm.get('linkExpiryDate')?.touched) {
+          <div>
+            @if (documentLinkForm.get('linkExpiryTime')?.errors?.['required']) {
+            <div class="text-danger">
+              {{ "EXPIRY_TIME_ARE_REQUIRED" | translate }}
+            </div>
+            }
+          </div>
+          }
+        </section>
+        <hr />
+        <section>
+          <span> {{ "PASSWORD_PROTECTION" | translate }}</span>
+          <p>
+            <mat-checkbox color="primary" formControlName="isPassword"></mat-checkbox>
+            <label for="isPassword">{{ "IS_PASSWORD_REQUIRED" | translate}}</label>
+          </p>
+          @if (documentLinkForm.get('isPassword')?.value) {
+          <input autocomplete="new-password" type="password" class="form-control" formControlName="password"
+            placeholder="{{ 'ENTER_PASSWORD' | translate }}" />
+          }
+          @if (documentLinkForm.get('isPassword')?.touched && documentLinkForm.hasError('passwordValidator')) {
+          <div class="text-danger">
+            {{ "PASSWORD_IS_REQUIRED" | translate }}
+          </div>
+          }
+        </section>
+        <hr />
+        <section>
+          <span> {{ "ALLOW_DOWNLOAD" | translate }}</span>
+          <p>
+            <mat-checkbox formControlName="isAllowDownload" color="primary"></mat-checkbox>
+            <label for="isAllowDownload">{{ "USERS_WITH_LINK_CAN_DOWNLOAD_THIS_ITEM" | translate}}</label>
+          </p>
+        </section>
+      </div>
+    </div>
+    }
+    @if (!isEditMode) {
+    <button type="submit" (click)="createLink()" class="success me-2" matButton="filled">
+      <mat-icon class="medium-icon">save</mat-icon>
+      {{ "CREATE_LINK" | translate }}
+    </button>
+    }
+    @if (isEditMode && isResetLink) {
+    <button type="submit" (click)="createLink()" class="success me-2" matButton="filled">
+      <mat-icon class="medium-icon">save</mat-icon>
+      {{ "UPDATE_LINK" | translate }}
+    </button>
+    }
+  </form>
+  @if (isLoading) {
+  <div class="spinner-container">
+    <!-- <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div> -->
+    <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+    </mat-progress-spinner>
+  </div>
+  }
+</mat-dialog-content>

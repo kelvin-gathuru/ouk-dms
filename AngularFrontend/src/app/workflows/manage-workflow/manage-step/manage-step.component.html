@@ -1,0 +1,82 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        @if(workflowSteps.length == 0){
+        <span class="mb-0 page-title">{{ "ADD_WORKFLOW_STEP" | translate
+          }}<app-page-help-text code="MANAGE_WORKFLOW"></app-page-help-text></span>
+        } @if(workflowSteps.length > 0){
+        <span class="mb-0 page-title">{{ "EDIT_WORKFLOW_STEP" | translate
+          }}<app-page-help-text code="MANAGE_WORKFLOW"></app-page-help-text></span>
+        }
+      </div>
+    </div>
+
+    <div class="row">
+      <form [formGroup]="stepFormGroup">
+        <mat-card appearance="outlined">
+          <mat-card-content>
+            <div formArrayName="steps">
+              @if(this.workflowInstances.length == 0) {
+              <div class="d-flex justify-content-end mb-2">
+                <button (click)="addStep(null)" class="primary me-2" matButton="filled">
+                  <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+                  {{ "ADD_ANOTHER_STEP" | translate }}
+                </button>
+              </div>
+              } @for (step of steps.controls; track $index; let i = $index) {
+              <div [formGroupName]="i">
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="d-flex">
+                      <div class="form-group w-100">
+                        <label> {{ "STEP_NAME" | translate }}</label>
+                        <input formControlName="stepName" class="form-control w-100" type="text" placeholder="{{
+                            'ENTER_THE_WORKFLOW_STEP_NAME' | translate
+                          }}" (blur)="checkUniqueStepName(i)" />
+                        @if (step.get('stepName')?.touched &&
+                        step.get('stepName')?.errors) {
+                        @if(step.get('stepName')?.errors?.['required']) {
+                        <div class="text-danger">
+                          {{ "STEP_NAME_IS_REQUIRED" | translate }}
+                        </div>
+                        } @if(step.get('stepName')?.errors?.['notUnique']) {
+                        <div class="text-danger">
+                          {{ "STEP_NAME_MUST_BE_UNIQUE" | translate }}
+                        </div>
+                        } }
+                      </div>
+                    </div>
+                  </div>
+                  @if (workflowInstances.length == 0 && i > 1) {
+                  <div class="col-md-1">
+                    <div class="form-group">
+                      @if (steps.length > 2) {
+                      <button type="button" mat-icon-button class="mt-3" (click)="removeStep(i)">
+                        <mat-icon class="medium-icon text-danger fs-4 align-middle">delete</mat-icon>
+                      </button>
+                      }
+                    </div>
+                  </div>
+                  }
+                </div>
+              </div>
+              }
+            </div>
+            <div class="col-md-12 mt-2">
+              <button class="success me-2" matButton="filled" [disabled]="stepFormGroup.invalid || steps.length < 2"
+                (click)="saveWorkflowSteps()" cdkFocusInitial>
+                {{ "NEXT" | translate }}
+                <mat-icon class="medium-icon fs-3 align-middle">arrow_right</mat-icon>
+              </button>
+              <button type="button" class="error" matButton="filled" (click)="onPreviousClick()">
+                <mat-icon class="medium-icon fs-3 align-middle">arrow_left</mat-icon>
+                {{ "PREVIOUS" | translate }}
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </form>
+    </div>
+  </div>
+</section>

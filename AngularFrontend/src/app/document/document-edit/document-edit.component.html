@@ -1,0 +1,339 @@
+<mat-dialog-content>
+  <div class="d-flex">
+    <div class="me-auto p-2">
+      <span class="mb-3 page-title">
+        {{ "MANAGE_DOCUMENT" | translate }}
+        <app-page-help-text [code]="'ADD_DOCUMENT'"></app-page-help-text>
+      </span>
+    </div>
+    <div class="d-flex justify-content-end mb-2">
+      <mat-icon
+        class="close-icon text-danger cursor-pointer"
+        (click)="onDocumentCancel()"
+        >cancel</mat-icon
+      >
+    </div>
+  </div>
+
+  <form [formGroup]="documentForm">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label class="form-label text-danger"
+            >{{ "NAME" | translate }} <sup>*</sup></label
+          >
+          <input formControlName="name" class="form-control" type="text" />
+          @if (documentForm.get('name')?.touched &&
+          documentForm.get('name')?.errors) {
+          <div>
+            @if (documentForm.get('name')?.errors?.['required']) {
+            <div class="text-danger">
+              {{ "NAME_IS_REQUIRED" | translate }}
+            </div>
+            }
+          </div>
+          }
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label class="form-label text-danger"
+            >{{ "CATEGORY" | translate }} <sup>*</sup></label
+          >
+          <mat-select
+            panelClass="mat-select-control"
+            class="form-control"
+            formControlName="categoryId"
+            (selectionChange)="onCategoryChange($event)"
+          >
+            <mat-select-trigger>
+              <span [matTooltip]="selectedCategory?.displayName">
+                {{ selectedCategory?.displayName || "NONE" | translate }}
+              </span>
+            </mat-select-trigger>
+            <mat-option>-- {{ "NONE" | translate }} --</mat-option>
+            @for (category of allCategories; track category) {
+            <mat-option [value]="category.id">
+              <div
+                class="country-item"
+                [ngStyle]="{
+                  'margin-left.px': (category.deafLevel ?? 0) * 20
+                }"
+              >
+                @if(category.deafLevel == 0) {
+                <div class="d-flex align-items-center">
+                  <mat-icon class="text-warning me-1">folder</mat-icon>
+                  <b>{{ category.name }}</b>
+                </div>
+                } @else {
+                <div
+                  [matTooltip]="category.name"
+                  class="d-flex align-items-center"
+                >
+                  <mat-icon class="text-warning me-1">folder</mat-icon>
+                  {{ category.name }}
+                </div>
+                }
+              </div>
+            </mat-option>
+            }
+          </mat-select>
+          @if (documentForm.get('categoryId')?.touched &&
+          documentForm.get('categoryId')?.errors) {
+          <div>
+            @if (documentForm.get('categoryId')?.errors?.['required']) {
+            <div class="text-danger">
+              {{ "CATEGORY_IS_REQUIRED" | translate }}
+            </div>
+            }
+          </div>
+          }
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="form-label">{{ "DOCUMENT_STATUS" | translate }}</label>
+          <mat-select
+            panelClass="mat-select-control"
+            class="form-control"
+            formControlName="documentStatusId"
+          >
+            <mat-option>-- {{ "NONE" | translate }} --</mat-option>
+            @for (documentStatus of documentStatuses; track documentStatus) {
+            <mat-option [value]="documentStatus.id">
+              <span [ngStyle]="{ color: documentStatus?.colorCode }">
+                {{ documentStatus.name }}
+              </span>
+            </mat-option>
+            }
+          </mat-select>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="form-label">{{ "CLIENT" | translate }}</label>
+          <mat-select
+            panelClass="mat-select-control"
+            class="form-control"
+            formControlName="clientId"
+          >
+            <mat-option>-- {{ "NONE" | translate }} --</mat-option>
+            @for (client of clientStore.clients(); track client) {
+            <mat-option [value]="client.id">
+              <span> {{ client.companyName }} </span>
+            </mat-option>
+            }
+          </mat-select>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label class="form-label">{{ "DESCRIPTION" | translate }}</label>
+          <textarea formControlName="description" class="form-control" rows="3">
+          </textarea>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-12">
+        <div formArrayName="documentMetaTags">
+          @for (documentmetatag of documentMetaTagsArray.controls; track $index;
+          let i = $index) {
+          <ng-container [formGroupName]="i">
+            @if (i == 0) {
+            <label>{{ "META_TAGS" | translate }}</label>
+            }
+
+            <div class="form-group mb-3 meta-tag-item">
+              <div class="row">
+                <!-- MetaTag Select (full width on mobile, 1/3 on desktop) -->
+                <div class="col-12 col-md-4 mb-2 mb-md-0">
+                  <mat-select
+                    panelClass="mat-select-control"
+                    (selectionChange)="onMetaTagKeyChange($event, i)"
+                    class="form-control"
+                    formControlName="documentMetaTagId"
+                    placeholder="{{ 'SELECT_META_TAG' | translate }}"
+                  >
+                    <mat-option>-- {{ "NONE" | translate }} --</mat-option>
+                    @for (metaTag of metaTags(); track metaTag.id) {
+                    <mat-option [value]="metaTag.id">{{
+                      metaTag.name
+                    }}</mat-option>
+                    }
+                  </mat-select>
+                </div>
+
+                <!-- MetaTag Value + Button (same row in mobile) -->
+                <div class="col-12 col-md-8">
+                  <div class="row align-items-center">
+                    <!-- Text MetaTag -->
+                    @if (documentmetatag.get('metaTagType')?.value == 0) {
+                    <div class="col-9 col-md-9">
+                      <input
+                        formControlName="metatag"
+                        class="form-control"
+                        type="text"
+                        placeholder="{{ 'ENTER_META_TAG_VALUE' | translate }}"
+                      />
+                      @if ( documentmetatag.get('metatag')?.hasError('required')
+                      && documentmetatag.get('metatag')?.touched ) {
+                      <div class="text-danger">
+                        {{ "META_TAG_VALUE_REQUIRED" | translate }}
+                      </div>
+                      }
+                    </div>
+                    }
+
+                    <!-- Date MetaTag -->
+                    @if (documentmetatag.get('metaTagType')?.value == 1) {
+                    <div class="col-9 col-md-9">
+                      <div class="input-group">
+                        <input
+                          #ref
+                          class="form-control"
+                          placeholder="{{ 'CHOOSE_A_DATE' | translate }}"
+                          formControlName="metaTagDate"
+                          [matDatepicker]="picker"
+                        />
+                        <div class="input-group-append">
+                          <button
+                            class="btn btn-primary calendar-button"
+                            type="button"
+                            (click)="picker.open()"
+                          >
+                            <mat-icon class="medium-icon fs-6 align-middle"
+                              >calendar_today</mat-icon
+                            >
+                          </button>
+                        </div>
+                        <mat-datepicker #picker></mat-datepicker>
+                      </div>
+                      @if (
+                      documentmetatag.get('metaTagDate')?.hasError('required')
+                      && documentmetatag.get('metaTagDate')?.touched ) {
+                      <div class="text-danger">
+                        {{ "META_TAG_VALUE_REQUIRED" | translate }}
+                      </div>
+                      }
+                    </div>
+                    }
+
+                    <!-- Add/Delete Button -->
+                    <div class="col-3 col-md-auto text-end ps-0">
+                      @if (i == 0) {
+                      <button
+                        (click)="onAddAnotherMetaTag()"
+                        class="btn btn-outline-success"
+                        type="button"
+                      >
+                        <mat-icon>add</mat-icon>
+                      </button>
+                      } @else {
+                      <button
+                        (click)="onDeleteMetaTag(i)"
+                        class="btn btn-outline-danger"
+                        type="button"
+                      >
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          }
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>{{ "RETENTION_PERIOD" | translate }}</label>
+            <mat-select
+              panelClass="mat-select-control"
+              class="form-control"
+              formControlName="retentionPeriodInDays"
+              placeholder="{{ 'RETENTION_PERIOD' | translate }}"
+            >
+              <mat-option value="0">-- {{ "NONE" | translate }} --</mat-option>
+              <mat-option value="30">
+                {{ "30_DAYS" | translate }}
+              </mat-option>
+              <mat-option value="60">
+                {{ "60_DAYS" | translate }}
+              </mat-option>
+              <mat-option value="90">
+                {{ "90_DAYS" | translate }}
+              </mat-option>
+              <mat-option value="180">
+                {{ "180_DAYS" | translate }}
+              </mat-option>
+              <mat-option value="365">
+                {{ "365_DAYS" | translate }}
+              </mat-option>
+              <mat-option value="730">
+                {{ "2_YEARS" | translate }}
+              </mat-option>
+              <mat-option value="1095">
+                {{ "3_YEARS" | translate }}
+              </mat-option>
+              <mat-option value="1825">
+                {{ "5_YEARS" | translate }}
+              </mat-option>
+            </mat-select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>{{ "RETENTION_PERIOD_ACTION" | translate }}</label>
+            <mat-select
+              panelClass="mat-select-control"
+              class="form-control"
+              formControlName="onExpiryAction"
+              placeholder="{{ 'RETENTION_PERIOD_ACTION' | translate }}"
+            >
+              <mat-option [value]="0"
+                >-- {{ "NONE" | translate }} --</mat-option
+              >
+              <mat-option [value]="1">
+                {{ "ARCHIVE" | translate }}
+              </mat-option>
+              <mat-option [value]="2">
+                {{ "DELETE" | translate }}
+              </mat-option>
+            </mat-select>
+            @if((documentForm.get('retentionPeriodInDays')?.touched ||
+            documentForm.get('retentionPeriodInDays')?.dirty ||
+            documentForm.get('onExpiryAction')?.touched ||
+            documentForm.get('onExpiryAction')?.dirty ) &&
+            documentForm.errors?.['retentionPeriodAndAction']) {
+            <div class="text-danger">
+              {{ "SELECT_RETENTION_PERIOD" | translate }}
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 col-md-12 d-flex flex-wrap button-group-responsive">
+        <button
+          *hasClaim="['ALL_EDIT_DOCUMENT', 'ASSIGNED_EDIT_DOCUMENT']"
+          class="success me-2"
+          matButton="filled"
+          (click)="SaveDocument()"
+          cdkFocusInitial
+        >
+          <mat-icon class="medium-icon">save</mat-icon> {{ "SAVE" | translate }}
+        </button>
+        <button
+          type="button"
+          class="error"
+          matButton="filled"
+          (click)="onDocumentCancel()"
+        >
+          <mat-icon class="medium-icon">cancel</mat-icon>
+          {{ "CANCEL" | translate }}
+        </button>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>

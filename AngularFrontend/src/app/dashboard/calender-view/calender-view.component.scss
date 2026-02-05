@@ -1,0 +1,7 @@
+.tooltip-custom {
+  z-index: 1000; /* Ensure it appears above other elements */
+  max-width: 100%; /* Ensure it doesn’t overflow the event box */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis if the content is too long */
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3); /* Give the tooltip a slight shadow */
+}

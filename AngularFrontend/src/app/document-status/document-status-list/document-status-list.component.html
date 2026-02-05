@@ -1,0 +1,72 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        <span class="mb-0 page-title">{{'DOCUMENT_STATUS' | translate}}
+          <app-page-help-text [code]="'DOCUMENT_STATUS'"></app-page-help-text>
+        </span>
+      </div>
+      <div class="d-flex justify-content-end">
+        <button class="primary" matButton="filled" (click)="onCreateDocumentStatus()">
+          <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+           <span class="d-none d-lg-inline ms-1">{{ 'ADD_DOCUMENT_STATUS' | translate }}</span>
+        </button>
+      </div>
+    </div>
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <div class="table-responsive">
+          <div class="grid-height-large">
+            <table mat-table [dataSource]="documentStatuses">
+              <ng-container matColumnDef="action">
+                <th class="table-column-fix-250" mat-header-cell *matHeaderCellDef>{{'ACTION' |
+                  translate}} </th>
+                <td mat-cell *matCellDef="let documentStatus">
+                  <div class="d-flex gap-2">
+                    <button matMiniFab class="primary" type="button" (click)="onEditDocumentStatus(documentStatus)">
+                      <mat-icon class="medium-icon fs-5 align-middle">edit</mat-icon>
+                    </button>
+                    <button matMiniFab (click)="deleteDocumentStatus(documentStatus.id)" class="error" type="button">
+                      <mat-icon class="medium-icon fs-5 align-middle">delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>{{ 'NAME' | translate }}</th>
+                <td mat-cell *matCellDef="let documentStatus">{{ documentStatus.name }}</td>
+              </ng-container>
+              <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>{{ 'DESCRIPTION' | translate }}</th>
+                <td mat-cell *matCellDef="let documentStatus">{{ documentStatus.description }}</td>
+              </ng-container>
+              <ng-container matColumnDef="colorCode">
+                <th mat-header-cell *matHeaderCellDef>{{ 'COLOR_CODE' | translate }}</th>
+                <td mat-cell [ngStyle]="{'color': documentStatus?.colorCode}" *matCellDef="let documentStatus">{{
+                  documentStatus.colorCode }}</td>
+              </ng-container>
+              <tr *matNoDataRow>
+                <td colspan="5">
+                  <div class="m-2">
+                    <b> {{'NO_DATA_FOUND' | translate}}</b>
+                  </div>
+                </td>
+              </tr>
+              <tr class="grid-header-color" mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr class="my-2" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>
+@if(isLoadingResults) {
+<div class="spinner-container">
+  <!-- <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div> -->
+  <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+  </mat-progress-spinner>
+</div>
+}

@@ -1,0 +1,1 @@
+import{a as t}from"./chunk-GVGC473E.js";var e=class extends t{id="";createdBy="";categoryId="";documentStatusId="";storageSettingId="";clientId="";createDate;operation="";documentNumber="";startDate;endDate;metaTagsTypeId=""};export{e as a};

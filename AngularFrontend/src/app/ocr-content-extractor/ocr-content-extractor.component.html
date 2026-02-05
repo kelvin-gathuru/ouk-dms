@@ -1,0 +1,55 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        <span class="mb-0 page-title">{{'OCR_CONTENT_EXTRACTOR' | translate}} <app-page-help-text
+            code="OCR_CONTENT_EXTRACTOR"></app-page-help-text> </span>
+      </div>
+    </div>
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <form>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>{{'DOCUMENT_UPLOAD' | translate}}</label>
+                <input class="form-control w-100" #file (change)="upload(file.files)" type="file">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              @if (errorMessage) {
+              <span class="text-danger">{{errorMessage}}</span>
+              }
+            </div>
+          </div>
+          <div class="row my-3">
+            <div class="m-top-10 col-md-12">
+              <button class="success me-2" matButton="filled" (click)="extract()" cdkFocusInitial>
+                <mat-icon class="medium-icon fs-5 align-middle">download</mat-icon>
+                {{'EXTRACT' | translate}}
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <textarea name="extractedText" class="form-control" rows="20" [(ngModel)]="extractedText"
+                placeholder="{{'EXTRACTED_TEXT' | translate}}">
+              </textarea>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  @if (isLoading) {
+  <div class="spinner-container">
+    <!-- <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div> -->
+    <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+    </mat-progress-spinner>
+  </div>
+  }
+</section>

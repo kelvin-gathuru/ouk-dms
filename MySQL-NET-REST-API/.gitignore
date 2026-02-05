@@ -1,0 +1,43 @@
+*.swp
+*.*~
+project.lock.json
+.DS_Store
+*.pyc
+
+# Visual Studio Code
+.vscode
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+msbuild.log
+msbuild.err
+msbuild.wrn
+
+# Visual Studio 2015
+.vs/
+
+/DocumentManagement.API/wwwroot/Documents
+/DocumentManagement.API/wwwroot/images
+/DocumentManagement.API/temp/internal-nlog.txt
+/DocumentManagement.API/Documents
+/DocumentManagement.API/wwwroot/SearchIndex
+/DocumentManagement.API/wwwroot/Signatures
+/DocumentManagement.API/wwwroot/FileRquestDocument
+/DocumentManagement.API/wwwroot/FileRequestDocument/
+/DocumentManagement.API/wwwroot/summary/
+/DocumentManagement.API/wwwroot/f00a3bc4-b4e0-47fe-8304-e733f4f5ccea_extracted_image.png

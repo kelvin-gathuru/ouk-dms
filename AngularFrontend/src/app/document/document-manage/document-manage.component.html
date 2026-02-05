@@ -1,0 +1,11 @@
+<app-document-manage-presentation (addDocumentTrail)="addDocumentTrail($event)" (onSaveDocument)="saveDocument($event)">
+</app-document-manage-presentation>
+@if (loading) {
+  <div class="spinner-container">
+    <mat-progress-spinner
+      mode="indeterminate"
+      diameter="60"
+      strokeWidth="5">
+    </mat-progress-spinner>
+  </div>
+}

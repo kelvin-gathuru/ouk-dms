@@ -1,0 +1,87 @@
+<div class="container-fluid p-0">
+  <div class="row g-0">
+    <div class="col-lg-4">
+      <div class="auth-content p-4 d-flex align-items-center min-vh-100">
+        <div class="w-100">
+          <div class="row justify-content-center">
+            <div class="col-lg-9">
+              <div>
+                <div class="text-center">
+                  <div class="text-center logo-img">
+                    <img [src]="logoUrl" alt="Logo" />
+                  </div>
+                </div>
+                <div class="p-2 mt-5">
+                  <form [formGroup]="loginFormGroup" (submit)="onLoginSubmit()">
+                    <div class="row">
+                      <div class="col-md-12 col-sm-12 col-12">
+                        <div class="form-group">
+                          <label>{{ "EMAIL" | translate }}</label>
+                          <input formControlName="userName" class="form-control" type="text" />
+
+                          @if(loginFormGroup.get('userName')?.touched && loginFormGroup.get('userName')?.errors) {
+                          <div class="k-tooltip-validation">
+                            @if(loginFormGroup.get('userName')?.errors?.['required']) {
+                            <div class="text-danger">
+                              {{ "EMAIL_IS_REQUIRED" | translate }}
+                            </div>
+                            }
+                            @if(loginFormGroup.get('userName')?.errors?.['email']) {
+                            <div class="text-danger">
+                              {{ "PLEASE_ENTER_VALID_EMAIL" | translate }}
+                            </div>
+                            }
+                          </div>
+                          }
+                        </div>
+                      </div>
+
+                      <div class="col-md-12 col-sm-12 col-12">
+                        <div class="form-group">
+                          <label>{{ "PASSWORD" | translate }}</label>
+                          <input type="password" formControlName="password" class="form-control" autocomplete="off" />
+
+                          @if(loginFormGroup.get('password')?.touched &&
+                          loginFormGroup.get('password')?.errors?.['required']) {
+                          <div class="k-tooltip-validation">
+                            <div class="text-danger">
+                              {{ "PASSWORD_IS_REQUIRED" | translate }}
+                            </div>
+                          </div>
+                          }
+                        </div>
+                      </div>
+
+                      <div class="col-md-12 col-sm-6 col-12">
+                        <button type="submit" matButton="filled" class="primary mt-3" style="width: 100%;"
+                          [disabled]="!loginFormGroup.valid">
+                          <mat-icon class="me-2 medium-icon fs-5 align-middle">login</mat-icon>
+                          {{ "LOGIN" | translate }}
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-8">
+      <div class="auth-bg">
+        <div class="bg-overlay"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if(isLoading) {
+<div class="spinner-container">
+  <!-- <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div> -->
+  <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+  </mat-progress-spinner>
+</div>
+}

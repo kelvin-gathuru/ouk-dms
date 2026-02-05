@@ -1,0 +1,233 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        <span class="mb-0 page-title">
+          {{ "MANAGE_FILE_REQUEST" | translate }}
+          <app-page-help-text code="MANAGE_FILE_REQUEST"></app-page-help-text>
+        </span>
+      </div>
+    </div>
+    <form [formGroup]="fileRequestForm">
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-12 mb-2">
+              <div class="form-group">
+                <label class="form-label text-danger">
+                  {{ "SUBJECT" | translate }} <sup>*</sup></label>
+                <input formControlName="subject" class="form-control" type="text" />
+                @if (fileRequestForm.get('subject')?.touched &&
+                fileRequestForm.get('subject')?.errors) {
+                <div>
+                  @if (fileRequestForm.get('subject')?.errors?.['required']) {
+                  <div class="text-danger">
+                    {{ "SUBJECT_IS_REQUIRED" | translate }}
+                  </div>
+                  }
+                </div>
+                }
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="form-label">{{ "EMAIL" | translate }}</label>
+                <input formControlName="email" class="form-control" type="email" />
+                @if (fileRequestForm.get('email')?.touched &&
+                fileRequestForm.get('email')?.errors) {
+                <div>
+                  @if (fileRequestForm.get('email')?.errors?.['email']) {
+                  <div class="text-danger">
+                    {{ "INVALID_EMAIL" | translate }}
+                  </div>
+                  }
+                </div>
+                }
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="form-label text-danger">{{ "ALLOW_FILE_EXTENSION" | translate }} <sup>*</sup></label>
+                <mat-select panelClass="mat-select-control" placeholder="{{ 'SELECT_FILE_EXTENSION' | translate }}"
+                  class="form-control" formControlName="fileType" multiple>
+                  @for (fileType of fileTypes; track fileType) {
+                  <mat-option [value]="fileType.value">
+                    {{ fileType.key | translate }}
+                  </mat-option>
+                  }
+                </mat-select>
+                @if (fileRequestForm.get('fileType')?.touched &&
+                fileRequestForm.get('fileType')?.errors) {
+                <div>
+                  @if (fileRequestForm.get('fileType')?.errors?.['required']) {
+                  <div class="text-danger">
+                    {{ "ALLOW_FILE_EXTENSION_IS_REQUIRED" | translate }}
+                  </div>
+                  }
+                </div>
+                }
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="form-label">{{
+                  "MAXIMUM_DOCUMENT_UPLOAD" | translate
+                  }}</label>
+                <input formControlName="maxDocument" class="form-control" type="number" min="1" />
+                @if (fileRequestForm.get('maxDocument')?.touched &&
+                fileRequestForm.get('maxDocument')?.errors) {
+                <div>
+                  @if (fileRequestForm.get('maxDocument')?.errors?.['required'])
+                  {
+                  <div class="text-danger">
+                    {{ "MAXIMUM_DOCUMENT_UPLOAD_IS_REQUIRED" | translate }}
+                  </div>
+                  } @if (fileRequestForm.get('maxDocument')?.errors?.['min']) {
+                  <div class="text-danger">
+                    {{ "MAXIMUM_DOCUMENT_UPLOAD_MIN_VALUE" | translate }}
+                  </div>
+                  }
+                </div>
+                }
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="form-label">{{
+                  "MAXIMUM_FILE_SIZE_UPLOAD" | translate
+                  }}</label>
+                <mat-select panelClass="mat-select-control" placeholder="{{ 'SELECT_MAX_FILE_SIZE' | translate }}"
+                  formControlName="sizeInMb" class="form-control">
+                  @for (size of fileSizeOptions; track size) {
+                  <mat-option [value]="size.value">
+                    <span [appFileSizeLabel]="size.value"></span>
+                  </mat-option>
+                  }
+                </mat-select>
+                @if (fileRequestForm.get('sizeInMb')?.touched &&
+                fileRequestForm.get('sizeInMb')?.errors) {
+                <div>
+                  @if (fileRequestForm.get('sizeInMb')?.errors?.['required']) {
+                  <div class="text-danger">
+                    {{ "FILE_SIZE_IS_REQUIRED" | translate }}
+                  </div>
+                  }
+                </div>
+                }
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="form-label">{{
+                  "PASSWORD_PROTECTION" | translate
+                  }}</label>
+                <p>
+                  <mat-checkbox color="primary" formControlName="hasPassword">
+                    {{ "IS_PASSWORD_REQUIRED" | translate }}
+                  </mat-checkbox>
+                </p>
+                <div class="input-group">
+                  @if (fileRequestForm.get('hasPassword')?.value) {
+                  <input [type]="passwordFieldType" autocomplete="new-password" class="form-control"
+                    formControlName="password" placeholder="{{ 'ENTER_PASSWORD' | translate }}" />
+                  }
+                  <div class="input-group-append">
+                    @if (fileRequestForm.get('hasPassword')?.value) {
+                    <button type="button" class="btn btn-primary calendar-button" (click)="togglePasswordVisibility()">
+                      <mat-icon class="medium-icon fs-5 align-middle">{{
+                        passwordFieldType === "password"
+                        ? "visibility"
+                        : "visibility_off"
+                        }}</mat-icon>
+                    </button>
+                    }
+                  </div>
+                </div>
+                @if (fileRequestForm.get('hasPassword')?.touched &&
+                fileRequestForm.hasError('passwordValidator')) {
+                <div class="text-danger">
+                  {{ "PASSWORD_IS_REQUIRED" | translate }}
+                </div>
+                }
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="form-label">{{
+                  "LINK_EXPIRATION" | translate
+                  }}</label>
+                <p>
+                  <mat-checkbox color="primary" formControlName="isLinkExpiryTime">
+                    {{ "IS_LINK_VALID_UNTIL" | translate }}
+                  </mat-checkbox>
+                </p>
+                @if (fileRequestForm.get('isLinkExpiryTime')?.value) {
+                <div>
+                  <div class="d-flex">
+                    <div class="flex-fill me-2">
+                      <div class="input-group">
+                        <input class="form-control" matInput formControlName="linkExpiryDate"
+                          placeholder="{{ 'MM_DD_YYYY' | translate }}" [matDatepicker]="linkExpiryDatePicker"
+                          [min]="minDate" />
+                        <div class="input-group-append">
+                          <button class="btn btn-primary calendar-button" type="button"
+                            (click)="linkExpiryDatePicker.open()">
+                            <mat-icon class="medium-icon fs-5 align-middle">calendar_today</mat-icon>
+                          </button>
+                        </div>
+                        <mat-datepicker #linkExpiryDatePicker></mat-datepicker>
+                      </div>
+                    </div>
+
+                    <div class="flex-fill">
+                      <div class="input-group">
+                        <input class="form-control timepicker-input" formControlName="linkExpiryTime" [format]="24"
+                          placeholder="{{ 'EXPIRY_TIME' | translate }}" [ngxTimepicker]="timePicker"
+                          [disableClick]="true" readonly />
+                        <div class="input-group-append">
+                          <button class="btn btn-primary calendar-button" ngxMaterialTimepickerToggleIcon type="button"
+                            (click)="timePicker.open()">
+                            <mat-icon class="medium-icon fs-5 align-middle">access_time</mat-icon>
+                          </button>
+                        </div>
+                        <ngx-material-timepicker #timePicker></ngx-material-timepicker>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                } @if (fileRequestForm.get('isLinkExpiryTime')?.touched &&
+                fileRequestForm.hasError('linkExpiryDateValidator')) {
+                <div class="text-danger">
+                  {{ "EXPIRY_DATE_AND_TIME_ARE_REQUIRED" | translate }}
+                </div>
+                } @if
+                (fileRequestForm.get('linkExpiryTime')?.hasError('required') &&
+                fileRequestForm.get('linkExpiryDate')?.touched) {
+                <div>
+                  @if
+                  (fileRequestForm.get('linkExpiryTime')?.errors?.['required'])
+                  {
+                  <div class="text-danger">
+                    {{ "EXPIRY_TIME_ARE_REQUIRED" | translate }}
+                  </div>
+                  }
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 mt-2">
+            <button class="success me-2" matButton="filled" (click)="saveFileRequest()" cdkFocusInitial>
+              <mat-icon class="medium-icon">save</mat-icon>
+              {{ "SAVE" | translate }}
+            </button>
+            <button type="button" class="error" matButton="filled" [routerLink]="['/file-request']">
+              <mat-icon class="medium-icon">cancel</mat-icon>
+              {{ "CANCEL" | translate }}
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </form>
+  </div>
+</section>

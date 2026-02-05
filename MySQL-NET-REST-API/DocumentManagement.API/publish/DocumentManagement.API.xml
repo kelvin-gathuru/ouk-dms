@@ -1,0 +1,582 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DocumentManagement.API</name>
+    </assembly>
+    <members>
+        <member name="T:DocumentManagement.API.Controllers.CategoryController">
+            <summary>
+            Category
+            </summary>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.CategoryController.#ctor(MediatR.IMediator)">
+            <summary>
+            Category
+            </summary>
+            <param name="mediator"></param>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.CategoryController.GetCategory(System.Guid)">
+            <summary>
+            Get Specific Category by ID
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.CategoryController.GetCategories">
+            <summary>
+            Get All Categories
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.CategoryController.AddCategory(DocumentManagement.MediatR.Commands.AddCategoryCommand)">
+            <summary>
+            Create a Category.
+            </summary>
+            <remarks>
+            Sample request:
+                POST /Category
+                {
+                   "Name": "Item1",
+                   "Description": "description1"
+                }
+            </remarks>
+            <param name="addCategoryCommand"></param>
+            <returns>A newly created Category</returns>
+            <response code="422">Returns the request parameters are not valid</response>
+            <response code="201">Returns the newly created item</response>
+            <response code="409">If the item is null</response>   
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.CategoryController.UpdateCategory(System.Guid,DocumentManagement.MediatR.Commands.UpdateCategoryCommand)">
+            <summary>
+            Modified category by Id
+            </summary>
+            <param name="Id"></param>
+            <param name="updateCategoryCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.CategoryController.DeleteCategory(System.Guid)">
+            <summary>
+            Delete Category by Id
+            </summary>
+            <param name="Id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DocumentManagement.API.Controllers.DocumentAuditTrailController">
+            <summary>
+            DocumentAuditTrail
+            </summary>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.DocumentAuditTrailController.#ctor(MediatR.IMediator)">
+            <summary>
+            DocumentAuditTrail
+            </summary>
+            <param name="mediator"></param>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.DocumentAuditTrailController.GetDocumentAuditTrails(DocumentManagement.Data.Resources.DocumentResource)">
+            <summary>
+            Get All Document Audit Trail detail
+            </summary>
+            <param name="documentResource"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.DocumentAuditTrailController.AddDocumentAuditTrail(DocumentManagement.MediatR.Commands.AddDocumentAuditTrailCommand)">
+            <summary>
+            Add Document Audit Trail
+            </summary>
+            <param name="addDocumentAuditTrailCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DocumentManagement.API.Controllers.DocumentLibraryController">
+            <summary>
+            DocumentLibrary
+            </summary>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.DocumentLibraryController.#ctor(MediatR.IMediator)">
+            <summary>
+            DocumentLibrary
+            </summary>
+            <param name="mediator"></param>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.DocumentLibraryController.GetDocumentLibraries(DocumentManagement.Data.Resources.DocumentResource)">
+            <summary>
+            Get Document list which user allow to view
+            </summary>
+            <param name="documentResource"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DocumentManagement.API.Controllers.DocumentPermission.DocumentRolePermissionController">
+            <summary>
+            DocumentRolePermission
+            </summary>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.DocumentPermission.DocumentRolePermissionController.#ctor(MediatR.IMediator)">
+            <summary>
+            DocumentRolePermission
+            </summary>
+            <param name="mediator"></param>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.DocumentPermission.DocumentRolePermissionController.GetDocumentRolePermission(System.Guid)">
+            <summary>
+            Get Document Role Permission
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.DocumentPermission.DocumentRolePermissionController.AddDocumentRolePermission(DocumentManagement.MediatR.Commands.AddDocumentRolePermissionCommand)">
+            <summary>
+            Add Document Role Permission
+            </summary>
+            <param name="addDocumentRolePermissionCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.DocumentPermission.DocumentRolePermissionController.DeleteDocumentRolePermission(System.Guid)">
+            <summary>
+            Delete Document Role Permission
+            </summary>
+            <param name="Id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DocumentManagement.API.Controllers.DocumentUserPermissionController">
+            <summary>
+            DocumentUserPermission
+            </summary>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.DocumentUserPermissionController.#ctor(MediatR.IMediator)">
+            <summary>
+            DocumentUserPermission
+            </summary>
+            <param name="mediator"></param>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.DocumentUserPermissionController.GetDocumentUserPermission(System.Guid)">
+            <summary>
+            Get Document User Permission by Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.DocumentUserPermissionController.AddDocumentUserPermission(DocumentManagement.MediatR.Commands.AddDocumentUserPermissionCommand)">
+            <summary>
+            Add Document User Permission
+            </summary>
+            <param name="addDocumentUserPermissionCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.DocumentUserPermissionController.DeleteDocumentUserPermission(System.Guid)">
+            <summary>
+            Delete Document User Permission By Id
+            </summary>
+            <param name="Id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DocumentManagement.API.Controllers.DocumentController">
+            <summary>
+            Document
+            </summary>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.DocumentController.#ctor(MediatR.IMediator,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,DocumentManagement.Helper.PathHelper)">
+            <summary>
+            Document
+            </summary>
+            <param name="mediator"></param>
+            <param name="webHostEnvironment"></param>
+            <param name="pathHelper"></param>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.DocumentController.GetDocument(System.Guid)">
+            <summary>
+            Get Document By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.DocumentController.GetDocuments(DocumentManagement.Data.Resources.DocumentResource)">
+            <summary>
+            Get All Documents
+            </summary>
+            <param name="Name"></param>
+            <param name="Id"></param>
+            <param name="CreatedBy"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.DocumentController.AddDocument(DocumentManagement.MediatR.Commands.AddDocumentCommand)">
+            <summary>
+            Create a document
+            </summary>
+            <param name="addDocumentCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.DocumentController.UploadFile">
+            <summary>
+            Document by upload
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.DocumentController.UpdateDocument(System.Guid,DocumentManagement.MediatR.Commands.UpdateDocumentCommand)">
+            <summary>
+            Upload document
+            </summary>
+            <param name="Id"></param>
+            <param name="updateDocumentCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.DocumentController.DeleteDocument(System.Guid)">
+            <summary>
+            Delete Document by Id
+            </summary>
+            <param name="Id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DocumentManagement.API.Controllers.OperationController">
+            <summary>
+            Operation
+            </summary>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.OperationController.#ctor(MediatR.IMediator)">
+            <summary>
+            Operation
+            </summary>
+            <param name="mediator"></param>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.OperationController.GetOperation(System.Guid)">
+            <summary>
+            Get Operation By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.OperationController.GetOperations">
+            <summary>
+            Get All Operations
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.OperationController.AddOperation(DocumentManagement.MediatR.Commands.AddOperationCommand)">
+            <summary>
+            Create A Operation
+            </summary>
+            <param name="addOperationCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.OperationController.UpdateOperation(System.Guid,DocumentManagement.MediatR.Commands.UpdateOperationCommand)">
+            <summary>
+            Update Exist Operation By Id
+            </summary>
+            <param name="Id"></param>
+            <param name="updateOperationCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.OperationController.DeleteOperation(System.Guid)">
+            <summary>
+            Delete Operation By Id
+            </summary>
+            <param name="Id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DocumentManagement.API.Controllers.RoleController">
+            <summary>
+            Role
+            </summary>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.RoleController.#ctor(MediatR.IMediator,Microsoft.Extensions.Logging.ILogger{DocumentManagement.API.Controllers.RoleController})">
+            <summary>
+            Role
+            </summary>
+            <param name="mediator"></param>
+            <param name="logger"></param>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.RoleController.AddRole(DocumentManagement.MediatR.Commands.AddRoleCommand)">
+            <summary>
+            Create A Role
+            </summary>
+            <param name="addRoleCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.RoleController.UpdateRole(System.Guid,DocumentManagement.MediatR.Commands.UpdateRoleCommand)">
+            <summary>
+            Update Exist Role By Id
+            </summary>
+            <param name="id"></param>
+            <param name="updateRoleCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.RoleController.GetRole(System.Guid)">
+            <summary>
+            Get Role By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.RoleController.GetRoles">
+            <summary>
+            Get All Roles
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.RoleController.DeleteRole(System.Guid)">
+            <summary>
+            Delete Role By Id
+            </summary>
+            <param name="Id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DocumentManagement.API.Controllers.RoleUsersController">
+            <summary>
+            RoleUsers
+            </summary>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.RoleUsersController.#ctor(MediatR.IMediator,Microsoft.Extensions.Logging.ILogger{DocumentManagement.API.Controllers.RoleUsersController})">
+            <summary>
+            RoleUsers
+            </summary>
+            <param name="mediator"></param>
+            <param name="logger"></param>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.RoleUsersController.RoleUsers(System.Guid)">
+            <summary>
+            Get Role Users By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.RoleUsersController.UpdateRoleUsers(System.Guid,DocumentManagement.MediatR.Commands.UpdateUserRoleCommand)">
+            <summary>
+            Update Role Users By Id
+            </summary>
+            <param name="id"></param>
+            <param name="updateRoleCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DocumentManagement.API.Controllers.ScreenOperationController">
+            <summary>
+            ScreenOperation
+            </summary>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.ScreenOperationController.#ctor(MediatR.IMediator)">
+            <summary>
+            ScreenOperation
+            </summary>
+            <param name="mediator"></param>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.ScreenOperationController.GetScreenOperations">
+            <summary>
+            Get All Screen Operations
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.ScreenOperationController.AddScreenOperation(DocumentManagement.MediatR.Commands.AddScreenOperationCommand)">
+            <summary>
+            Add Screen Operation
+            </summary>
+            <param name="addScreenOperationCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.ScreenOperationController.UpdateScreenOperation(System.Guid,DocumentManagement.MediatR.Commands.UpdateScreenOperationCommand)">
+            <summary>
+            Update Screen Operation By Id
+            </summary>
+            <param name="Id"></param>
+            <param name="updateScreenOperationCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.ScreenOperationController.DeleteScreenOperation(System.Guid)">
+            <summary>
+            Delete Screen Operation By Id
+            </summary>
+            <param name="Id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DocumentManagement.API.Controllers.ScreenController">
+            <summary>
+            Screen
+            </summary>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.ScreenController.#ctor(MediatR.IMediator)">
+            <summary>
+            Screen
+            </summary>
+            <param name="mediator"></param>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.ScreenController.GetScreen(System.Guid)">
+            <summary>
+            Get Screen By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.ScreenController.GetScreens">
+            <summary>
+            Get All Screens
+            </summary>
+            <remarks>
+            Sample request:
+                POST /Todo
+                {
+                   "id": 1,
+                   "name": "Item1",
+                   "isComplete": true
+                }
+            </remarks>
+            <returns>Test</returns>
+            <response code="200">Returns the newly created item</response>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.ScreenController.AddScreen(DocumentManagement.MediatR.Commands.AddScreenCommand)">
+            <summary>
+            Create a Screen
+            </summary>
+            <param name="addScreenCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.ScreenController.UpdateScreen(System.Guid,DocumentManagement.MediatR.Commands.UpdateScreenCommand)">
+            <summary>
+            Update Screen By Id
+            </summary>
+            <param name="Id"></param>
+            <param name="updateScreenCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.ScreenController.DeleteScreen(System.Guid)">
+            <summary>
+            Delete Screen By Id
+            </summary>
+            <param name="Id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DocumentManagement.API.Controllers.UserNotificationController">
+            <summary>
+            UserNotification
+            </summary>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.UserNotificationController.#ctor(MediatR.IMediator)">
+            <summary>
+            UserNotification
+            </summary>
+            <param name="mediator"></param>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.UserNotificationController.GetNotification">
+            <summary>
+            Get Notifications for login user
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.UserNotificationController.GetNotifications(DocumentManagement.Data.Resources.NotificationResource)">
+            <summary>
+            Get All Document Audit Trail detail
+            </summary>
+            <param name="notificationResource"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.UserNotificationController.MarkAsRead(DocumentManagement.MediatR.Commands.MarkAsReadCommand)">
+            <summary>
+            Mark Notification as Read.
+            </summary>
+            <param name="markAsReadCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.UserNotificationController.MarkAllAsRead">
+            <summary>
+            Mark All Notification As Read.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:DocumentManagement.API.Controllers.UserClaimController">
+            <summary>
+            UserClaim
+            </summary>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.UserClaimController.#ctor(MediatR.IMediator)">
+            <summary>
+            UserClaim
+            </summary>
+            <param name="mediator"></param>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.UserClaimController.UpdateUserClaim(System.Guid,DocumentManagement.MediatR.Commands.UpdateUserClaimCommand)">
+            <summary>
+            Update User Claim By Id
+            </summary>
+            <param name="id"></param>
+            <param name="addUserCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DocumentManagement.API.Controllers.UserController">
+            <summary>
+            User
+            </summary>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.UserController.#ctor(MediatR.IMediator,DocumentManagement.Data.Dto.UserInfoToken)">
+            <summary>
+            User
+            </summary>
+            <param name="mediator"></param>
+            <param name="userInfo"></param>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.UserController.GetUsers">
+            <summary>
+            Get All Users
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.UserController.GetUser(System.Guid)">
+            <summary>
+            Get User By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.UserController.AddUser(DocumentManagement.MediatR.Commands.AddUserCommand)">
+            <summary>
+             Create a User
+            </summary>
+            <param name="addUserCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.UserController.UserLogin(DocumentManagement.MediatR.Commands.UserLoginCommand)">
+            <summary>
+            User Login
+            </summary>
+            <param name="userLoginCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.UserController.UpdateUser(System.Guid,DocumentManagement.MediatR.Commands.UpdateUserCommand)">
+            <summary>
+            Update User By Id
+            </summary>
+            <param name="id"></param>
+            <param name="updateUserCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.UserController.UpdateUserProfile(DocumentManagement.MediatR.Commands.UpdateUserProfileCommand)">
+            <summary>
+            Update Profile
+            </summary>
+            <param name="id"></param>
+            <param name="updateUserProfileCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.UserController.DeleteUser(System.Guid)">
+            <summary>
+            Delete User By Id
+            </summary>
+            <param name="Id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.UserController.ChangePassword(DocumentManagement.MediatR.Commands.ChangePasswordCommand)">
+            <summary>
+            User Change Password
+            </summary>
+            <param name="resetPasswordCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.UserController.ResetPassword(DocumentManagement.MediatR.Commands.ResetPasswordCommand)">
+            <summary>
+            Reset Resetpassword
+            </summary>
+            <param name="newPasswordCommand"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DocumentManagement.API.Controllers.UserController.GetProfile">
+            <summary>
+            Get User Profile
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

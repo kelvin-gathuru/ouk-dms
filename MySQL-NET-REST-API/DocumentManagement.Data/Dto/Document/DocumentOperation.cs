@@ -1,0 +1,25 @@
+﻿namespace DocumentManagement.Data.Dto;
+
+public enum DocumentOperation
+{
+    Read = 1,
+    Created = 2,
+    Modified = 3,
+    Deleted = 4,
+    Added_Permission = 5,
+    Removed_Permission = 6,
+    Send_Email = 7,
+    Download = 8,
+    Added_Version = 9,
+    Added_Signature = 10,
+    Restored_Version = 11,
+    Archived = 12,
+    Restored = 13,
+    Added_Folder_Permission = 14,
+    Removed_Folder_Permission = 15,
+    Archived_Folder = 16,
+    Restored_Folder = 17,
+    Added_Folder = 18,
+    Edited_Folder = 19,
+    Deleted_Folder = 20
+}

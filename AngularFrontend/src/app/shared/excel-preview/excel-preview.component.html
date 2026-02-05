@@ -1,0 +1,47 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <div class="row">
+              <div class="col mb-4">
+                <input type="text" [(ngModel)]="searchTerm" placeholder="Search..."
+                  class="form-control search-input w-100" />
+              </div>
+            </div>
+            @if(excelData.length > 0) {
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  @for (col of excelData[0] | keyvalue; track $index) {
+                  <th (click)="setOrder(col.key)">
+                    {{ col.key }}
+                  </th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of filteredData() | paginate: { itemsPerPage: 10, currentPage: page }; track $index) {
+                <tr>
+                  @for (col of row | keyvalue; track $index) {
+                  <td>
+                    {{ col.value }}
+                  </td>
+                  }
+                </tr>
+                }
+                <tr>
+                  <td colspan="100%" class="text-center">
+                    <pagination-controls (pageChange)="page = $event"></pagination-controls>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

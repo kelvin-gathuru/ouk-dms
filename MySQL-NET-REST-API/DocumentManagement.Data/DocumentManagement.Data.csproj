@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Dto\Workflow\WorkFlowStepRoleDto.cs" />
+    <Compile Remove="Dto\Workflow\WorkflowStepUserDto.cs" />
+    <Compile Remove="Entities\WorkFlowStepRole.cs" />
+    <Compile Remove="Entities\WorkflowStepUser.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DocumentManagement.Helper\DocumentManagement.Helper.csproj" />
+  </ItemGroup>
+
+</Project>

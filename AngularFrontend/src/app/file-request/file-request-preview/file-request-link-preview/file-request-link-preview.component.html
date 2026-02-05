@@ -1,0 +1,214 @@
+<nav #navbar class="navbar active">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <!-- mobile menu bars -->
+      <a onClick="return false;" class="bars" (click)="mobileMenuSidebarOpen($event,'overlay-open')"></a>
+      <a class="navbar-brand" routerLink="/">
+        <img [src]="logoUrl" alt="Logo" class="logo-img" />
+      </a>
+    </div>
+  </div>
+</nav>
+<section class="content">
+  <div class="container-fluid">
+
+    <div class="row align-items-center">
+      <div class="col-md-6 mb-2">
+        <span class="mb-0 page-title">
+          {{ 'FILE_UPLOAD_REQUEST' | translate }}
+        </span>
+      </div>
+    </div>
+
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <!-- Link Expired Message -->
+        @if(isLinkExpired || (fileRequestDocuments && fileRequestInfo && fileRequestDocuments.length >=
+        fileRequestInfo.maxDocument)) {
+        <div class="text-center text-danger">
+          <h2>{{ 'LINK_EXPIRED' | translate }}</h2>
+          <p>{{ 'URL_NOT_VALID' | translate }}</p>
+          <a class="btn btn-primary mt-3" [routerLink]="['/']">
+            {{ 'GO_HOME' | translate }}
+          </a>
+        </div>
+        }
+
+        <!-- File Upload Section -->
+        @if(!isLinkExpired) {
+        <!-- Password Verification -->
+        @if(requiresPassword && !isPasswordVerified) {
+        <form [formGroup]="documentLinkForm" class="mb-4">
+          <div class="form-group">
+            <label class="form-label text-danger">{{ 'PASSWORD' | translate }} <sup>*</sup></label>
+            <input type="password" class="form-control" formControlName="password"
+              placeholder="{{ 'ENTER_PASSWORD' | translate }}" />
+            @if(documentLinkForm.get('password')?.touched && documentLinkForm.get('password')?.hasError('required')) {
+            <div class="text-danger">
+              {{ 'PASSWORD_IS_REQUIRED' | translate }}
+            </div>
+            }
+            <button class="primary mt-2" matButton="filled" (click)="checkPassword()">
+              <mat-icon class="medium-icon fs-5 align-middle">lock</mat-icon>
+              {{ 'SUBMIT' | translate }}
+            </button>
+          </div>
+        </form>
+        }
+
+        <!-- File Upload Form -->
+        @if((!requiresPassword || isPasswordVerified) && (fileRequestDocuments && fileRequestInfo &&
+        fileRequestDocuments.length < fileRequestInfo.maxDocument)) { <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>{{ 'SUBJECT' | translate }}</th>
+                <th>{{ 'ALLOW_FILE_TYPE' | translate }}</th>
+                <th>{{ 'REQUEST_BY' | translate }}</th>
+                <th>{{ 'MAXIMUM_FILE_SIZE_UPLOAD' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{ fileRequestInfo.subject }}</td>
+                <td>{{ fileRequestInfo.allowExtension }}</td>
+                <td>{{ fileRequestInfo.createdById }}</td>
+                <td>{{ fileRequestInfo.sizeInMb }} Mb</td>
+              </tr>
+            </tbody>
+          </table>
+  </div>
+  @if(!requiresPassword || isPasswordVerified) {
+  <div class="col-md-12 d-flex justify-content-end mb-2">
+    @if(fileInputs && fileRequestInfo && fileRequestDocuments && fileInputs.length < (fileRequestInfo.maxDocument -
+      fileRequestDocuments.length)) { <button class="btn btn-primary me-2" type="button" (click)="addFileInput()">
+      <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+      {{ 'ADD_ANOTHER_FILE' | translate }}
+      </button>
+      }
+  </div>
+  }
+
+  @if(fileRequestInfo && fileRequestInfo.maxDocument - fileRequestDocuments.length >= fileInputs.length) {
+  <form [formGroup]="uploadForm" class="mt-4">
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <div class="row g-3" formArrayName="files">
+          @for(fileInput of fileInputs.controls; track fileInput; let i = $index) {
+          <div [formGroupName]="i" class="col-12">
+
+            <div class="row align-items-center">
+              <!-- File Input -->
+              <div class="col-md-6 mb-2">
+                <label for="{{ 'fileInput-' + i }}" class="form-label text-danger">{{'DOCUMENT_UPLOAD' | translate}}
+                  <sup>*</sup></label>
+                <input type="file" formControlName="file" class="form-control" [id]="'fileInput-' + i"
+                  (change)="onFileSelected($event, i)" />
+                @if(fileInput.get('file')?.touched && fileInput.get('file')?.hasError('required')) {
+                <div class="text-danger small mt-1">
+                  {{ "FILE_IS_REQUIRED" | translate }}
+                </div>
+                }
+                @if(fileInput.get('file')?.touched && fileInput.get('file')?.hasError('sizeExceeded')) {
+                <div class="text-danger small mt-1">
+                  {{ "FILE_SIZE_EXCEEDED" | translate }}
+                </div>
+                }
+                @if(fileInput.get('file')?.touched && fileInput.get('file')?.hasError('invalidExtension')) {
+                <div class="text-danger small mt-1">
+                  {{ "INVALID_FILE_EXTENSION" | translate }}
+                </div>
+                }
+              </div>
+
+              <!-- File Name Input -->
+              <div class="col-md-6 mb-2">
+                <label for="{{ 'fileName-' + i }}" class="form-label text-danger">
+                  {{ 'FILE_NAME' | translate }} <sup>*</sup>
+                </label>
+                <input type="text" class="form-control" [id]="'fileName-' + i" formControlName="name"
+                  [value]="uploadedFileNames[i] || ''" placeholder="{{ 'SELECTED_FILE_NAME' | translate }}" />
+                @if(fileInput.get('name')?.touched && fileInput.get('name')?.hasError('required')) {
+                <div class="text-danger small mt-1">
+                  {{ "NAME_IS_REQUIRED" | translate }}
+                </div>
+                }
+              </div>
+
+              <!-- Remove Button -->
+              <div class="col-md-1 text-end">
+                @if(i > 0) {
+                <button class="btn btn-danger btn-sm" type="button" (click)="removeFileInput(i)" aria-label="Remove">
+                  <mat-icon class="medium-icon fs-5 align-middle">delete</mat-icon>
+                </button>
+                }
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+
+        <!-- Action Buttons -->
+        @if(fileRequestDocuments && fileRequestInfo && fileRequestDocuments.length < fileRequestInfo.maxDocument) { <div
+          class="mt-4">
+          <button class="success me-2" matButton="filled" type="button" [disabled]="uploadedFiles.length === 0"
+            (click)="onFileUpload()">
+            <mat-icon class="medium-icon align-middle">save</mat-icon>
+            {{ 'UPLOAD_FILES' | translate }}
+          </button>
+          <button class="error" matButton="filled" type="button" [routerLink]="['/']">
+            <mat-icon class="medium-icon align-middle">cancel</mat-icon>
+            {{ 'CANCEL' | translate }}
+          </button>
+          </div>
+          }
+      </mat-card-content>
+    </mat-card>
+  </form>
+  }
+  }
+
+  <!-- Uploaded Files Table -->
+  @if(fileRequestDocuments && fileRequestDocuments.length > 0) {
+  <div class="mt-4">
+    <h5>{{ 'UPLOADED_FILES' | translate }}</h5>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>{{ 'FILE_NAME' | translate }}</th>
+          <th>{{ 'DOCUMENT_STATUS' | translate }}</th>
+          <th>{{ 'UPLOADED_DATE' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(file of fileRequestDocuments; track file) {
+        <tr>
+          <td>{{ file.name }}</td>
+          <td [appStatusColor]="file.fileRequestDocumentStatus | fileRequestDocumentStatus">
+            {{ file.fileRequestDocumentStatus | fileRequestDocumentStatus }}
+          </td>
+          <td>{{ file.createdDate | utcToLocalTime:'full' }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+  }
+  </mat-card-content>
+  </mat-card>
+  </div>
+</section>
+
+@if(isLoading) {
+<div class="spinner-container">
+  <!-- <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div> -->
+<mat-progress-spinner
+      mode="indeterminate"
+      diameter="60"
+      strokeWidth="5">
+    </mat-progress-spinner>
+</div>
+}

@@ -1,0 +1,130 @@
+<mat-dialog-content>
+  <div class="d-flex">
+    <div class="me-auto p-2">
+      <span class="mb-3 page-title">
+        {{ "STORAGE_SETTINGS" | translate }}
+        <app-page-help-text [code]="'STORAGE_SETTINGS'"></app-page-help-text>
+      </span>
+    </div>
+    <div class="d-flex justify-content-end mb-2">
+      <mat-icon class="close-icon text-danger cursor-pointer " (click)="closeDialog()">cancel</mat-icon>
+    </div>
+  </div>
+  <form [formGroup]="storageSettingForm" class="form-group">
+    <div class="row">
+      <div class="col-md-6">
+        <label for="storageType" class="form-label">{{
+          "STORAGE_TYPE" | translate
+          }}</label>
+        <mat-select panelClass="mat-select-control" class="form-control" id="storageType" formControlName="storageType"
+          placeholder="{{ 'SELECT_STORAGE' | translate }}" (selectionChange)="onStorageTypeChange($event)">
+          @for (item of storageTypes; track item) {
+          @if (item.key != storageType.LOCAL.toString()) {
+          <mat-option [value]="item.value">{{
+            item.value | storageType
+            }}</mat-option>
+          }
+          }
+        </mat-select>
+        @if (
+        storageSettingForm.get('storageType')?.invalid &&
+        storageSettingForm.get('storageType')?.touched
+        ) {
+        <div class="text-danger">
+          {{ "STORAGE_TYPE_IS_REQUIRED" | translate }}
+        </div>
+        }
+      </div>
+
+      @if (
+      storageSettingForm.get('storageType')?.value?.toString() === storageType.AWS.toString() ||
+      storageSettingForm.get('storageType')?.value?.toString() === storageType.CLOUDFLARE.toString()
+      ) {
+      <div class="col-md-6">
+        <label for="name" class="form-label text-danger">{{ "NAME" | translate }} <sup>*</sup></label>
+        <input type="text" class="form-control" id="name" formControlName="name" />
+        @if (storageSettingForm.get('name')?.invalid && storageSettingForm.get('name')?.touched) {
+        <div class="text-danger">
+          {{ "NAME_IS_REQUIRED" | translate }}
+        </div>
+        }
+      </div>
+      <div class="col-md-6">
+        <label for="accessKey" class="form-label text-danger">{{
+          "ACCESS_KEY" | translate
+          }} <sup>*</sup></label>
+        <input type="text" class="form-control" id="accessKey" formControlName="accessKey" />
+        @if (storageSettingForm.get('accessKey')?.invalid && storageSettingForm.get('accessKey')?.touched) {
+        <div class="text-danger">
+          {{ "ACCESS_KEY_IS_REQUIRED" | translate }}
+        </div>
+        }
+      </div>
+      <div class="col-md-6 ">
+        <label for="region" class="form-label text-danger">{{
+          "REGION" | translate
+          }} <sup>*</sup></label>
+        <input type="text" class="form-control" id="region" formControlName="region" />
+        @if (storageSettingForm.get('region')?.invalid && storageSettingForm.get('region')?.touched) {
+        <div class="text-danger">
+          {{ "REGION_IS_REQUIRED" | translate }}
+        </div>
+        }
+      </div>
+      <div class="col-md-6">
+        <label for="secretKey" class="form-label text-danger">{{
+          "SECRET_KEY" | translate
+          }} <sup>*</sup></label>
+        <input type="text" class="form-control" id="secretKey" formControlName="secretKey" />
+        @if (storageSettingForm.get('secretKey')?.invalid && storageSettingForm.get('secretKey')?.touched) {
+        <div class="text-danger">
+          {{ "SECRET_KEY_IS_REQUIRED" | translate }}
+        </div>
+        }
+      </div>
+      <div class="col-md-6">
+        <label for="bucketName" class="form-label text-danger">{{
+          "BUCKET_NAME" | translate
+          }} <sup>*</sup></label>
+        <input type="text" class="form-control" id="bucketName" formControlName="bucketName" />
+        @if (storageSettingForm.get('bucketName')?.invalid && storageSettingForm.get('bucketName')?.touched) {
+        <div class="text-danger">
+          {{ "BUCKET_NAME_IS_REQUIRED" | translate }}
+        </div>
+        }
+      </div>
+      @if (storageSettingForm.get('storageType')?.value?.toString() === storageType.CLOUDFLARE.toString()) {
+      <div class="col-md-6">
+        <label for="accountId" class="form-label text-danger">{{ "ACCOUNT_ID" | translate }} <sup>*</sup></label>
+        <input type="text" class="form-control" id="accountId" formControlName="accountId" />
+        @if (storageSettingForm.get('accountId')?.invalid && storageSettingForm.get('accountId')?.touched) {
+        <div class="text-danger">
+          {{ "ACCOUNT_ID_IS_REQUIRED" | translate }}
+        </div>
+        }
+      </div>
+      }
+      <div class="col-md-12">
+        <mat-checkbox color="primary" formControlName="enableEncryption">
+        </mat-checkbox>
+        <label for="enableEncryption" class="form-label">{{'ENABLE_ENCRYPTION' | translate}}</label>
+      </div>
+      <div class="col-md-12">
+        <mat-checkbox color="primary" formControlName="isDefault">
+        </mat-checkbox>
+        <label for="isDefault" class="form-label">{{'IS_DEFAULT' | translate}}</label>
+      </div>
+      }
+      <div class="row mt-4">
+        <div class="col-md-12">
+          <button class="success me-2" matButton="filled" (click)="saveSettings()" cdkFocusInitial>
+            <mat-icon class="medium-icon align-middle">save</mat-icon> {{ "SAVE" | translate }}
+          </button>
+          <button type="button" class="error" matButton="filled" (click)="closeDialog()">
+            <mat-icon class="medium-icon align-middle">cancel</mat-icon> {{ "CANCEL" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>

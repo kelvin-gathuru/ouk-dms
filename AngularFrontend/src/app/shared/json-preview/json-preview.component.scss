@@ -1,0 +1,16 @@
+.json-viewer-container {
+    height: 91vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+  }
+  
+  .form-control {
+    width: 70%;
+  }
+  

@@ -1,0 +1,397 @@
+<mat-dialog-content>
+  <div class="d-flex">
+    <div class="me-auto p-2">
+      <span class="mb-3 page-title">
+        {{ "ADD_REMINDER" | translate }}
+        <app-page-help-text [code]="'ADD_REMINDER'"></app-page-help-text>
+      </span>
+    </div>
+    <div class="d-flex justify-content-end mb-2">
+      <mat-icon class="close-icon text-danger cursor-pointer " (click)="closeDialog()">cancel</mat-icon>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <form [formGroup]="reminderForm">
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label for="subject"> {{ "SUBJECT" | translate }}</label>
+            <input formControlName="subject" type="text" class="form-control" id="subject" />
+            @if (reminderForm.get('subject')?.touched && reminderForm.get('subject')?.errors) {
+            <div>
+              @if (reminderForm.get('subject')?.errors?.['required']) {
+              <div class="text-danger">
+                {{ "SUBJECT_IS_REQUIRED" | translate }}
+              </div>
+              }
+            </div>
+            }
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label for="message"> {{ "MESSAGE" | translate }}</label>
+            <textarea class="form-control" formControlName="message" id="message" cols="30"></textarea>
+            @if (reminderForm.get('message')?.touched && reminderForm.get('message')?.errors) {
+            <div>
+              @if (reminderForm.get('message')?.errors?.['required']) {
+              <div class="text-danger">
+                {{ "MESSAGE_IS_REQUIRED" | translate }}
+              </div>
+              }
+            </div>
+            }
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-md">
+            <mat-checkbox color="primary" (change)="checkData($event)" formControlName="isRepeated">
+              {{ "REPEATE_REMINDER" | translate }}
+            </mat-checkbox>
+          </div>
+          <div class="col-md">
+            <mat-checkbox color="primary" formControlName="isEmailNotification">{{ "SEND_EMAIL" | translate
+              }}</mat-checkbox>
+          </div>
+        </div>
+        @if (reminderForm.get('isRepeated')?.value) {
+        <div class="row mt-2">
+          <div class="form-group col-md-6">
+            <label for="frequency"> {{ "FREQUENCY" | translate }}</label>
+            <select class="form-control" (change)="onFrequencyChange()" formControlName="frequency" id="frequency">
+              <option value="">--{{ "NONE" | translate }}--</option>
+              @for (frequencyItem of reminderFrequencies; track frequencyItem?.id) {
+              <option [value]="frequencyItem?.id">
+                {{ frequencyItem?.name?.toUpperCase() | translate }}
+              </option>
+              }
+            </select>
+            @if (reminderForm.get('frequency')?.errors?.['required']) {
+            <div>
+              <div class="text-danger">
+                {{ "FREQUENCY_IS_REQUIRED" | translate }}
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+        }
+        @if (reminderForm.get('isRepeated')?.value) {
+        <div class="row mt-2">
+          <div class="col-md-12">
+            @if (reminderForm.get('frequency')?.value == '0') {
+            <div class="form-group">
+              <label for="weekDays">{{ "WEEK_DAYS" | translate }}</label>
+              <div id="weekDays" class="row">
+                @for (dailyReminder of dailyRemindersArray.controls; track i; let i = $index) {
+                <div class="col-sm-auto mr-1" formArrayName="dailyReminders">
+                  <ng-container [formGroupName]="i">
+                    <mat-checkbox color="primary" class="mr-1" formControlName="isActive">
+                      {{
+                      dailyReminder.get("name")?.value.toUpperCase()
+                      | translate
+                      }}
+                    </mat-checkbox>
+                  </ng-container>
+                </div>
+                }
+              </div>
+            </div>
+            }
+            @if (reminderForm.get('frequency')?.value == '1') {
+            <div class="form-group">
+              <label for="weekDay">{{ "WEEK_DAYS" | translate }}</label>
+              <div id="weekDay">
+                <mat-radio-group formControlName="dayOfWeek">
+                  @for (day of dayOfWeek; track i; let i = $index) {
+                  <mat-radio-button class="mr-2" color="primary" [value]="day.id">{{ day.name | translate
+                    }}</mat-radio-button>
+                  }
+                </mat-radio-group>
+              </div>
+            </div>
+            }
+            @if (reminderForm.get('frequency')?.value == '3') {
+            <div class="form-group mt-2">
+              <label for="Quarterly">{{ "SELECT_QUARTER_DATE" | translate }}</label>
+              <div id="Quarterly" class="row">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>{{ "SELECT_REMINDER_MONTH" | translate }}</th>
+                      <th>{{ "SELECT_REMINDER_DAY" | translate }}</th>
+                    </tr>
+                  </thead>
+                  <tbody formArrayName="quarterlyReminders">
+                    @for (quarterlyReminder of quarterlyRemindersArray.controls; track i; let i = $index) {
+                    <tr>
+                      <ng-container [formGroupName]="i">
+                        <td>
+                          {{ quarterlyReminder.get("name")?.value | translate }}
+                        </td>
+                        <td>
+                          <select (change)="onDateChange(quarterlyReminder)" class="form-control"
+                            formControlName="month">
+                            @for (mon of quarterlyReminder.get('monthValues')?.value; track mon.id) {
+                            <option [value]="mon.id">
+                              {{ mon.name | translate }}
+                            </option>
+                            }
+                          </select>
+                        </td>
+                        <td>
+                          <select (change)="onDateChange(quarterlyReminder)" class="form-control" formControlName="day">
+                            @for (day of days; track day) {
+                            <option [value]="day">
+                              {{ day }}
+                            </option>
+                            }
+                          </select>
+                          @if (quarterlyReminder.get('day')?.touched && quarterlyReminder?.hasError('invalidDate'))
+                          {
+                          <div>
+                            <div class="text-danger">
+                              {{ "PLEASE_SELECT_VALID_DAY" | translate }}
+                            </div>
+                          </div>
+                          }
+                        </td>
+                      </ng-container>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            }
+            @if (reminderForm.get('frequency')?.value == '4') {
+            <div class="form-group mt-2">
+              <label for="HalfYearly">{{ "SELECT_DATE" | translate }}</label>
+              <div id="HalfYearly" class="row">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>{{ "SELECT_REMINDER_MONTH" | translate }}</th>
+                      <th>{{ "SELECT_REMINDER_DAY" | translate }}</th>
+                    </tr>
+                  </thead>
+                  <tbody formArrayName="halfYearlyReminders">
+                    @for (halfYearlyReminder of halfYearlyRemindersArray.controls; track i; let i = $index) {
+                    <tr>
+                      <ng-container [formGroupName]="i">
+                        <td>
+                          {{ halfYearlyReminder.get("name")?.value | translate }}
+                        </td>
+                        <td>
+                          <select (change)="onDateChange(halfYearlyReminder)" class="form-control"
+                            formControlName="month">
+                            @for (mon of halfYearlyReminder.get('monthValues')?.value; track mon.id) {
+                            <option [value]="mon.id">
+                              {{ mon.name | translate }}
+                            </option>
+                            }
+                          </select>
+                        </td>
+                        <td>
+                          <select (change)="onDateChange(halfYearlyReminder)" class="form-control"
+                            formControlName="day">
+                            @for (day of days; track day) {
+                            <option [value]="day">
+                              {{ day }}
+                            </option>
+                            }
+                          </select>
+                          @if (halfYearlyReminder.get('day')?.touched &&
+                          halfYearlyReminder?.hasError('invalidDate')) {
+                          <div>
+                            <div class="text-danger">
+                              {{ "PLEASE_SELECT_VALID_DAY" | translate }}
+                            </div>
+                          </div>
+                          }
+                        </td>
+                      </ng-container>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+        }
+        @if (!reminderForm.get('isRepeated')?.value) {
+        <div class="row mt-2">
+          <div class="form-group col-md-3">
+            <label for="frequency"> {{ "REMINDER_START_DATE" | translate }}</label>
+            <div class="input-group">
+              <input #ref class="form-control" formControlName="startDate" [matDatepicker]="startDatePicker"
+                placeholder="{{ 'REMINDER_DATE' | translate }}" />
+              <div class="input-group-append">
+                <button class="btn btn-primary calendar-button" type="button" (click)="startDatePicker.open()">
+                  <mat-icon class="medium-icon fs-5 align-middle">calendar_today</mat-icon>
+                </button>
+              </div>
+              <mat-datepicker #startDatePicker></mat-datepicker>
+            </div>
+            @if (reminderForm.get('startDate')?.touched && reminderForm.get('startDate')?.errors) {
+            <div>
+              @if (reminderForm.get('startDate')?.errors?.['required']) {
+              <div class="text-danger">
+                {{ "DATE_IS_REQUIRED" | translate }}
+              </div>
+              }
+            </div>
+            }
+            @if (reminderForm.get('startDate')?.touched &&
+            reminderForm.get('startDate')?.errors?.['owlDateTimeMin']) {
+            <div>
+              <div class="text-danger">
+                {{ "START_DATE_SHOULD_BE_GREATER_THEN_CURRENT_DATE_TIME" | translate }}
+              </div>
+            </div>
+            }
+          </div>
+          <div class="form-group col-md-3">
+            <label for="startTime">{{ "REMINDER_TIME" | translate }}</label>
+            <div class="input-group">
+              <input class="form-control timepicker-input" formControlName="startTime" [format]="24"
+                [ngxTimepicker]="toggleIcon" [disableClick]="true" readonly />
+              <div class="input-group-append">
+                <button class="btn btn-primary calendar-button" ngxMaterialTimepickerToggleIcon type="button"
+                  (click)="toggleIcon.open()">
+                  <mat-icon class="medium-icon fs-5 align-middle">access_time</mat-icon>
+                </button>
+              </div>
+              <ngx-material-timepicker #toggleIcon></ngx-material-timepicker>
+            </div>
+            @if (reminderForm.get('startTime')?.touched && reminderForm.get('startTime')?.errors) {
+            <div>
+              @if (reminderForm.get('startTime')?.errors?.['required']) {
+              <div class="text-danger">
+                {{ "TIME_IS_REQUIRED" | translate }}
+              </div>
+              }
+            </div>
+            }
+          </div>
+        </div>
+        }
+        @if (reminderForm.get('isRepeated')?.value) {
+        <div class="row mt-2">
+          <div class="form-group col-md-3">
+            <label for="startDate">{{ "REMINDER_START_DATE" | translate }}</label>
+            <div class="input-group">
+              <input #ref class="form-control" formControlName="startDate" [matDatepicker]="startDatePicker"
+                placeholder="{{ 'REMINDER_DATE' | translate }}" />
+              <div class="input-group-append">
+                <button class="btn btn-primary calendar-button" type="button" (click)="startDatePicker.open()">
+                  <mat-icon class="medium-icon fs-5 align-middle">calendar_today</mat-icon>
+                </button>
+              </div>
+              <mat-datepicker #startDatePicker></mat-datepicker>
+            </div>
+            @if (reminderForm.get('startDate')?.touched && reminderForm.get('startDate')?.errors) {
+            <div>
+              @if (reminderForm.get('startDate')?.errors?.['required']) {
+              <div class="text-danger">
+                {{ "START_DATE_IS_REQUIRED" | translate }}
+              </div>
+              }
+              @if (reminderForm.get('startDate')?.errors?.['owlDateTimeMin']) {
+              <div class="text-danger">
+                {{ "START_DATE_SHOULD_BE_GREATER_THEN_CURRENT_DATE_TIME" | translate }}
+              </div>
+              }
+            </div>
+            }
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="startTime">{{ "REMINDER_TIME" | translate }} </label>
+            <div class="input-group">
+              <input class="form-control timepicker-input" formControlName="startTime" [format]="24"
+                [ngxTimepicker]="toggleIcon" [disableClick]="true" readonly />
+              <div class="input-group-append">
+                <button class="btn btn-primary calendar-button" ngxMaterialTimepickerToggleIcon type="button"
+                  (click)="toggleIcon.open()">
+                  <mat-icon class="medium-icon fs-5 align-middle">access_time</mat-icon>
+                </button>
+              </div>
+              <ngx-material-timepicker #toggleIcon></ngx-material-timepicker>
+            </div>
+            @if (reminderForm.get('startTime')?.touched && reminderForm.get('startTime')?.errors) {
+            <div>
+              @if (reminderForm.get('startTime')?.errors?.['required']) {
+              <div class="text-danger">
+                {{ "TIME_IS_REQUIRED" | translate }}
+              </div>
+              }
+            </div>
+            }
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="endDate">{{ "REMINDER_END_DATE" | translate }}</label>
+            <div class="input-group">
+              <input #ref class="form-control" formControlName="endDate" [matDatepicker]="endDatePicker"
+                placeholder="{{ 'REMINDER_DATE' | translate }}" />
+              <div class="input-group-append">
+                <button class="btn btn-primary calendar-button" type="button" (click)="endDatePicker.open()">
+                  <mat-icon class="medium-icon fs-5 align-middle">calendar_today</mat-icon>
+                </button>
+              </div>
+              <mat-datepicker #endDatePicker></mat-datepicker>
+            </div>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="endTime">{{ "REMINDER_END_TIME" | translate }}</label>
+            <div class="input-group">
+              <input class="form-control timepicker-input" formControlName="endTime" [format]="24"
+                [ngxTimepicker]="endTimeToggleIcon" [disableClick]="true" readonly />
+              <div class="input-group-append">
+                <button class="btn btn-primary calendar-button" ngxMaterialTimepickerToggleIcon type="button"
+                  (click)="endTimeToggleIcon.open()">
+                  <mat-icon class="medium-icon fs-5 align-middle">access_time</mat-icon>
+                </button>
+              </div>
+            </div>
+            <ngx-material-timepicker #endTimeToggleIcon></ngx-material-timepicker>
+            @if (reminderForm.get('endTime')?.hasError('required') && reminderForm.get('endDate')?.touched) {
+            <div>
+              @if (reminderForm.get('endTime')?.errors?.['required']) {
+              <div class="text-danger">
+                {{ "ENDTIME_IS_REQUIRED" | translate }}
+              </div>
+              }
+            </div>
+            }
+          </div>
+        </div>
+        }
+        <div class="mt-4 col-md-12 d-flex flex-wrap button-group-responsive">
+          <button (click)="createReminder()" type="submit" class="success me-2" matButton="filled">
+            <mat-icon class="medium-icon">save</mat-icon>
+            {{ "SAVE" | translate }}
+          </button>
+          <button type="button" class="error" matButton="filled" (click)="onCancel()">
+            <mat-icon class="medium-icon">cancel</mat-icon>
+            {{ "CANCEL" | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  @if (isLoading) {
+  <div class="spinner-container">
+    <!-- <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div> -->
+    <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+    </mat-progress-spinner>
+  </div>
+  }
+</mat-dialog-content>

@@ -1,0 +1,74 @@
+<mat-dialog-content>
+  <div class="d-flex">
+    <div class="me-auto p-2">
+      <span class="mb-3 page-title">
+        {{ "DOCUMENT_SIGNATURE" | translate }}
+        <app-page-help-text [code]="'DOCUMENT_SIGNATURE'"></app-page-help-text>
+      </span>
+    </div>
+    <div class="d-flex justify-content-end mb-2">
+      <mat-icon class="close-icon text-danger cursor-pointer " (click)="closeDialog()">cancel</mat-icon>
+    </div>
+  </div>
+  <div class="row">
+    <label for="signature"> {{ "ADD_YOUR_SIGNATURE" | translate }}</label>
+    <div class="col-md-12">
+      <div class="signature-container">
+        <canvas width="600" height="200" style="border:1px solid #ccc; width:100%; max-width:50vw; max-height:90vh;"
+          #canvas>
+        </canvas>
+      </div>
+    </div>
+    <label for="or" class="text-danger d-flex justify-content-center align-items-center m-2 w-100"> {{ "OR" |
+      translate
+      }}</label>
+    <div class="col-sm-12">
+      <div class="form-group">
+        <label for="signature"> {{"UPLOAD_YOUR_SIGNATURE" | translate}}</label>
+        <input type="file" accept="image/png, image/jpeg" (change)="onFileSelected($event)"
+          class="form-control signature-upload">
+      </div>
+    </div>
+    <div class="mt-2 col-md-12">
+      <button type="button" class="success me-2" matButton="filled" (click)="saveSignature()" cdkFocusInitial>
+        <mat-icon class="medium-icon">save</mat-icon>
+        {{ "SAVE" | translate }}
+      </button>
+      <button type="button" class="error" matButton="filled" (click)="clearSignature()">
+        <mat-icon class="medium-icon">cancel</mat-icon>
+        {{ "CLEAR" | translate }}
+      </button>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col-md-12">
+      @if(documentSignatures.length > 0) {
+      <div class="row mb-3">
+        @for (signature of documentSignatures; track $index) {
+        <div class="col-md-6">
+          <div class="previous-signature">
+            <img [src]="'data:image/png;base64,' + signature.data" alt="Signature" class="signature-img" />
+            <div class="signature-details">
+              <p>
+                <strong>{{ "ISSIGN" | translate }}:</strong>
+                {{ signature.signatureUser }}
+              </p>
+              <p>
+                <strong>{{ "SIGNDATE" | translate }}:</strong>
+                {{ signature.signatureDate | utcToLocalTime : "full" }}
+              </p>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+      }
+    </div>
+  </div>
+  @if(isLoading) {
+  <div class="spinner-container">
+    <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+    </mat-progress-spinner>
+  </div>
+  }
+</mat-dialog-content>

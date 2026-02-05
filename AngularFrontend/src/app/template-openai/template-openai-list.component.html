@@ -1,0 +1,79 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        <span class="mb-0 page-title">{{ "PROMPT_TEMPLATE" | translate }}
+          <app-page-help-text [code]="'PROMPT_TEMPLATE'"></app-page-help-text>
+        </span>
+      </div>
+      <div class="d-flex justify-content-end">
+        <button *hasClaim="'ADD_PROMPT_TEMPLATES'" (click)="onAiPromptTemplates()" class="primary me-2"
+          matButton="filled">
+          <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+          <span class="d-none d-lg-inline ms-1">{{ "ADD_AI_PROMPT_TEMPLATE" | translate }}</span>
+        </button>
+      </div>
+    </div>
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <div class="table-responsive">
+          <div class="grid-height-large">
+            <table mat-table [dataSource]="aiPromptTemplates" matSort matSortActive="name" matSortDirection="asc">
+              <!-- Action Column -->
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "ACTION" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let aiPromptTemplate">
+                  <div class="d-flex justify-content-center align-items-center gap-2">
+                    <button matMiniFab class="primary" *hasClaim="'EDIT_PROMPT_TEMPLATES'"
+                      (click)="editAiPromptTemplates(aiPromptTemplate)" type="button">
+                      <mat-icon class="medium-icon fs-5 align-middle">edit</mat-icon>
+                    </button>
+                    <button matMiniFab class="error" *hasClaim="'DELETE_PROMPT_TEMPLATES'"
+                      (click)="deleteAiPromptTemplates(aiPromptTemplate)" type="button">
+                      <mat-icon class="medium-icon fs-5 align-middle">delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+              <!-- Storage Type Column -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "NAME" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let aiPromptTemplate">
+                  {{ aiPromptTemplate.name }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "DESCRIPTION" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let aiPromptTemplate">
+                  {{ aiPromptTemplate.description }}
+                </td>
+              </ng-container><ng-container matColumnDef="promptInput">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "PROMPTINPUT" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let aiPromptTemplate">
+                  {{ aiPromptTemplate.promptInput }}
+                </td>
+              </ng-container>
+              <tr *matNoDataRow>
+                <td colspan="5">
+                  <div class="m-2">
+                    <b> {{ "NO_DATA_FOUND" | translate }}</b>
+                  </div>
+                </td>
+              </tr>
+              <tr class="grid-header-color" mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>

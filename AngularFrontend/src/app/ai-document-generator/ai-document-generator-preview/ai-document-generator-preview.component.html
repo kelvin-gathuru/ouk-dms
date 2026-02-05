@@ -1,0 +1,59 @@
+<mat-card appearance="outlined">
+  <mat-card-content>
+    <form [formGroup]="aiEditorForm">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label [dir]="langDir" class="font-weight-bold">
+              {{ "DOCUMENT_SUMMARY" | translate }}
+            </label>
+            <div class="NgxEditor__Wrapper">
+              <app-text-editor formControlName="editorData"></app-text-editor>
+            </div>
+            @if(aiEditorForm.get('editorData')?.touched &&
+            aiEditorForm.get('editorData')?.errors &&
+            aiEditorForm.get('editorData')?.errors?.['required']){
+            <div class="text-danger">
+              {{ "DESCRIPTION_IS_REQUIRED" | translate }}
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="m-top-10 col-md-12 mt-2">
+          <button
+            [dir]="langDir"
+            type="button"
+            class="success"
+            matButton="filled"
+            (click)="generateDocument()"
+          >
+            <mat-icon class="medium-icon">save</mat-icon>
+            {{ "SAVE_AS_PDF" | translate }}
+          </button>
+        </div>
+      </div>
+      <div style="position: absolute; left: -15420px">
+        <div style="width: 100%; display: flex">
+          <div id="pdfDocument">
+            <div
+              class="container"
+              style="width: 95%; margin-right: auto; margin-left: auto"
+            >
+              <div
+                innerHTML="{{ aiEditorForm.get('editorData')?.value }}"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    @if(isLoadingResults) {
+    <div class="spinner-container">
+      <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+      </mat-progress-spinner>
+    </div>
+    }
+  </mat-card-content>
+</mat-card>

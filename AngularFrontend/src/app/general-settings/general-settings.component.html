@@ -1,0 +1,64 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        <span class="mb-0 page-title">{{ "GENERAL_SETTINGS" | translate
+          }}<app-page-help-text code="GENERAL_SETTINGS"></app-page-help-text>
+        </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <mat-card appearance="outlined">
+          <mat-card-header>
+            <h5 class="card-title text-danger">
+              {{ "OPENAI_API_KEY" | translate }}
+            </h5>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="col-md-12 my-2">
+              <label class="form-label" for="openAIAPIKey">{{ "OPENAIAPIKEY" | translate }}
+              </label>
+              <input type="password" id="openAIAPIKey" [(ngModel)]="openAIAPIKey" class="form-control"
+                placeholder="{{ 'ENTER_OPENAI_API_KEY' | translate }}" />
+            </div>
+            <div class="col-md-12 mt-3">
+              <button class="success me-2" matButton="filled" (click)="onSaveOpenAIAPIKey('openai')">
+                <mat-icon class="medium-icon align-middle">save</mat-icon>
+                {{ "SAVE" | translate }}
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    <!-- Gemini API key is now configured in appsettings.json on the server -->
+    <!--
+    <div class="row mt-2">
+      <div class="col-md-12">
+        <mat-card appearance="outlined">
+          <mat-card-header>
+            <h5 class="card-title text-danger">
+              {{ "GEMINI_API_KEY" | translate }}
+            </h5>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="col-md-12 my-2">
+              <label class="form-label" for="geminiAPIKey">{{ "GEMINI_API_KEY" | translate }}
+              </label>
+              <input type="password" id="geminiAPIKey" [(ngModel)]="geminiAPIKey" class="form-control"
+                placeholder="{{ 'ENTER_OPENAI_API_KEY' | translate }}" />
+            </div>
+            <div class="col-md-12 mt-3">
+              <button class="success me-2" matButton="filled" (click)="onSaveOpenAIAPIKey('gemini')">
+                <mat-icon class="medium-icon align-middle">save</mat-icon>
+                {{ "SAVE" | translate }}
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    -->
+  </div>
+</section>

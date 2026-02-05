@@ -1,0 +1,520 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        <span class="mb-0 page-title">{{ "DOCUMENT_VIEW" | translate
+          }}<app-page-help-text [code]="'ASSIGNED_DOCUMENTS'"></app-page-help-text></span>
+      </div>
+      <!-- Large Screen Buttons -->
+      <div class="d-flex justify-content-end mb-2 d-none d-md-inline-flex">
+        <button matButton="filled" class="primary me-2" [routerLink]="['/assign/folder-view']">
+          <mat-icon class="medium-icon fs-5 align-middle">folder</mat-icon>
+          <span class="d-none d-lg-inline ms-1">{{ "FOLDER_VIEW" | translate }}</span>
+        </button>
+
+        <button matButton="filled" class="error me-2" (click)="onRefresh()">
+          <mat-icon class="medium-icon fs-5 align-middle">refresh</mat-icon>
+          <span class="d-none d-lg-inline ms-1">{{ "REFRESH" | translate }}</span>
+        </button>
+
+        <button *hasClaim="'ASSIGNED_CREATE_DOCUMENT'" (click)="onAddDocument()" class="primary me-2"
+          matButton="filled">
+          <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+          <span class="d-none d-lg-inline ms-1">{{ "ADD_DOCUMENT" | translate }}</span>
+        </button>
+
+        <button (click)="onReminderList()" class="primary me-2" matButton="filled">
+          <mat-icon class="medium-icon fs-5 align-middle">list</mat-icon>
+          <span class="d-none d-lg-inline ms-1">{{ "MY_REMINDERS" | translate }}</span>
+        </button>
+
+        <button (click)="onTableSettings()" class="tertiary me-2" matButton="filled">
+          <mat-icon class="medium-icon fs-5 align-middle">settings</mat-icon>
+          <span class="d-none d-lg-inline ms-1">{{ "TABLE_SETTINGS" | translate }}</span>
+        </button>
+      </div>
+
+      <!-- Small Screen / Tablet Menu -->
+      <div class="d-flex justify-content-end d-md-none">
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Actions">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item [routerLink]="['/assign/folder-view']">
+            <mat-icon>folder</mat-icon>
+            <span class="d-none d-lg-inline ms-1">{{ "FOLDER_VIEW" | translate }}</span>
+          </button>
+          <button mat-menu-item (click)="onRefresh()">
+            <mat-icon>refresh</mat-icon>
+            <span class="d-none d-lg-inline ms-1">{{ "REFRESH" | translate }}</span>
+          </button>
+          <button *hasClaim="'ASSIGNED_CREATE_DOCUMENT'" mat-menu-item (click)="onAddDocument()">
+            <mat-icon>add</mat-icon>
+            <span class="d-none d-lg-inline ms-1">{{ "ADD_DOCUMENT" | translate }}</span>
+          </button>
+          <button mat-menu-item (click)="onReminderList()">
+            <mat-icon>list</mat-icon>
+            <span class="d-none d-lg-inline ms-1">{{ "MY_REMINDERS" | translate }}</span>
+          </button>
+          <button mat-menu-item (click)="onTableSettings()">
+            <mat-icon>settings</mat-icon>
+            <span class="d-none d-lg-inline ms-1">{{ "TABLE_SETTINGS" | translate }}</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+    <!-- <div class="card"> -->
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-accordion class="primary">
+          <mat-expansion-panel [expanded]="step() === 0" (opened)="onOpened()" (closed)="onClosed()">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{ "FILTER" | translate }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="d-flex flex-wrap flex-column flex-sm-row">
+              <div class="p-1 flex-item flex-fill">
+                <input class="form-control" [(ngModel)]="docNo" placeholder="{{ 'DOCUMENT_NO' | translate }}"
+                  type="text" #docNoInput />
+              </div>
+              <div class="p-1 flex-item flex-fill">
+                <input class="form-control" placeholder="{{
+                    'SEARCH_DOCUMENT_BY_NAME_OR_DESCRIPTION' | translate
+                  }}" #input />
+              </div>
+              <div class="p-1 flex-item flex-fill">
+                <mat-select panelClass="mat-select-control" class="form-control" [(value)]="selectedCategory"
+                  placeholder="{{ 'SELECT_CATEGORY' | translate }}" (selectionChange)="onCategoryChange($event)">
+                  <mat-select-trigger>
+                    <span [matTooltip]="selectedCategory?.displayName">
+                      {{ selectedCategory?.displayName || "NONE" | translate }}
+                    </span>
+                  </mat-select-trigger>
+                  <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
+                  @for(category of allCategories; track category; let index =
+                  $index) {
+                  <mat-option [value]="category">
+                    <div class="country-item" [ngStyle]="{
+                        'margin-left.px': (category.deafLevel ?? 0) * 20
+                      }">
+                      @if(category.deafLevel == 0) {
+                      <div class="d-flex align-items-center">
+                        <mat-icon class="text-warning me-1">folder</mat-icon>
+                        <b>{{ category.name }}</b>
+                      </div>
+                      } @else {
+                      <div [matTooltip]="category.name" class="d-flex align-items-center">
+                        <mat-icon class="text-warning me-1">folder</mat-icon>
+                        {{ category.name }}
+                      </div>
+                      }
+                    </div>
+                  </mat-option>
+                  }
+                </mat-select>
+              </div>
+              <div class="p-1 flex-item flex-fill">
+                <mat-select panelClass="mat-select-control" class="form-control"
+                  placeholder="{{ 'SELECT_DOCUMENT_STATUS' | translate }}" (selectionChange)="onStatusChange($event)">
+                  <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
+                  @for(status of documentStatuses; track status) {
+                  <mat-option [value]="status">
+                    <span [ngStyle]="{ color: status?.colorCode }">{{
+                      status.name
+                      }}</span>
+                  </mat-option>
+                  }
+                </mat-select>
+              </div>
+              <div class="p-1 flex-item flex-fill">
+                <mat-select panelClass="mat-select-control" class="form-control"
+                  placeholder="{{ 'SELECT_CLIENT' | translate }}" (selectionChange)="onClientChange($event)">
+                  <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
+                  @for(client of clientStore.clients(); track client) {
+                  <mat-option [value]="client">
+                    <span> {{ client.companyName }} </span>
+                  </mat-option>
+                  }
+                </mat-select>
+              </div>
+              <div class="p-1 flex-item flex-fill">
+                <mat-select panelClass="mat-select-control" class="form-control"
+                  placeholder="{{ 'SELECT_STORAGE' | translate }}" (selectionChange)="onStorageChange($event)">
+                  <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
+                  @for(storage of storageSettinges; track storage) {
+                  <mat-option [value]="storage">
+                    {{ storage.storageType | storageType : storage.name }}
+                  </mat-option>
+                  }
+                </mat-select>
+              </div>
+              <div class="p-1 flex-item flex-fill">
+                <mat-select panelClass="mat-select-control" placeholder="{{ 'SELECT_META_TAG' | translate }}"
+                  class="form-control" (selectionChange)="onMetaTagChange($event)">
+                  <mat-option>-- {{ "NONE" | translate }} --</mat-option>
+                  @for(documentMetaTag of
+                  documentMetaTagStore.documentMetaTags(); track
+                  documentMetaTag) {
+                  <mat-option [value]="documentMetaTag">
+                    <span> {{ documentMetaTag.name }} </span>
+                  </mat-option>
+                  }
+                </mat-select>
+              </div>
+              <div class="p-1 flex-item flex-fill" [ngStyle]="{
+                  display:
+                    selectedType !== null && selectedType === 0
+                      ? 'block'
+                      : 'none'
+                }">
+                <input class="form-control" [(ngModel)]="metatagText"
+                  placeholder="{{ 'SEARCH_DOCUMENT_BY_META_TAGS' | translate }}" #metatag />
+              </div>
+
+              <!-- Date Range Picker (Visible only for 'dateTime' type) -->
+              <div class="p-1 flex-item flex-fill" [ngStyle]="{
+                  display:
+                    selectedType !== null && selectedType === 1
+                      ? 'block'
+                      : 'none'
+                }">
+                <form [formGroup]="filterForm">
+                  <!-- Start Date -->
+                  <div class="input-group">
+                    <input #startDateInput formControlName="startDate" class="form-control"
+                      [matDatepicker]="startPicker" placeholder="{{ 'START_DATE' | translate }}" />
+                    <div class="input-group-append">
+                      <button class="btn btn-primary calendar-button" type="button" (click)="startPicker.open()">
+                        <mat-icon class="medium-icon fs-6 align-middle">calendar_today</mat-icon>
+                      </button>
+                    </div>
+                    <mat-datepicker #startPicker></mat-datepicker>
+                  </div>
+
+                  <!-- End Date -->
+                  <div class="input-group mt-2">
+                    <input #endDateInput formControlName="endDate" class="form-control" [matDatepicker]="endPicker"
+                      (dateInput)="
+                        onDateFilterChange(
+                          startDateInput.value,
+                          endDateInput.value
+                        )
+                      " placeholder="{{ 'END_DATE' | translate }}" />
+                    <div class="input-group-append">
+                      <button class="btn btn-primary calendar-button" type="button" (click)="endPicker.open()">
+                        <mat-icon class="medium-icon fs-6 align-middle">calendar_today</mat-icon>
+                      </button>
+                    </div>
+                    <mat-datepicker #endPicker></mat-datepicker>
+                  </div>
+                  @if( filterForm.get('endDate')?.hasError('required') &&
+                  filterForm.get('startDate')?.value ) {
+                  <div class="text-danger">
+                    {{
+                    "END_DATE_IS_REQUIRED_WHEN_START_DATE_IS_SELECTED"
+                    | translate
+                    }}
+                  </div>
+                  }
+                </form>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="table-responsive mt-2">
+          <div [ngClass]="{
+              'grid-height-docs': step() == 0,
+              'grid-height-docm': step() == 1
+            }">
+            <table mat-table [dataSource]="dataSource" matSort matSortDisableClear matSortActive="createdDate"
+              matSortDirection="desc">
+              @for (column of
+              documentLibraryTableSettingsStore.tableSettingsVisible(); track
+              $index) {
+              <ng-container [matColumnDef]="column.key">
+                @if (column.key === 'select') {
+                <th [ngStyle]="{ 'min-width.px': column.width }" class="text-center" mat-header-cell *matHeaderCellDef>
+                  @if(selection.isEmpty()) {
+
+                  <mat-checkbox (change)="$event ? masterToggle() : null" color="primary"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                  </mat-checkbox>
+                  } @else {
+                  <button mat-mini-fab class="btn btn-primary btn-sm" matTooltipPosition="above" matTooltip="{{
+                      'CLICK_HERE_TO_SHARED_SELECT_DOCUMENTS' | translate
+                    }}" (click)="onSharedSelectDocument()" *hasClaim="'ASSIGNED_SHARE_DOCUMENT'"
+                    [attr.aria-label]="'SHARE' | translate">
+                    <mat-icon>share</mat-icon>
+                  </button>
+                  }
+                </th>
+                <td [ngStyle]="{ 'min-width.px': column.width }" mat-cell *matCellDef="let row">
+                  <mat-checkbox (click)="$event.stopPropagation()" color="primary"
+                    (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                  </mat-checkbox>
+                </td>
+                } @else if(column.key === 'action') {
+                <th [ngStyle]="{ 'min-width.px': column.width }" mat-header-cell *matHeaderCellDef>
+                  {{ "ACTION" | translate }}
+                </th>
+                <td [ngStyle]="{ 'min-width.px': column.width }" mat-cell *matCellDef="let document">
+                  <div class="d-flex">
+                    <button matMiniFab class="primary" *hasClaim="[
+                        'ASSIGNED_EDIT_DOCUMENT',
+                        'ASSIGNED_START_WORKFLOW',
+                        'ASSIGNED_GET_DOCUMENT_SUMMARY',
+                        'ASSIGNED_ADD_SIGNATURE',
+                        'ASSIGNED_SHARE_DOCUMENT',
+                        'Assigned_Create_Shareable_Link',
+                        'ASSIGNED_DOWNLOAD_DOCUMENT',
+                        'ASSIGNED_UPLOAD_NEW_VERSION',
+                        'ASSIGNED_VIEW_VERSION_HISTORY',
+                        'ASSIGNED_ADD_COMMENT',
+                        'Assigned_Add_Reminder',
+                        'ASSIGNED_SEND_EMAIL',
+                        'ASSIGNED_ARCHIVE_DOCUMENT',
+                        'ASSIGNED_MANAGE_INDEXING'
+                      ]" [matMenuTriggerFor]="menu" [attr.aria-label]="'Action'">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                      <button class="btn btn-light btn-sm" mat-menu-item (click)="onDocumentView(document)"
+                        type="button">
+                        <mat-icon>visibility</mat-icon>
+                        {{ "VIEW" | translate }}
+                      </button>
+                      <button *hasClaim="'ASSIGNED_EDIT_DOCUMENT'" mat-menu-item class="btn btn-light btn-sm"
+                        (click)="editDocument(document)">
+                        <mat-icon>edit</mat-icon>
+                        {{ "EDIT" | translate }}
+                      </button>
+                      @if(checkWorkflowInstance(document)) {
+                      <button *hasClaim="'ASSIGNED_START_WORKFLOW'" mat-menu-item class="btn btn-light btn-sm"
+                        (click)="manageWorkflowInstance(document)">
+                        <mat-icon>sync_alt</mat-icon>
+                        {{ "START_WORKFLOW" | translate }}
+                      </button>
+                      }
+                      <button *hasClaim="'ASSIGNED_GET_DOCUMENT_SUMMARY'" mat-menu-item
+                        (click)="getDocumentSummary(document)" type="button">
+                        <mat-icon>smart_toy</mat-icon>
+                        {{ "GET_DOCUMENT_SUMMARY" | translate }}
+                      </button>
+                      <button *hasClaim="'ASSIGNED_ADD_SIGNATURE'" mat-menu-item class="btn btn-light btn-sm"
+                        (click)="onDocumentSignatureClick(document)">
+                        <mat-icon>draw</mat-icon>
+                        {{ "DOCUMENT_SIGNATURE" | translate }}
+                      </button>
+                      <button *hasClaim="'ASSIGNED_SHARE_DOCUMENT'" mat-menu-item class="btn btn-light btn-sm"
+                        (click)="manageDocumentPermission(document)" type="button">
+                        <mat-icon>share</mat-icon>
+                        {{ "SHARE" | translate }}
+                      </button>
+                      <button mat-menu-item *hasClaim="'ASSIGNED_CREATE_SHAREABLE_LINK'" class="btn btn-light btn-sm"
+                        (click)="onCreateShareableLink(document)" type="button">
+                        <mat-icon>link</mat-icon>
+                        {{ "GET_SHAREABLE_LINK" | translate }}
+                      </button>
+                      @if(document.isAllowDownload) {
+                      <button class="btn btn-light btn-sm" *hasClaim="'ASSIGNED_DOWNLOAD_DOCUMENT'" mat-menu-item
+                        (click)="downloadDocument(document)" type="button">
+                        <mat-icon>download</mat-icon>
+                        {{ "DOWNLOAD" | translate }}
+                      </button>
+                      }
+                      <button mat-menu-item class="btn btn-light btn-sm" *hasClaim="'ASSIGNED_UPLOAD_NEW_VERSION'"
+                        (click)="uploadNewVersion(document)" type="button">
+                        <mat-icon>upload</mat-icon>
+                        {{ "UPLOAD_NEW_VERSION_FILE" | translate }}
+                      </button>
+                      <button class="btn btn-light btn-sm" mat-menu-item *hasClaim="'ASSIGNED_VIEW_VERSION_HISTORY'"
+                        (click)="onVersionHistoryClick(document)">
+                        <mat-icon> history</mat-icon>
+                        {{ "VERSION_HISOTRY" | translate }}
+                      </button>
+                      <button class="btn btn-light btn-sm" *hasClaim="'ASSIGNED_ADD_COMMENT'" mat-menu-item
+                        (click)="addComment(document)" type="button">
+                        <mat-icon> chat</mat-icon>
+                        {{ "COMMENT" | translate }}
+                      </button>
+                      <button class="btn btn-light btn-sm" *hasClaim="'ASSIGNED_ADD_REMINDER'" mat-menu-item
+                        (click)="addReminder(document)" type="button">
+                        <mat-icon>notifications</mat-icon>
+                        {{ "ADD_REMINDER" | translate }}
+                      </button>
+                      <button class="btn btn-light btn-sm" *hasClaim="'ASSIGNED_SEND_EMAIL'" mat-menu-item
+                        (click)="sendEmail(document)" type="button">
+                        <mat-icon>forward_to_inbox</mat-icon>
+                        {{ "SEND_EMAIL" | translate }}
+                      </button>
+                      <button *hasClaim="'ASSIGNED_ARCHIVE_DOCUMENT'" mat-menu-item (click)="archiveDocument(document)"
+                        type="button">
+                        <mat-icon>archive</mat-icon>
+                        {{ "ARCHIVE" | translate }}
+                      </button>
+                    </mat-menu>
+                    @if(document.commentCount > 0) {
+                    <mat-icon style="cursor: pointer; margin-left: 8px" (click)="addComment(document)"
+                      matBadgeSize="small" matBadge="{{ document.commentCount }}">
+                      comment
+                    </mat-icon>
+                    }
+                    <ng-container *hasClaim="[
+                        'ASSIGNED_SHARE_DOCUMENT',
+                        'ASSIGNED_SHARE_FOLDER'
+                      ]">
+                      @if(document.isShared) {
+                      <mat-icon style="cursor: pointer; margin-left: 8px" (click)="manageSharePermission(document)">
+                        groups
+                      </mat-icon>
+                      }
+                    </ng-container>
+                  </div>
+                </td>
+                } @else if(column.key === 'currentWorkflow') {
+                <th [ngStyle]="{ 'min-width.px': column.width }" mat-header-cell *matHeaderCellDef>
+                  {{ "WORKFLOW" | translate }}
+                </th>
+                <td [ngStyle]="{ 'min-width.px': column.width }" mat-cell *matCellDef="let document">
+                  @if(document.workflowsDetail &&
+                  document.workflowsDetail.length > 0) {
+                  <div class="d-flex flex-column">
+                    @for (workflow of document.workflowsDetail; track workflow;
+                    let i = $index) {
+                    <a class="doc-link mb-1" [ngClass]="{
+                        'link-success': workflow.workflowInstaceStatus == 2,
+                        'link-danger': workflow.workflowInstaceStatus == 3
+                      }" (click)="viewVisualWorkflow(workflow)">
+                      {{ workflow.workflowName }}
+                    </a>
+                    }
+                  </div>
+                  }
+                </td>
+                } @else if(column.key === 'isSigned') {
+                <th [ngStyle]="{ 'min-width.px': column.width }" mat-header-cell *matHeaderCellDef>
+                  {{ "ISSIGN" | translate }}
+                </th>
+                <td [ngStyle]="{ 'min-width.px': column.width }" mat-cell *matCellDef="let document">
+                  @if(document.isSignatureExists) {
+                  <span class="bg-success text-light">
+                    <mat-icon class="medium-icon fs-5 align-middle">check</mat-icon>
+                  </span>
+                  {{ document.signBy }}
+                  }
+                </td>
+                } @else if(column.key === 'documentNumber') {
+                <th [ngStyle]="{ 'min-width.px': column.width }" mat-header-cell *matHeaderCellDef mat-sort-header
+                  [disabled]="!column.allowSort">
+                  {{ column.header | translate }}
+                </th>
+                <td [ngStyle]="{ 'min-width.px': column.width }" mat-cell *matCellDef="let document">
+                  <a class="doc-link" (click)="onDocumentView(document)">{{
+                    document.documentNumber
+                    }}</a>
+                </td>
+                } @else if(column.key === 'name') {
+                <th [ngStyle]="{ 'min-width.px': column.width }" mat-header-cell *matHeaderCellDef mat-sort-header
+                  [disabled]="!column.allowSort">
+                  {{ column.header | translate }}
+                </th>
+                <td [ngStyle]="{ 'min-width.px': column.width }" mat-cell *matCellDef="let document">
+                  <a class="doc-link" (click)="onDocumentView(document)">{{
+                    document.name
+                    }}</a>
+                </td>
+                } @else if(column.key === 'documentStatus') {
+                <th [ngStyle]="{ 'min-width.px': column.width }" mat-header-cell *matHeaderCellDef
+                  [mat-sort-header]="column.allowSort ? column.key : ''">
+                  {{ column.header | translate }}
+                </th>
+                <td [ngStyle]="{ 'min-width.px': column.width }" mat-cell *matCellDef="let document">
+                  <span [ngStyle]="{ color: document.documentStatus?.colorCode }">{{ document.documentStatus?.name
+                    }}</span>
+                </td>
+                } @else if(column.key === 'storageType') {
+                <th [ngStyle]="{ 'min-width.px': column.width }" mat-header-cell *matHeaderCellDef mat-sort-header
+                  [disabled]="!column.allowSort">
+                  {{ "STORAGE" | translate }}
+                </th>
+                <td [ngStyle]="{ 'min-width.px': column.width }" mat-cell *matCellDef="let document">
+                  {{
+                  document.storageType
+                  | storageType : document.storageSettingName
+                  }}
+                </td>
+                } @else if(column.key === 'client') {
+                <th [ngStyle]="{ 'min-width.px': column.width }" mat-header-cell *matHeaderCellDef mat-sort-header
+                  [disabled]="!column.allowSort">
+                  {{ "CLIENT" | translate }}
+                </th>
+                <td [ngStyle]="{ 'min-width.px': column.width }" mat-cell *matCellDef="let document">
+                  {{ document?.client?.companyName }}
+                </td>
+                } @else{ @if(column.type === 'datetime') {
+                <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!column.allowSort"
+                  [ngStyle]="{ 'min-width.px': column.width }">
+                  {{ column.header | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element" [ngStyle]="{ 'min-width.px': column.width }">
+                  {{ element[column.key] | utcToLocalTime : "short" }}
+                </td>
+                } @else if(column.type === 'bool') {
+                <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!column.allowSort"
+                  [ngStyle]="{ 'min-width.px': column.width }">
+                  {{ column.header | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element" [ngStyle]="{ 'min-width.px': column.width }">
+                  {{ element[column.key] }}
+                </td>
+                } @else {
+                <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!column.allowSort"
+                  [ngStyle]="{ 'min-width.px': column.width }">
+                  {{ column.header | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element" [ngStyle]="{ 'min-width.px': column.width }">
+                  {{ element[column.key] }}
+                </td>
+                } }
+              </ng-container>
+              }
+              <ng-container matColumnDef="footer">
+                <td mat-footer-cell [attr.colspan]="visibleTableKeys.length" *matFooterCellDef>
+                  <mat-paginator [length]="documentResource.totalCount" [pageSize]="documentResource.pageSize"
+                    [pageSizeOptions]="[10, 20, 30]">
+                  </mat-paginator>
+                </td>
+              </ng-container>
+              <tr *matNoDataRow>
+                <td [attr.colspan]="visibleTableKeys.length">
+                  <div class="m-2">
+                    <b> {{ "NO_DATA_FOUND" | translate }}</b>
+                  </div>
+                </td>
+              </tr>
+              <tr class="grid-header-color" mat-header-row *matHeaderRowDef="visibleTableKeys; sticky: true"></tr>
+              <tr [ngClass]="{
+                  'odd-row': isOddDataRow(getDataIndex(row)),
+                  'even-row': !isOddDataRow(getDataIndex(row))
+                }" mat-row *matRowDef="let row; columns: visibleTableKeys"></tr>
+              <tr mat-footer-row *matFooterRowDef="footerToDisplayed; sticky: true"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>
+@if((dataSource.loading$ | async) || isLoadingResults) {
+<div class="spinner-container">
+  <!-- <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div> -->
+  <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+  </mat-progress-spinner>
+</div>
+}

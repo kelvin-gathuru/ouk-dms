@@ -1,0 +1,6 @@
+::ng-deep .ck-editor__editable_inline {
+  min-height: 60vh;
+  /* adjust this to your needs */
+  max-height: 70vh;
+  overflow-y: auto;
+}

@@ -1,0 +1,71 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        <span class="mb-0 page-title">
+          {{ "MANAGE_DOCUMENT_META_TAGS" | translate }}
+          <app-page-help-text code="MANAGE_DOCUMENT_META_TAG"></app-page-help-text>
+        </span>
+      </div>
+    </div>
+
+    <form [formGroup]="documentMetaTagForm">
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="form-label text-danger">{{ "TYPE" | translate }} <sup>*</sup></label>
+                <mat-select panelClass="mat-select-control" placeholder="{{ 'TYPE' | translate }}" class="form-control"
+                  formControlName="type">
+                  @for (fileType of fileTypes; track fileType) {
+                  <mat-option [value]="fileType.value">
+                    {{ fileType.key | translate }}
+                  </mat-option>
+                  }
+                </mat-select>
+                @if (documentMetaTagForm.get('type')?.touched &&
+                documentMetaTagForm.get('type')?.errors?.['required']) {
+                <div class="text-danger">
+                  {{ "TYPE_IS_REQUIRED" | translate }}
+                </div>
+                }
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="form-label text-danger">{{ "NAME" | translate }} <sup>*</sup></label>
+                <input formControlName="name" class="form-control" type="text" />
+                @if ( documentMetaTagForm.get('name')?.touched &&
+                documentMetaTagForm.get('name')?.errors?.['required'] ) {
+                <div class="text-danger">
+                  {{ "NAME_IS_REQUIRED" | translate }}
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="row my-4">
+            <div class="col-md-3 status-switch">
+              <mat-slide-toggle color="primary" formControlName="isEditable">
+                <span>
+                  {{ "IS_EDITABLE" | translate }}
+                </span>
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="m-top-10 col-md-12">
+            <button class="success me-2" matButton="filled" (click)="saveDocumentMetaTag()" cdkFocusInitial>
+              <mat-icon class="medium-icon align-middle">save</mat-icon>
+              {{ "SAVE" | translate }}
+            </button>
+            <button type="button" class="error" matButton="filled" [routerLink]="['/document-meta-tag']">
+              <mat-icon class="medium-icon align-middle">cancel</mat-icon>
+              {{ "CANCEL" | translate }}
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </form>
+  </div>
+</section>

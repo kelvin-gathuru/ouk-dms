@@ -1,0 +1,49 @@
+<mat-dialog-content>
+  <div class="d-flex">
+    <div class="me-auto p-2">
+      <span class="mb-3 page-title">
+        {{ "START_WORKFLOW" | translate }}
+        <app-page-help-text [code]="'MANAGE_WORKFLOW'"></app-page-help-text>
+      </span>
+    </div>
+    <div class="d-flex justify-content-end mb-2">
+      <mat-icon class="close-icon text-danger cursor-pointer " (click)="closeDialog()">cancel</mat-icon>
+    </div>
+  </div>
+
+  <form [formGroup]="workflowInstanceForm">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="form-label text-danger">{{ 'WORKFLOW' | translate }} <sup>*</sup></label>
+          <mat-select panelClass="mat-select-control" class="form-control" formControlName="workflowId"
+            placeholder="{{ 'SELECT_WORKFLOW' | translate }}">
+            @for (workflow of workflows; track workflow) {
+            <mat-option [value]="workflow.id">
+              {{ workflow.name }}
+            </mat-option>
+            }
+          </mat-select>
+          @if (workflowInstanceForm.get('workflowId')?.touched && workflowInstanceForm.get('workflowId')?.errors) {
+          <div>
+            @if (workflowInstanceForm.get('workflowId')?.errors?.['required']) {
+            <div class="text-danger">
+              {{'SELECT_WORKFLOW' | translate}}
+            </div>
+            }
+          </div>
+          }
+        </div>
+      </div>
+      <div class="mt-2 col-md-12">
+        <button class="success me-2" matButton="filled" type="button" (click)="saveWorkflowInstance()" cdkFocusInitial>
+          <mat-icon class="medium-icon">save</mat-icon> {{'SAVE' | translate}}
+        </button>
+        <button class="error" matButton="filled" type="button" (click)="closeDialog()">
+          <mat-icon class="medium-icon">cancel</mat-icon> {{'CANCEL' | translate}}
+        </button>
+      </div>
+    </div>
+  </form>
+
+</mat-dialog-content>

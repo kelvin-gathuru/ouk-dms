@@ -1,0 +1,147 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        <span class="mb-0 page-title">{{ "COMPANY_PROFILE" | translate
+          }}<app-page-help-text code="COMPANY_PROFILE"></app-page-help-text>
+        </span>
+      </div>
+    </div>
+    <form [formGroup]="companyProfileForm">
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="companyTitle">{{
+                    "COMPANY_TITLE" | translate
+                    }}</label>
+                  <input type="text" id="companyTitle" formControlName="companyTitle" class="form-control"
+                    placeholder="Enter company title" />
+                  @if (companyProfileForm.get('companyTitle')?.touched &&
+                  companyProfileForm.get('companyTitle')?.errors?.['required']) {
+                  <div class="text-danger">
+                    {{ "COMPANY_TITLE_IS_REQUIRED" | translate }}
+                  </div>
+                  }
+                </div>
+              </div>
+              <div class="col-md-12 mt-3">
+                <div class="form-group">
+                  <label for="logoUpload" class="form-label">
+                    {{ "COMPANY_LOGO" | translate }}</label>
+                  <mat-card class="example-card p-4" appearance="outlined">
+                    @if (logoUrl) {
+                    <img mat-card-image [src]="logoUrl" alt="Company Logo" class="mb-4" width="200" height="55" />
+                    }
+                    <mat-card-content>
+                      <div class="form-group">
+                        <input #logoUpload type="file" (change)="onLogoUpload($event)" accept="image/*" hidden />
+                        <button class="success me-2" matButton="filled" (click)="triggerLogoUpload(logoUpload)">
+                          <mat-icon class="medium-icon fs-5 align-middle">image</mat-icon>
+                          {{ "CHANGE_LOGO" | translate }}
+                        </button>
+                      </div>
+                      <div class="row mt-3">
+                        <div class="col-sm-12">
+                          <span class="font-weight-bold text-danger">
+                            {{ "THE_LOGO_SIZE_NOTE" | translate }}
+                          </span>
+                        </div>
+                      </div>
+                      @if (companyProfileForm.get('logo')?.touched &&
+                      companyProfileForm.get('logo')?.errors?.['required']) {
+                      <div class="text-danger">
+                        {{ "COMPANY_LOGO_IS_REQUIRED" | translate }}
+                      </div>
+                      }
+                    </mat-card-content>
+                  </mat-card>
+                </div>
+                <div class="form-group mt-3">
+                  <label for="logoIconUpload" class="form-label">
+                    {{ "COMPANY_ICON_LOGO" | translate }}</label>
+                  <mat-card class="example-card p-4" appearance="outlined">
+                    @if (logoIconUrl) {
+                    <img mat-card-image [src]="logoIconUrl" alt="Company Icon Logo" class="mb-4" width="48"
+                      height="48" />
+                    }
+                    <mat-card-content>
+                      <div class="form-group">
+                        <input #logoIconUpload type="file" (change)="onLogoIconUpload($event)" accept="image/*"
+                          hidden />
+                        <button class="success me-2" matButton="filled" (click)="triggerLogoIconUpload(logoIconUpload)">
+                          <mat-icon class="medium-icon fs-5 align-middle">image</mat-icon>
+                          {{ "CHANGE_ICON_LOGO" | translate }}
+                        </button>
+                      </div>
+                      <div class="row mt-3">
+                        <div class="col-sm-12">
+                          <span class="font-weight-bold text-danger">
+                            {{ "THE_ICON_LOGO_SIZE_NOTE" | translate }}
+                          </span>
+                        </div>
+                      </div>
+                      @if (companyProfileForm.get('logoIcon')?.touched &&
+                      companyProfileForm.get('logoIcon')?.errors?.['required']) {
+                      <div class="text-danger">
+                        {{ "COMPANY_ICON_LOGO_IS_REQUIRED" | translate }}
+                      </div>
+                      }
+                    </mat-card-content>
+                  </mat-card>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="bannerUpload" class="form-label">
+                  {{ "COMPANY_BANNER" | translate }}</label>
+                <mat-card class="example-card" appearance="outlined">
+                  @if (bannerUrl) {
+                  <img mat-card-image [src]="bannerUrl" alt="Company Banner" width="1000" height="500" />
+                  }
+                  <mat-card-content>
+                    <div class="form-group">
+                      <input #bannerUpload type="file" (change)="onBannerUpload($event)" accept="image/*" hidden />
+                      <button class="success me-2 mt-2" matButton="filled" color="primary"
+                        (click)="triggerBannerUpload(bannerUpload)">
+                        <mat-icon class="medium-icon fs-5 align-middle">image</mat-icon>
+                        {{ "CHANGE_BANNER" | translate }}
+                      </button>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <span class="font-weight-bold text-danger">
+                          {{ "THE_BANNER_SIZE_NOTE" | translate }}
+                        </span>
+                      </div>
+                    </div>
+                    @if (companyProfileForm.get('banner')?.touched &&
+                    companyProfileForm.get('banner')?.errors?.['required']) {
+                    <div class="text-danger">
+                      {{ "COMPANY_BANNER_IS_REQUIRED" | translate }}
+                    </div>
+                    }
+                  </mat-card-content>
+                </mat-card>
+              </div>
+            </div>
+            <div class="m-top-10">
+              <button class="success me-2" matButton="filled" [disabled]="companyProfileForm.invalid"
+                (click)="onSave()">
+                <mat-icon class="medium-icon align-middle">save</mat-icon>
+                {{ "SAVE" | translate }}
+              </button>
+              <button class="error" matButton="filled" [routerLink]="['/dashboard']">
+                <mat-icon class="medium-icon align-middle">cancel</mat-icon>
+                {{ "CANCEL" | translate }}
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </form>
+  </div>
+</section>

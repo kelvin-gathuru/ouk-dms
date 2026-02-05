@@ -1,0 +1,1 @@
+var d=(o=>(o[o.Office=0]="Office",o[o.Pdf=1]="Pdf",o[o.Image=2]="Image",o[o.Text=3]="Text",o[o.Audio=4]="Audio",o[o.Video=5]="Video",o[o.Other=6]="Other",o[o.CSV=7]="CSV",o[o.Json=8]="Json",o))(d||{});export{d as a};

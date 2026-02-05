@@ -1,0 +1,349 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        @if(workflowTransitions.length == 0) {
+        <span class="mb-0 page-title">{{ "ADD_WORKFLOW_TRANSITIONS" | translate
+          }}<app-page-help-text code="MANAGE_WORKFLOW"></app-page-help-text>
+        </span>
+        } @if(workflowTransitions.length > 0) {
+        <span class="mb-0 page-title">{{ "EDIT_WORKFLOW_TRANSITIONS" | translate
+          }}<app-page-help-text code="MANAGE_WORKFLOW"></app-page-help-text>
+        </span>
+        }
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-9">
+        <form [formGroup]="transitionFormGroup">
+          <mat-card appearance="outlined">
+            <mat-card-content>
+              <div formArrayName="transitions">
+                @if(workflowInstances.length == 0) {
+                <div class="d-flex justify-content-end mb-2">
+                  <button type="button" (click)="addTransition()" class="primary me-2" matButton="filled">
+                    <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+                    {{ "ADD_ANOTHER_TRANSITION" | translate }}
+                  </button>
+                </div>
+                }
+                <div class="row">
+                  <div class="col-sm-12">
+                    @for(step of transitions.controls; track step; let i =
+                    $index) {
+                    <div [formGroupName]="i">
+                      <mat-card appearance="outlined" class="mb-3">
+                        <mat-card-content>
+                          <div class="row">
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label class="form-lable text-danger">
+                                  {{ "TRANSITION_NAME" | translate }}
+                                  <sup>*</sup></label>
+                                <input formControlName="name" (blur)="onTransitionChange()" class="form-control"
+                                  type="text" placeholder="{{
+                                    'ENTER_THE_WORKFLOW_TRANSITION_NAME'
+                                      | translate
+                                  }}" (blur)="checkUniqueTransitionName(i)" />
+                                @if(step.get('name')?.touched &&
+                                step.get('name')?.errors){
+                                <div>
+                                  @if(step.get('name')?.errors?.['required']) {
+                                  <div class="text-danger">
+                                    {{ "TRANSITION_NAME_REQUIRED" | translate }}
+                                  </div>
+                                  } @if(step.get('name')?.errors?.['notUnique'])
+                                  {
+                                  <div class="text-danger">
+                                    {{
+                                    "TRANSITION_NAME_MUST_BE_UNIQUE"
+                                    | translate
+                                    }}
+                                  </div>
+                                  }
+                                </div>
+                                }
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                @let filterWorkFlowsteps = workflowSteps |
+                                filter_workflow_step : transitions.value : i;
+                                <label class="form-lable text-danger">{{ "FROM_STEP" | translate }}
+                                  <sup>*</sup></label>
+                                <mat-select panelClass="mat-select-control" class="form-control"
+                                  formControlName="fromStepId" placeholder="{{
+                                    'SELECT_FROM_STEP' | translate
+                                  }}" (selectionChange)="filterSteps(i)">
+                                  @for(step of filterWorkFlowsteps; track
+                                  step.id) {
+                                  <mat-option [value]="step.id">
+                                    {{ step.stepName }}
+                                  </mat-option>
+                                  }
+                                </mat-select>
+                                @if(step.get('fromStepId')?.touched &&
+                                step.get('fromStepId')?.errors){
+                                <div>
+                                  @if(step.get('fromStepId')?.errors?.['required'])
+                                  {
+                                  <div class="text-danger">
+                                    {{ "FROM_STEP_REQUIRED" | translate }}
+                                  </div>
+                                  } @if(step?.hasError('sameStep')) {
+                                  <mat-error>
+                                    {{ "FROM_TO_STEP_NOT_SAME" | translate }}
+                                  </mat-error>
+                                  }
+                                </div>
+                                }
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label class="form-lable text-danger">{{ "TO_STEP" | translate }}
+                                  <sup>*</sup></label>
+                                <mat-select panelClass="mat-select-control" formControlName="toStepId"
+                                  class="form-control" placeholder="{{
+                                    'SELECT_TO_STEP' | translate
+                                  }}" (selectionChange)="filterSteps(i)">
+                                  @for(step of workflowSteps; track step.id) {
+                                  <mat-option [value]="step.id">
+                                    {{ step.stepName }}
+                                  </mat-option>
+                                  }
+                                </mat-select>
+                                @if(step.get('toStepId')?.touched &&
+                                (step.get('toStepId')?.errors || step.errors)){
+                                <div>
+                                  @if(step.get('toStepId')?.errors?.['required'])
+                                  {
+                                  <div class="text-danger">
+                                    {{ "TO_STEP_REQUIRED" | translate }}
+                                  </div>
+                                  } @if(step?.errors?.['sameStep']) {
+                                  <div class="text-danger">
+                                    {{ "FROM_TO_STEP_NOT_SAME" | translate }}
+                                  </div>
+                                  }
+                                </div>
+                                }
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label class="form-lable">
+                                  {{ "ROLES" | translate }}
+                                </label>
+                                <mat-select panelClass="mat-select-control" class="form-control" multiple
+                                  formControlName="roleIds" name="role" placeholder="{{ 'SELECT_ROLES' | translate }}">
+                                  @for(role of workflowStore.roles(); track
+                                  role.id) {
+                                  <mat-option [value]="role.id">
+                                    {{ role.name }}
+                                  </mat-option>
+                                  }
+                                </mat-select>
+                                @if(( step.get('roleIds')?.touched ||
+                                step.get('userIds')?.touched) &&
+                                step?.hasError('atLeastOneRequired')) {
+                                <mat-error class="text-danger">
+                                  {{ "AT_LEAST_ONE_REQUIRED" | translate }}
+                                </mat-error>
+                                }
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label> {{ "USERS" | translate }}</label>
+                                <mat-select panelClass="mat-select-control" class="form-control" multiple
+                                  formControlName="userIds" name="user" placeholder="{{ 'SELECT_USERS' | translate }}">
+                                  @for(user of workflowStore.users(); track
+                                  user.id) {
+                                  <mat-option [value]="user.id">
+                                    {{ user.firstName }} &nbsp;&nbsp;
+                                    {{ user.lastName }}
+                                  </mat-option>
+                                  }
+                                </mat-select>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="d-flex flex-column">
+                                <label>
+                                  {{
+                                  "COLOR_OF_TRANSITON_BUTTON" | translate
+                                  }}</label>
+                                <mat-button-toggle-group class="custom-toggle-group" appearance="standard"
+                                  formControlName="color">
+                                  <mat-button-toggle class="approved" value="approved">{{ "APPROVED" | translate }}
+                                  </mat-button-toggle>
+                                  <mat-button-toggle class="rejected" value="rejected">{{ "REJECTED" | translate }}
+                                  </mat-button-toggle>
+                                  <mat-button-toggle class="pending" value="pending">{{ "PENDING" | translate }}
+                                  </mat-button-toggle>
+                                  <mat-button-toggle class="inprogress" value="inprogress">{{ "INPROGRESS" | translate
+                                    }}
+                                  </mat-button-toggle>
+                                  <mat-button-toggle class="onhold" value="onhold">{{ "ONHOLD" | translate }}
+                                  </mat-button-toggle>
+                                  <mat-button-toggle class="cancelled" value="cancelled">{{ "CANCELLED" | translate }}
+                                  </mat-button-toggle>
+                                  <mat-button-toggle class="escalated" value="escalated">{{ "ESCALATED" | translate }}
+                                  </mat-button-toggle>
+                                  <mat-button-toggle class="completed" value="completed">{{ "COMPLETED" | translate }}
+                                  </mat-button-toggle>
+                                </mat-button-toggle-group>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group mt-3">
+                                <mat-checkbox color="primary" formControlName="isSignatureRequired"
+                                  class="example-margin">
+                                  {{ "IS_SIGNATURE_REQUIRED" | translate }}
+                                </mat-checkbox>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <mat-checkbox color="primary" class="pt-3" formControlName="isUploadDocumentVersion">
+                                  {{ "UPLOAD_DOC_VER_REQUIRED" | translate }}
+                                </mat-checkbox>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm">
+                              <label>{{ "REMINDER_DAYS" | translate }}</label>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>{{ "DAYS" | translate }}</label>
+                                <mat-select panelClass="mat-select-control" class="form-control" formControlName="days"
+                                  placeholder="{{ 'DAYS' | translate }}">
+                                  @for(day of getDays(); track day) {
+                                  <mat-option [value]="day">
+                                    {{ day }}
+                                  </mat-option>
+                                  }
+                                </mat-select>
+                              </div>
+                            </div>
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <label>{{
+                                  "REMINDER_HOURS" | translate
+                                  }}</label>
+                                <mat-select panelClass="mat-select-control" class="form-control" formControlName="hours"
+                                  placeholder="{{
+                                    'REMINDER_HOURS' | translate
+                                  }}">
+                                  @for(hour of getHours(); track hour) {
+                                  <mat-option [value]="hour">
+                                    {{ hour }}
+                                  </mat-option>
+                                  }
+                                </mat-select>
+                              </div>
+                            </div>
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <label>{{
+                                  "REMINDER_MINUTES" | translate
+                                  }}</label>
+                                <mat-select panelClass="mat-select-control" class="form-control"
+                                  formControlName="minutes" placeholder="{{
+                                    'REMINDER_MINUTES' | translate
+                                  }}">
+                                  @for(minute of getMinutes(); track minute) {
+                                  <mat-option [value]="minute">
+                                    {{ minute }}
+                                  </mat-option>
+                                  }
+                                </mat-select>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="form-group">
+                                @if(workflowInstances.length == 0) {
+                                <button type="button" mat-icon-button color="warn" (click)="removeTransition(i)">
+                                  <mat-icon class="text-danger">delete</mat-icon>
+                                </button>
+                                }
+                              </div>
+                            </div>
+                          </div>
+                          <div class="d-flex gap-1 mt-4">
+                            @if(workflowInstances.length == 0){
+                            <button type="button" (click)="addTransition()" class="primary me-2" matButton="filled">
+                              <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+                              {{ "ADD_ANOTHER_TRANSITION" | translate }}
+                            </button>
+                            }
+                            <button class="success me-2" matButton="filled" [disabled]="transitionFormGroup.invalid"
+                              (click)="saveTransition()" cdkFocusInitial>
+                              <mat-icon class="medium-icon align-middle">save</mat-icon>
+                              {{ "SAVE" | translate }}
+                            </button>
+                            <button type="button" class="error" matButton="filled" (click)="onPreviousClick()">
+                              <mat-icon class="medium-icon fs-3 align-middle">arrow_left</mat-icon>
+                              {{ "PREVIOUS" | translate }}
+                            </button>
+                          </div>
+                        </mat-card-content>
+                      </mat-card>
+                    </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </form>
+      </div>
+      <div class="col-sm-3">
+        <ngx-graph #graph class="chart-container" [layoutSettings]="{ orientation: 'TB' }" [links]="links"
+          [nodes]="nodes" [layout]="'dagre'" [panOnZoom]="true" [autoCenter]="true" [autoZoom]="true">
+          [layout]="'dagreCluster'">
+          <ng-template #defsTemplate>
+            <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4"
+              orient="auto">
+              <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+            </svg:marker>
+          </ng-template>
+          <ng-template #nodeTemplate let-node>
+            <svg:g class="node">
+              <svg:rect [attr.width]="node.dimension.width" [attr.height]="node.dimension.height"
+                [attr.fill]="node.data.color" />
+              <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2">
+                {{ node.label }}
+              </svg:text>
+            </svg:g>
+          </ng-template>
+          <ng-template #linkTemplate let-link>
+            <svg:g class="edge">
+              <svg:path class="line" stroke-width="2" marker-end="url(#arrow)"></svg:path>
+              <svg:text class="edge-label" text-anchor="middle">
+                <textPath class="text-path" [attr.href]="'#' + link.id"
+                  [style.dominant-baseline]="link.dominantBaseline" startOffset="50%">
+                  {{ link.label }}
+                </textPath>
+              </svg:text>
+            </svg:g>
+          </ng-template>
+        </ngx-graph>
+      </div>
+    </div>
+  </div>
+</section>

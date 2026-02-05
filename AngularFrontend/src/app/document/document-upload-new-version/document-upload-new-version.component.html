@@ -1,0 +1,158 @@
+<mat-dialog-content>
+  <div class="d-flex">
+    <div class="me-auto p-2">
+      <span class="mb-3 page-title">
+        {{ "UPLOAD_NEW_VERSION_FILE" | translate }}
+        <app-page-help-text [code]="'UPLOAD_NEW_VERSION'"></app-page-help-text>
+      </span>
+    </div>
+    <div class="d-flex justify-content-end mb-2">
+      <mat-icon class="close-icon text-danger cursor-pointer " (click)="closeDialog()">cancel</mat-icon>
+    </div>
+  </div>
+  <form [formGroup]="documentForm">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label>{{ "DOCUMENT_UPLOAD" | translate }}</label>
+          <input class="form-control" #file (change)="upload(file.files)" type="file" />
+          @if((documentForm.get('url')?.touched ||
+          documentForm.get('url')?.dirty) &&
+          documentForm.get('url')?.errors) {
+          @if(documentForm.get('url')?.errors?.['required']) {
+          <div class="text-danger">
+            {{ "DOCUMENT_IS_REQUIRED" | translate }}
+          </div>
+          }
+          }
+          @if((documentForm.get('extension')?.touched ||
+          documentForm.get('extension')?.dirty) &&
+          documentForm.get('url')?.errors) {
+          @if(documentForm.get('extension')?.errors?.['required']) {
+          <div class=" text-danger">
+            {{ "DOCUMENT_TYPE_IS_NOT_ALLOW" | translate }}
+          </div>
+          }
+          }
+        </div>
+        <div class="form-group">
+          <label>{{ "COMMENT" | translate }}</label>
+          <textarea class="form-control" formControlName="comment" rows="2"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 d-flex flex-column flex-sm-row gap-2 mt-2">
+        <button *hasClaim="['ALL_UPLOAD_NEW_VERSION','ASSIGNED_UPLOAD_NEW_VERSION']" class="success me-2"
+          matButton="filled" (click)="SaveDocument()" cdkFocusInitial>
+          <mat-icon class="medium-icon">save</mat-icon>
+          {{ "SAVE" | translate }}
+        </button>
+        <button type="button" class="error" matButton="filled" (click)="closeDialog()">
+          <mat-icon class="medium-icon">cancel</mat-icon>
+          {{ "CANCEL" | translate }}
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 mt-5">
+        <span class="dialog-title">
+          {{ data.name | limitTo : '100' }} ::{{ "VERSION_HISTORY" | translate }}
+        </span>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="table-responsive">
+        <table class="table table-pos table_color">
+          <thead>
+            <tr>
+              <th>{{ "VERSION_NO" | translate }}</th>
+              <th>{{ "MODIFIED_DATE" | translate }}</th>
+              <th>{{ "CREATED_BY" | translate }}</th>
+              <th>{{ "SIGNBY" | translate }}</th>
+              <th>{{ "SIGNDATE" | translate }}</th>
+              <th>{{ "COMMENT" | translate }}</th>
+              <th>{{ "ACTIONS" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (version of documentVersions; track $index) {
+            <tr>
+              <td>{{ version.versionNumber }}</td>
+              <td>{{ version.modifiedDate | utcToLocalTime : "full" }}</td>
+              <td>
+                {{ version.createdByUser }}
+              </td>
+              <td>
+                @if(version.signBy){
+                {{ version.signBy }}
+                }
+              </td>
+              <td>
+                @if(version.signBy){
+                {{ version.signDate | utcToLocalTime : "short" }}
+                }
+              </td>
+              <td>
+                @if(version.comment) {
+                <span (click)="showComment(version.comment)" role="button" class="me-2 text-primary"
+                  matTooltip="Comment">
+                  <mat-icon> chat</mat-icon>
+                </span>
+                }
+              </td>
+
+              <td>
+                @if(version.isCurrentVersion) {
+                <span class="badge bg-success">{{ "CURRENT_VERSION" | translate }}
+                </span>
+                }
+                @if(!version.isCurrentVersion) {
+                <div>
+                  <span (click)="onDocumentView(version)" class="material-icons-outlined me-2 text-primary"
+                    matTooltip="view" role="button">
+                    <mat-icon> visibility</mat-icon>
+                  </span>
+                  @if(!data.isAssignUser) {
+                  <span *hasClaim="'ALL_DOWNLOAD_DOCUMENT'" (click)="downloadDocument(version)" role="button"
+                    class="me-2 text-primary" matTooltip="Download">
+                    <mat-icon> download</mat-icon>
+                  </span>
+                  <span *hasClaim="'ALL_RESTORE_VERSION'" (click)="restoreDocumentVersion(version)" role="button"
+                    matTooltip="Restore to Current Version" class="material-icons-outlined text-primary">
+                    <mat-icon> restore</mat-icon>
+                  </span>
+                  } @else {
+                  <span *hasClaim="'ASSIGNED_DOWNLOAD_DOCUMENT'" (click)="downloadDocument(version)" role="button"
+                    class="me-2 text-primary" matTooltip="Download">
+                    <mat-icon> download</mat-icon>
+                  </span>
+                  <span *hasClaim="'ASSIGNED_RESTORE_VERSION'" (click)="restoreDocumentVersion(version)" role="button"
+                    matTooltip="Restore to Current Version" class="material-icons-outlined text-primary">
+                    <mat-icon> restore</mat-icon>
+                  </span>
+                  }
+                </div>
+                }
+              </td>
+            </tr>
+            }
+            @if(documentVersions.length === 0) {
+            <tr>
+              <td colspan="5" class="text-center">
+                {{ "NO_DATA_FOUND" | translate }}
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </form>
+  @if(isLoading || isLoadingResults) {
+  <div class="spinner-container">
+    <mat-progress-spinner class="example-margin" [mode]="mode" diameter="60" strokeWidth="5" [value]="progress">
+    </mat-progress-spinner>
+  </div>
+  }
+</mat-dialog-content>

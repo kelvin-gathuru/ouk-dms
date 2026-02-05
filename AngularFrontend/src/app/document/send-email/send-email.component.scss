@@ -1,0 +1,30 @@
+
+::ng-deep .ck-editor__editable_inline {
+  min-height: 150px;
+}
+
+.input-group-text {
+  white-space: normal;
+  word-break: break-word;
+}
+
+.input-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 767px) {
+  .input-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .input-group-text {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
+  input.form-control {
+    width: 100%;
+  }
+}

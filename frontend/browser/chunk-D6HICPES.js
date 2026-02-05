@@ -1,0 +1,1 @@
+import{ja as s}from"./chunk-KZMFGXDY.js";var e=class i{transform(t,r){if(!t)return"";let n=r?parseInt(r,10):100;return t.length>n?t.substring(0,n)+"...":t}static \u0275fac=function(r){return new(r||i)};static \u0275pipe=s({name:"limitTo",type:i,pure:!0})};export{e as a};

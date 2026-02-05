@@ -1,0 +1,227 @@
+<mat-dialog-content>
+  <div class="d-flex">
+    <div class="me-auto p-2">
+      <span class="mb-3 page-title">
+        {{ "REMINDER_DETAIL" | translate }}
+      </span>
+    </div>
+    <div class="d-flex justify-content-end mb-2">
+      <mat-icon class="close-icon text-danger cursor-pointer " (click)="closeDialog()">cancel</mat-icon>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <form [formGroup]="reminderForm">
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label for="subject"> {{'SUBJECT' | translate}}</label>
+            <input formControlName="subject" type="text" class="form-control" id="subject">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label for="message"> {{'MESSAGE' | translate}}</label>
+            <textarea class="form-control" formControlName="message" id="message" cols="30"></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <mat-checkbox color="primary" (change)="checkData($event)" formControlName="isRepeated">
+              {{'REPEATE_REMINDER' | translate}}
+            </mat-checkbox>
+          </div>
+          <div class="col-md-2">
+            <mat-checkbox color="primary" formControlName="isEmailNotification">{{'SEND_EMAIL' |
+              translate}}</mat-checkbox>
+          </div>
+          <div class="col-md-4"></div>
+        </div>
+
+        @if(reminderForm.get('isRepeated')?.value) {
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="frequency"> {{'FREQUENCY' | translate}}</label>
+            <select class="form-control" (change)="onFrequencyChange()" formControlName="frequency" id="frequency">
+              <option value="">--{{'NONE' | translate}}--</option>
+              @for(frequencyItem of reminderFrequencies; track frequencyItem.id ; let i = $index) {
+              <option [value]="frequencyItem?.id">
+                {{frequencyItem?.name?.toUpperCase() | translate}}
+              </option>
+              }
+            </select>
+            @if(reminderForm.get('frequency')?.errors?.['required']) {
+            <div class="text-danger">
+              {{'FREQUENCY_IS_REQUIRED' | translate}}
+            </div>
+            }
+          </div>
+        </div>
+        }
+
+        @if(reminderForm.get('isRepeated')?.value) {
+        <div class="row">
+          <div class="col-md-12">
+
+            @if(reminderForm.get('frequency')?.value == '0') {
+            <div class="form-group">
+              <label for="weekDays">{{'WEEK_DAYS' | translate}}</label>
+              <div id="weekDays" class="row">
+                @for(dailyReminder of dailyRemindersArray.controls; track dailyReminder; let i = $index) {
+                <div class="col-sm-auto mr-1" formArrayName="dailyReminders">
+                  <ng-container [formGroupName]="i">
+                    <mat-checkbox color="primary" class="mr-1" formControlName="isActive">
+                      {{dailyReminder.get('name')?.value.toUpperCase() | translate}}
+                    </mat-checkbox>
+                  </ng-container>
+                </div>
+                }
+              </div>
+            </div>
+            }
+
+            @if(reminderForm.get('frequency')?.value == '1') {
+            <div class="form-group">
+              <label for="weekDay">{{'WEEK_DAYS' | translate}}</label>
+              <div id="weekDay">
+                <mat-radio-group formControlName="dayOfWeek">
+                  @for(day of dayOfWeek; track day.id; let i = $index) {
+                  <mat-radio-button class="mr-2" color="primary" [value]="day.id">
+                    {{day.name | translate}}
+                  </mat-radio-button>
+                  }
+                </mat-radio-group>
+              </div>
+            </div>
+            }
+
+            @if(reminderForm.get('frequency')?.value == '3') {
+            <div class="form-group">
+              <label for="Quarterly">{{'SELECT_QUARTER_DATE' | translate}}</label>
+              <div id="Quarterly" class="row">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>{{'MONTH' | translate}}</th>
+                      <th>{{'DAY' | translate}}</th>
+                    </tr>
+                  </thead>
+                  <tbody formArrayName="quarterlyReminders">
+                    @for(quarterlyReminder of quarterlyRemindersArray.controls; track quarterlyReminder; let i =
+                    $index) {
+                    <tr>
+                      <ng-container [formGroupName]="i">
+                        <td>{{quarterlyReminder.get('name')?.value?.toUpperCase() | translate}}</td>
+                        <td>
+                          <select class="form-control" formControlName="month">
+                            @for(mon of quarterlyReminder.get('monthValues')?.value; track mon.id; let j = $index) {
+                            <option [value]="mon.id">
+                              {{mon.name.toUpperCase() | translate}}
+                            </option>
+                            }
+                          </select>
+                        </td>
+                        <td>
+                          <select class="form-control" formControlName="day">
+                            @for(day of days; track day; let k = $index) {
+                            <option [value]="day">
+                              {{day}}
+                            </option>
+                            }
+                          </select>
+                        </td>
+                      </ng-container>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            }
+
+            @if(reminderForm.get('frequency')?.value == '4') {
+            <div class="form-group">
+              <label for="HalfYearly">{{'SELECT_DATE' | translate}}</label>
+              <div id="HalfYearly" class="row">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>{{'MONTH' | translate}}</th>
+                      <th>{{'DAY' | translate}}</th>
+                    </tr>
+                  </thead>
+                  <tbody formArrayName="halfYearlyReminders">
+                    @for(halfYearlyReminder of halfYearlyRemindersArray.controls; track halfYearlyReminder; let i =
+                    $index) {
+                    <tr>
+                      <ng-container [formGroupName]="i">
+                        <td>{{halfYearlyReminder.get('name')?.value | translate}}</td>
+                        <td>
+                          <select class="form-control" formControlName="month">
+                            @for(mon of halfYearlyReminder.get('monthValues')?.value; track mon.id; let j = $index)
+                            {
+                            <option [value]="mon.id">
+                              {{mon.name | translate}}
+                            </option>
+                            }
+                          </select>
+                        </td>
+                        <td>
+                          <select class="form-control" formControlName="day">
+                            @for(day of days; track day; let k = $index) {
+                            <option [value]="day">
+                              {{day}}
+                            </option>
+                            }
+                          </select>
+                        </td>
+                      </ng-container>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            }
+
+          </div>
+        </div>
+        }
+
+        <div class="row">
+          @if(!reminderForm.get('isRepeated')?.value) {
+          <div class="form-group col-md-6">
+            <label> {{'REMINDER_DATE' | translate}}</label>
+            <input class="form-control" [min]="minDate" formControlName="startDate"
+              placeholder="{{'DATE' | translate}}">
+          </div>
+          }
+
+          @if(reminderForm.get('isRepeated')?.value) {
+          <div class="form-group col-md-6">
+            <label> {{'REMINDER_START_DATE' | translate}}</label>
+            <input class="form-control" [min]="minDate" formControlName="startDate"
+              placeholder="{{'START_DATE' | translate }}">
+          </div>
+          <div class="form-group col-md-6">
+            <label>{{'REMINDER_END_DATE' | translate}}</label>
+            <input class="form-control" formControlName="endDate" placeholder="{{'END_DATE' | translate }}">
+          </div>
+          }
+        </div>
+      </form>
+    </div>
+  </div>
+  @if(isLoading) {
+  <div class="spinner-container">
+    <!-- <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div> -->
+    <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+    </mat-progress-spinner>
+  </div>
+  }
+
+</mat-dialog-content>

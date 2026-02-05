@@ -1,0 +1,74 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        <span class="mb-0 page-title">{{
+          "AI_DOCUMENT_GENERATOR" | translate
+          }}
+          <app-page-help-text [code]="'AI_DOCUMENT_GENERATOR'"></app-page-help-text>
+        </span>
+      </div>
+      <div class="d-flex justify-content-end">
+        <button [dir]="langDir" *hasClaim="'ADD_ALLOW_FILE_EXTENSIONS'" [routerLink]="['/allow-file-extension/manage']"
+          class="primary me-2" matButton="filled">
+          <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+           <span class="d-none d-lg-inline ms-1">{{ "ADD_ALLOW_FILE_EXTENSIONS" | translate }}</span>
+        </button>
+      </div>
+    </div>
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <div class="table-responsive">
+          <div class="grid-height-large">
+            <table [dir]="langDir" mat-table [dataSource]="allowFileExtensions">
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "ACTION" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let allowFileExtension">
+                  <div class="d-flex gap-2">
+                    <button [dir]="langDir" *hasClaim="'EDIT_ALLOW_FILE_EXTENSIONS'" [routerLink]="[
+                        '/allow-file-extension/manage',
+                        allowFileExtension.id
+                      ]" class="primary" matMiniFab routerLinkActive="active">
+                      <mat-icon class="medium-icon fs-5 align-middle">edit</mat-icon>
+                    </button>
+                    <button matMiniFab [dir]="langDir" *hasClaim="'DELETE_ALLOW_FILE_EXTENSIONS'"
+                      (click)="deleteAllowFileExtension(allowFileExtension)" class="error" type="button">
+                      <mat-icon class="medium-icon fs-5 align-middle">delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "TYPE" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let allowFileExtension">
+                  {{ allowFileExtension.fileType | fileType }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="extension">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "EXTENSIONS" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let allowFileExtension">
+                  {{ allowFileExtension.extension }}
+                </td>
+              </ng-container>
+              <tr *matNoDataRow>
+                <td colspan="5">
+                  <div class="m-2">
+                    <b> {{ "NO_DATA_FOUND" | translate }}</b>
+                  </div>
+                </td>
+              </tr>
+              <tr class="grid-header-color" mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>

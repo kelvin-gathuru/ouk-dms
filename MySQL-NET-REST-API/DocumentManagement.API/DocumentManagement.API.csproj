@@ -1,0 +1,82 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<UserSecretsId>59c02045-596a-4f38-9476-40995e33d270</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Helpers\CustomFileUploadOperationFilter.cs" />
+	  <Compile Remove="Helpers\Mapping\WorkflowStepRoleProfile.cs" />
+	  <Compile Remove="Helpers\Mapping\WorkflowStepUserProfile.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="ClientApp\index.html" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.301" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.2" />
+		<PackageReference Include="Hangfire.AspNetCore" Version="1.8.14" />
+		<PackageReference Include="Hangfire.MySqlStorage" Version="2.0.3" />
+		<PackageReference Include="Hangfire.SqlServer" Version="1.8.14" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="8.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.1" />
+		<PackageReference Include="mlglobtech.docnet" Version="1.0.0" />
+		<PackageReference Include="MySql.Data" Version="9.0.0" />
+		<!--do not delete this package reference-->
+		<PackageReference Include="NLog.Database" Version="5.3.4" />
+		<PackageReference Include="NLog.Web.AspNetCore" Version="5.3.13" />
+		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
+		<!--<PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />-->
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\DocumentManagement.Common\DocumentManagement.Common.csproj" />
+		<ProjectReference Include="..\DocumentManagement.Data\DocumentManagement.Data.csproj" />
+		<ProjectReference Include="..\DocumentManagement.Domain\DocumentManagement.Domain.csproj" />
+		<ProjectReference Include="..\DocumentManagement.Helper\DocumentManagement.Helper.csproj" />
+		<ProjectReference Include="..\DocumentManagement.MediatR\DocumentManagement.MediatR.csproj" />
+		<ProjectReference Include="..\DocumentManagement.Repository\DocumentManagement.Repository.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Update="nlog.config">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\images\banner.png">
+		  <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\images\logo.png">
+		  <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\tessdata\eng.traineddata">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="DocumentManagement.API.xml">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="ClientApp\" />
+		<Folder Include="Documents\" />
+		<Folder Include="wwwroot\Documents\" />
+		<Folder Include="wwwroot\images\" />
+		<Folder Include="wwwroot\Signatures\" />
+		<Folder Include="wwwroot\summary\" />
+	</ItemGroup>
+
+</Project>

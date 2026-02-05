@@ -1,0 +1,11 @@
+﻿using System;
+
+namespace DocumentManagement.Data.Dto;
+public class PageActionDto
+{
+    public Guid? Id { get; set; }
+    public string Name { get; set; }
+    public Guid PageId { get; set; }
+    public string Code { get; set; }
+    public int Order { get; set; }
+}

@@ -1,0 +1,79 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        <span class="mb-0 page-title">{{ "PROFILE" | translate }}
+        </span>
+      </div>
+      <div class="d-flex justify-content-end">
+        <button (click)="changePassword()" class="success me-2" matButton="filled">
+          <mat-icon class="middle-icon fs-5 align-middle">vpn_key</mat-icon>
+          {{ "CHANGE_PASSWORD" | translate }}
+        </button>
+      </div>
+    </div>
+    <form [formGroup]="userForm">
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label text-danger">{{ "FIRST_NAME" | translate }} <sup>*</sup></label>
+                <input formControlName="firstName" class="form-control" type="text" />
+                @if(userForm.get('firstName')?.touched &&
+                userForm.get('firstName')?.errors &&
+                userForm.get('firstName')?.errors?.['required']) {
+                <div class="text-danger">
+                  {{ "FIRST_NAME_IS_REQUIRED" | translate }}
+                </div>
+                }
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label text-danger">{{ "LAST_NAME" | translate }} <sup>*</sup></label>
+                <input formControlName="lastName" class="form-control" type="text" />
+                @if(userForm.get('lastName')?.touched &&
+                userForm.get('lastName')?.errors){
+                @if(userForm.get('lastName')?.errors?.['required']){
+                <div class="text-danger">
+                  {{ "LAST_NAME_IS_REQUIRED" | translate }}
+                </div>
+                } }
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label text-danger">{{ "MOBILE_NUMBER" | translate }} <sup>*</sup></label>
+                <input formControlName="phoneNumber" class="form-control" type="text" />
+                @if(userForm.get('phoneNumber')?.touched &&
+                userForm.get('phoneNumber')?.errors &&
+                userForm.get('phoneNumber')?.errors?.['required']) {
+                <div class="text-danger">
+                  {{ "MOBILE_IS_REQUIRED" | translate }}
+                </div>
+                }
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">{{ "EMAIL" | translate }}</label>
+                <input formControlName="email" class="form-control" type="email" />
+              </div>
+            </div>
+            <div class="col-md-12 mt-4">
+              <button class="success me-2" matButton="filled" (click)="updateProfile()" cdkFocusInitial>
+                <mat-icon class="medium-icon align-middle">save</mat-icon>
+                {{ "SAVE" | translate }}
+              </button>
+              <button type="button" class="error" matButton="filled" [routerLink]="['/']">
+                <mat-icon class="medium-icon align-middle">cancel</mat-icon>
+                {{ "CANCEL" | translate }}
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </form>
+  </div>
+</section>

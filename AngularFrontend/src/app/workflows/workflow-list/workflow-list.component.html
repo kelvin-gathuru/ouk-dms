@@ -1,0 +1,82 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        <span class="mb-0 page-title">
+          {{ "WORKFLOW_SETTINGS" | translate }}
+          <app-page-help-text code="WORKFLOW_SETTINGS"></app-page-help-text>
+        </span>
+      </div>
+      <div class="d-flex justify-content-end">
+        <button *hasClaim="'ADD_WORKFLOW_SETTINGS'" [routerLink]="['/workflow-settings/manage/add']"
+          class="primary me-2" matButton="filled">
+          <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+          <span class="d-none d-lg-inline ms-1">{{ "ADD_WORKFLOW" | translate }}</span>
+        </button>
+      </div>
+    </div>
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <div class="table-responsive">
+          <div class="grid-height-large">
+            <table mat-table [dataSource]="workflowStore.workflows()">
+              <ng-container matColumnDef="action">
+                <th class="table-column-fix-270" mat-header-cell *matHeaderCellDef>
+                  {{ "ACTION" | translate }}
+                </th>
+                <td class="d-flex gap-2" mat-cell *matCellDef="let workflow">
+                  <div class="d-flex gap-2 my-2">
+                    <button matMiniFab *hasClaim="'EDIT_WORKFLOW_SETTINGS'"
+                      [routerLink]="['/workflow-settings/manage', workflow.id]" class="primary">
+                      <mat-icon class="medium-icon fs-5 align-middle">edit</mat-icon>
+                    </button>
+                    <button matMiniFab *hasClaim="'DELETE_WORKFLOW_SETTINGS'" (click)="deleteWorkflow(workflow)"
+                      class="error" type="button">
+                      <mat-icon class="medium-icon fs-5 align-middle">delete</mat-icon>
+                    </button>
+                    @if (workflow.isWorkflowSetup) {
+                    <button class="success" matMiniFab (click)="viewVisualWorkflow(workflow)">
+                      <mat-icon class="medium-icon fs-5 align-middle">visibility</mat-icon>
+                    </button>
+                    }
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "NAME" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let workflow">{{ workflow.name }}</td>
+              </ng-container>
+              <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "DESCRIPTION" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let workflow">
+                  {{ workflow.description }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="setupStatus">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "SETUP_STATUS" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let workflow">
+                  {{ workflow.isWorkflowSetup ? ("COMPLETED" | translate) : ("DRAFT" | translate) }}
+                </td>
+              </ng-container>
+              <tr *matNoDataRow>
+                <td colspan="5">
+                  <div class="m-2">
+                    <b> {{ "NO_DATA_FOUND" | translate }}</b>
+                  </div>
+                </td>
+              </tr>
+              <tr class="grid-header-color" mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>

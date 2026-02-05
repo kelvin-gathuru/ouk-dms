@@ -1,0 +1,64 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        <span class="mb-0 page-title">
+          {{ "MANAGE_PAGE_HELPER" | translate }}
+          <app-page-help-text code="PAGE_HELPERS"></app-page-help-text>
+        </span>
+      </div>
+    </div>
+    <form [formGroup]="pageHelperForm">
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label text-danger">{{ "NAME" | translate }} <sup>*</sup></label>
+                <input formControlName="name" class="form-control" type="text" />
+                @if ( pageHelperForm.get('name')?.touched &&
+                pageHelperForm.get('name')?.errors?.['required'] ) {
+                <div class="text-danger">
+                  {{ "NAME_IS_REQUIRED" | translate }}
+                </div>
+                }
+              </div>
+            </div>
+            <div class="col-md-12 mt-2">
+              <div class="form-group">
+                <label class="fw-bold form-label text-danger">
+                  {{ "DOCUMENT_SUMMARY" | translate }}
+                  <sup>*</sup>
+                </label>
+                <div class="NgxEditor__Wrapper">
+                  <app-text-editor formControlName="description"></app-text-editor>
+                </div>
+                @if (pageHelperForm.get('description')?.touched &&
+                pageHelperForm.get('description')?.errors?.['required']) {
+                <div class="text-danger">
+                  {{ "DESCRIPTION_IS_REQUIRED" | translate }}
+                </div>
+                }
+              </div>
+            </div>
+
+            <div class="row mt-4">
+              <div class="col-md-12">
+                <button class="success me-2" matButton="filled" (click)="saveUser()" cdkFocusInitial>
+                  <mat-icon class="medium-icon align-middle">save</mat-icon>
+                  {{
+                  isEditMode ? ("UPDATE" | translate) : ("SAVE" | translate)
+                  }}
+                </button>
+                <button type="button" class="error" matButton="filled" [routerLink]="['/page-helper']">
+                  <mat-icon class="medium-icon align-middle">cancel</mat-icon>
+                  {{ "CANCEL" | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </form>
+  </div>
+</section>

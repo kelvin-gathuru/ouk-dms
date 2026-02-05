@@ -1,0 +1,185 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "document-management": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "outputPath": "dist/document-management",
+            "browser": "src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              },
+              {
+                "glob": "pdf.worker.min.js",
+                "input": "node_modules/pdfjs-dist/build/",
+                "output": "/js/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/ngx-extended-pdf-viewer/assets/",
+                "output": "/assets/"
+              }
+            ],
+            "allowedCommonJsDependencies": [
+              "clone",
+              "SubSink",
+              "clone-deep",
+              "rfdc",
+              "dayjs",
+              "dayjs/plugin/localeData",
+              "dayjs/plugin/localizedFormat",
+              "dayjs/plugin/objectSupport",
+              "dayjs/plugin/utc",
+              "@ckeditor/ckeditor5-build-classic",
+              "@swimlane/ngx-graph",
+              "dagre",
+              "webcola",
+              "papaparse",
+              "mammoth",
+              "pdfjs-dist",
+              "exif-js",
+              "jszip",
+              "html2canvas",
+              "jspdf",
+              "raf",
+              "core-js/modules/es.string.split.js",
+              "pako",
+              "core-js/modules/es.regexp.to-string.js",
+              "core-js/modules/es.array.reverse.js",
+              "rgbcolor",
+              "core-js/modules/es.string.includes.js",
+              "core-js/modules/es.array.index-of.js",
+              "rgbcolor",
+              "core-js/modules/es.string.trim.js",
+              "core-js/modules/es.array.reduce.js",
+              "core-js/modules/es.string.ends-with.js",
+              "core-js/modules/web.dom-collections.iterator.js",
+              "core-js/modules/es.array.iterator.js",
+              "core-js/modules/es.string.starts-with.js",
+              "core-js/modules/es.string.replace.js",
+              "core-js/modules/es.string.match.js",
+              "core-js/modules/es.promise.js",
+              "crypto-js"
+            ],
+            "styles": [
+              "public/scss/style.scss",
+              "public/scss/theme/custom-theme.scss",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+            ],
+            "scripts": [
+              "node_modules/mammoth/mammoth.browser.min.js"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2MB",
+                  "maximumError": "3MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "15kB",
+                  "maximumError": "20kB"
+                }
+              ],
+              "outputHashing": "all",
+              "serviceWorker": "ngsw-config.json",
+              "optimization": {
+                "fonts": {
+                  "inline": false
+                }
+              }
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "document-management:build:production"
+            },
+            "development": {
+              "buildTarget": "document-management:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular/build:extract-i18n"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": [
+              "src/styles.scss"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "e2e/protractor.conf.js"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "document-management:serve:production"
+            },
+            "development": {
+              "devServerTarget": "document-management:serve:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": "16449e0a-31ef-416b-9c17-4f7b77a0e5be"
+  }
+}

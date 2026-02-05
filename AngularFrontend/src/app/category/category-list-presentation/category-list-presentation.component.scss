@@ -1,0 +1,52 @@
+tr.example-detail-row {
+  height: 0 !important;
+  border-bottom: none;
+
+  td {
+    height: 0 !important;
+    padding: 0px !important;
+  }
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+  padding: 0px !important;
+}
+
+.example-element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+.inner-table {
+  margin: 1em;
+  padding: 1em;
+  width: 100% !important;
+}
+
+/* Remove the bottom border for all rows by default */
+.border-none {
+  border: none !important;
+}
+
+.folder_shared {
+  color: #f2d300;
+  font-size: 30px;
+  margin-top: 0;
+  float: left;
+}
+
+.shared-icon {
+  max-height: 21px;
+  margin-top: -14px;
+}
+
+.fwbolder {
+  font-size: 14px !important;
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .fwbolder {
+    font-size: 9px !important;
+  }
+}

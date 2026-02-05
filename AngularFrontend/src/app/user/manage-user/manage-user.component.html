@@ -1,0 +1,168 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        @if(isEditMode) {
+        <span class="mb-0 page-title">{{ "EDIT_USER" | translate }}</span>
+        }@else{
+        <span class="mb-0 page-title">{{ "ADD_USER" | translate }}</span>
+        }
+        <app-page-help-text [code]="'MANAGE_USER'"></app-page-help-text>
+      </div>
+    </div>
+
+    <form [formGroup]="userForm">
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label text-danger">{{ "FIRST_NAME" | translate }} <sup>*</sup></label>
+                <input formControlName="firstName" class="form-control" type="text" />
+                @if(userForm.get('firstName')?.touched &&
+                userForm.get('firstName')?.errors &&
+                userForm.get('firstName')?.errors?.['required']){
+                <div class="text-danger">
+                  {{ "FIRST_NAME_IS_REQUIRED" | translate }}
+                </div>
+                }
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label text-danger">{{ "LAST_NAME" | translate }} <sup>*</sup></label>
+                <input formControlName="lastName" class="form-control" type="text" />
+                @if(userForm.get('lastName')?.touched &&
+                userForm.get('lastName')?.errors &&
+                userForm.get('lastName')?.errors?.['required']){
+                <div class="text-danger">
+                  {{ "LAST_NAME_IS_REQUIRED" | translate }}
+                </div>
+                }
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label text-danger">{{ "MOBILE_NUMBER" | translate }} <sup>*</sup></label>
+                <input formControlName="phoneNumber" class="form-control" type="text" />
+                @if(userForm.get('phoneNumber')?.touched &&
+                userForm.get('phoneNumber')?.errors &&
+                userForm.get('phoneNumber')?.errors?.['required']){
+                <div class="text-danger">
+                  {{ "MOBILE_IS_REQUIRED" | translate }}
+                </div>
+                }
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label text-danger">{{ "EMAIL" | translate }} <sup>*</sup></label>
+                <input formControlName="email" class="form-control" type="email" autocomplete="off" />
+                @if(userForm.get('email')?.touched &&
+                userForm.get('email')?.errors ){
+                @if(userForm.get('email')?.errors?.['required']){
+                <div class="text-danger">
+                  {{ "EMAIL_IS_REQUIRED" | translate }}
+                </div>
+                } @if(userForm.get('email')?.errors?.['email']){
+                <div class="text-danger">
+                  {{ "PLEASE_ENTER_VALID_EMAIL" | translate }}
+                </div>
+                } }
+              </div>
+            </div>
+            @if(!isEditMode) {
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label text-danger">{{ "PASSWORD" | translate }} <sup>*</sup></label>
+                <input autocomplete="new-password" formControlName="password" class="form-control" type="password" />
+                @if( userForm.get('password')?.touched &&
+                userForm.get('password')?.errors ){
+                <div class="text-danger">
+                  @if(userForm.get('password')?.errors?.['required']){
+                  {{ "PASSWORD_IS_REQUIRED" | translate }}
+                  } @if(userForm.get('password')?.errors?.['minlength']){
+                  <div>
+                    {{ "YOU_HAVE_TO_ENTER_AT_LEAST_DIGIT" | translate }}
+                  </div>
+                  }
+                </div>
+                }
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label text-danger">{{ "CONFIRM_PASSWORD" | translate }} <sup>*</sup></label>
+                <input autocomplete="new-password" formControlName="confirmPassword" class="form-control"
+                  type="password" />
+                @if(userForm.get('confirmPassword')?.touched &&
+                userForm.get('confirmPassword')?.errors &&
+                userForm.get('confirmPassword')?.errors?.['required']){
+                <div class="text-danger">
+                  {{ "CONFIRM_PASSWORD_IS_REQUIRED" | translate }}
+                </div>
+                } @if(userForm.get('confirmPassword')?.touched &&
+                userForm.hasError('notSame')){
+                <div class="text-danger">
+                  {{ "PASSWORDS_DO_NOT_MATCH" | translate }}
+                </div>
+                }
+              </div>
+            </div>
+            }
+            <div class="form-group col-md-6">
+              <mat-label>{{ "ROLES" | translate }}</mat-label>
+              <mat-select panelClass="mat-select-control" class="form-control" [(value)]="selectedRoles" multiple>
+                <mat-select-trigger>
+                  @if(selectedRoles.length > 0){
+                  <span>
+                    {{ selectedRoles[0].name }}
+                  </span>
+                  } @if(selectedRoles.length > 1){
+                  <span class="example-additional-selection">
+                    (+{{ selectedRoles.length - 1 }}
+                    {{ selectedRoles.length === 2 ? "other" : "others" }})
+                  </span>
+                  }
+                </mat-select-trigger>
+                @for(role of roleList; track $index; let i = $index) {
+                <mat-option [value]="role">{{ role.name }}</mat-option>
+                }
+              </mat-select>
+            </div>
+            @if(securityObject.isSuperAdmin) {
+            <div class="form-group col-md-6 d-md-flex mt-3">
+              <div class="col-md-3 col-12 col-sm-12">
+                <mat-checkbox color="primary" formControlName="isSuperAdmin" class="example-margin">
+                  {{ "IS_SUPERADMIN" | translate }}
+                </mat-checkbox>
+              </div>
+              <div class="col-md-8 col-sm-12 col-12">
+                @if(userForm.get('isSuperAdmin')?.value) {
+                <div class="d-flex align-items-center rounded-1 p-2" style="background-color: #1976d2;">
+                  <span class="material-icons me-2 text-light">info</span>
+                  <span class="text-light">
+                    {{ "Grants full access to all system features and settings." | translate }}
+                  </span>
+                </div>
+                }
+              </div>
+            </div>
+            }
+            <div class="col-md-12 mt-4">
+              <button *hasClaim="'EDIT_USER'" class="success me-2" matButton="filled" (click)="saveUser()"
+                cdkFocusInitial>
+                <mat-icon class="medium-icon align-middle">save</mat-icon>
+                {{ isEditMode ? ("UPDATE" | translate) : ("SAVE" | translate) }}
+              </button>
+              <button type="button" class="error" matButton="filled" [routerLink]="['/users']">
+                <mat-icon class="medium-icon align-middle">cancel</mat-icon>
+                {{ "CANCEL" | translate }}
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </form>
+  </div>
+</section>

@@ -1,0 +1,142 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        <span class="mb-0 page-title">{{'STORAGE_SETTINGS' | translate}}
+          <app-page-help-text [code]="'STORAGE_SETTINGS'"></app-page-help-text>
+        </span>
+      </div>
+      <div class="d-flex justify-content-end">
+        <button (click)="onCreateStorageSetting()" class="primary me-2" matButton="filled">
+          <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+           <span class="d-none d-lg-inline ms-1">{{'ADD_STORAGE_SETTING' | translate}}</span>
+        </button>
+      </div>
+    </div>
+
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <div class="table-responsive">
+          <div class="grid-height-large">
+            <table mat-table [dataSource]="storageSettings">
+              <!-- Action Column -->
+              <ng-container matColumnDef="action">
+                <th class="table-column-fix-30" mat-header-cell class="table-column-150" *matHeaderCellDef>
+                  {{ "ACTION" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let storageSetting" class="table-column-150">
+                  <div class="btn-group">
+                    <button matMiniFab (click)="editStorageSetting(storageSetting)" class="primary">
+                      <mat-icon class="medium-icon fs-5 align-middle">edit</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+              <!-- Storage Type Column -->
+              <ng-container matColumnDef="storageType">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "STORAGE_TYPE" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let storageSetting">
+                  {{ storageSetting.storageType | storageType :'' }}
+                </td>
+              </ng-container>
+              <!-- Name Column -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>{{ "NAME" | translate }}</th>
+                <td mat-cell *matCellDef="let storageSetting">
+                  @if (storageSetting.isEditing) {
+                  <input [(ngModel)]="storageSetting.name" class="form-control form-control-sm" placeholder="Enter name"
+                    [readonly]="storageSetting.storageType.toString() === storageType.LOCAL.toString()" />
+                  } @else {
+                  {{ storageSetting.name }}
+                  }
+                </td>
+              </ng-container>
+              <!-- Json Value Column (Read-only) -->
+              <ng-container matColumnDef="jsonValue">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "CONFIGURATION" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let storageSetting">
+                  @if (storageSetting.storageType.toString() != storageType.LOCAL.toString()) {
+                  <mat-icon [ngStyle]="{'color': '#4252b1'}" matTooltip="{{ storageSetting.jsonValue }}"
+                    matTooltipPosition="above">
+                    info
+                  </mat-icon>
+                  }
+                </td>
+              </ng-container>
+              <!-- Is Default Column -->
+              <ng-container matColumnDef="isDefault">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "IS_DEFAULT" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let storageSetting; let index = index; let last = last;">
+                  @if (storageSetting.isEditing) {
+                  <mat-slide-toggle color="primary" [(ngModel)]="storageSetting.isDefault"
+                    [disabled]="storageSettings.length === 1">
+                  </mat-slide-toggle>
+                  } @else {
+                  @if (storageSetting.isDefault) {
+                  <button class="success" matButton="filled">{{'YES' | translate}}</button>
+                  } @else {
+                  <button class="btn btn-light btn-sm">{{'NO' | translate}}</button>
+                  }
+                  }
+                </td>
+              </ng-container>
+
+              <!-- Enable Encryption Column -->
+              <ng-container matColumnDef="enableEncryption">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "ENABLE_ENCRYPTION" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let storageSetting">
+                  @if (storageSetting.isEditing) {
+                  <mat-slide-toggle color="primary" [(ngModel)]="storageSetting.enableEncryption"></mat-slide-toggle>
+                  } @else {
+                  @if (storageSetting.enableEncryption) {
+                  <button class="success" matButton="filled">{{'YES' | translate}}</button>
+                  } @else {
+                  <button class="error" matButton="filled">{{'NO' | translate}}</button>
+                  }
+                  }
+                </td>
+              </ng-container>
+              <!-- Update Column (only shows when editing) -->
+              <ng-container matColumnDef="update">
+                <th mat-header-cell *matHeaderCellDef>{{ "UPDATE" | translate }}</th>
+                <td mat-cell *matCellDef="let storageSetting">
+                  <div class="col-md-12">
+                    @if (storageSetting.isEditing) {
+                    <button class="success me-2 table-column-100" matButton="filled"
+                      (click)="saveStorageSetting(storageSetting)" cdkFocusInitial>
+                      <mat-icon class="medium-icon align-middle">save</mat-icon>
+                      {{ "SAVE" | translate }}
+                    </button>
+                    <button type="button" class="error table-column-100" matButton="filled"
+                      (click)="cancelEditing(storageSetting)">
+                      <mat-icon class="medium-icon align-middle">cancel</mat-icon>
+                      {{ "CANCEL" | translate }}
+                    </button>
+                    }
+                  </div>
+                </td>
+              </ng-container>
+              <tr *matNoDataRow>
+                <td colspan="5">
+                  <div class="m-2">
+                    <b> {{'NO_DATA_FOUND' | translate}}</b>
+                  </div>
+                </td>
+              </tr>
+              <tr class="grid-header-color" mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>

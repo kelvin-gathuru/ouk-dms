@@ -1,0 +1,434 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        <span class="mb-0 page-title">{{ "FOLDER_VIEW" | translate
+          }}</span>
+        <app-page-help-text [code]="'ASSIGN_DOCUMENTS_FOLDER_VIEW'"></app-page-help-text>
+      </div>
+      <div class="d-flex d-md-none col-auto">
+        <button class="btn" [matMenuTriggerFor]="menu" [attr.aria-label]="'Action'">
+          <mat-icon class="medium-icon fs-4 d-flex align-items-center justify-content-center">more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu" class="p-3">
+          <div class="d-flex flex-column gap-2">
+            <button class="primary" matButton="filled" [routerLink]="['/assign/list-view']">
+              <mat-icon class="medium-icon fs-5 align-middle">list</mat-icon>
+              {{ "DOCUMENT_VIEW" | translate }}
+            </button>
+            <button class="error" matButton="filled" (click)="onRefresh()">
+              <mat-icon class="medium-icon fs-5 align-middle">refresh</mat-icon>
+              {{ "REFRESH" | translate }}
+            </button>
+            <button *hasClaim="'CREATE_CATEGORY'" class="success" matButton="filled" (click)="onFoldersOrCategories()">
+              <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+              {{ "ADD_FOLDERS_OR_CATEGORY" | translate }}
+            </button>
+            <button *hasClaim="'ASSIGNED_CREATE_DOCUMENT'" class="warning" matButton="filled" (click)="
+                      onAddDocument(assignFoldersViewStore.selectedCategoryId())
+                    ">
+              <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+              {{ "ADD_DOCUMENT" | translate }}
+            </button>
+          </div>
+        </mat-menu>
+      </div>
+      <div class="d-flex flex-wrap justify-content-end mb-2 d-none d-md-inline-flex gap-2">
+        <button class="primary" matButton="filled" [routerLink]="['/assign/list-view']">
+          <mat-icon class="medium-icon fs-5 align-middle">list</mat-icon>
+          <span class="d-none d-lg-inline ms-1">{{
+            "DOCUMENT_VIEW" | translate
+            }}</span>
+        </button>
+        <button class="error" matButton="filled" (click)="onRefresh()">
+          <mat-icon class="medium-icon fs-5 align-middle">refresh</mat-icon>
+          <span class="d-none d-lg-inline ms-1">{{
+            "REFRESH" | translate
+            }}</span>
+        </button>
+        <button *hasClaim="'CREATE_CATEGORY'" class="success" matButton="filled" (click)="onFoldersOrCategories()">
+          <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+          <span class="d-none d-lg-inline ms-1">{{
+            "ADD_FOLDERS_OR_CATEGORY" | translate
+            }}</span>
+        </button>
+        <button *hasClaim="'ASSIGNED_CREATE_DOCUMENT'" class="warning" matButton="filled"
+          (click)="onAddDocument(assignFoldersViewStore.selectedCategoryId())">
+          <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+          <span class="d-none d-lg-inline ms-1">{{
+            "ADD_DOCUMENT" | translate
+            }}</span>
+        </button>
+      </div>
+    </div>
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <div class="row align-items-center justify-content-between">
+          <div class="col-md-auto col-sm-auto">
+            <div class="d-flex align-items-center" style="height: 40px">
+              @if (assignFoldersViewStore.newCategoryPath().length > 0) {
+              <a role="button" class="d-flex align-items-center pl-3 height-30 text-decoration-none fw-bolder"
+                (click)="onHomeClick()">
+                <span class="material-icons folder_shared text-dark me-2">
+                  home
+                </span>
+                {{ "HOME" | translate }}
+              </a>
+              } @else {
+              <span role="button" class="d-flex align-items-center pl-3 height-30 fw-bolder">
+                <span class="material-icons folder_shared text-primary me-2">
+                  home
+                </span>
+                {{ "HOME" | translate }}
+              </span>
+              }
+              @if(assignFoldersViewStore.newCategoryPath().length > 0){
+              @let paths= assignFoldersViewStore.newCategoryPath();
+              <!-- Always show first folder -->
+              @if(paths.length <= 2){ <mat-icon class="small-arrow align-middle">arrow_right</mat-icon>
+                @if(paths.length==2){
+                <button [dir]="langDir" matTooltip="{{paths[0].name}}" type="button" [title]="paths[0].name"
+                  (click)="onFolderClickFromPath(paths[0])" class="btn btn-link text-decoration-none">
+                  @if(isMobile){
+                  <span [dir]="langDir" class="fw-bolder"> {{ paths[0].name | limitTo: '15' }}</span>
+                  } @else {
+                  <span [dir]="langDir" class="fw-bolder"> {{ paths[0].name }}</span>
+                  }
+                </button>
+                } @else{
+                <span [dir]="langDir" matTooltip="{{paths[0].name}}" class="fw-bolder">
+                  @if(isMobile){
+                  {{ paths[0].name | limitTo: '15' }}
+                  } @else {
+                  {{ paths[0].name }}
+                  }
+                </span>
+                }
+                } @else {
+                <mat-icon class="small-arrow align-middle">arrow_right</mat-icon>
+                <button class="btn btn-link text-decoration-none fw-bolder"
+                  (click)="onFolderClickFromPath(paths[paths.length - 2])">
+                  ...
+                </button>
+                }
+                <!-- Middle folders replaced with '...' if more than 3 folders -->
+                <!-- Show remaining folders -->
+                @for(path of paths; track i; let i = $index; let last = $last){
+                @if(i > 0 && (paths.length <= 3 || i>= paths.length - 2)){
+                  @if(i < paths.length - 1) { <mat-icon class="small-arrow align-middle">arrow_right</mat-icon>
+                    <button [dir]="langDir" matTooltip="{{path.name}}" type="button" [title]="path.name"
+                      (click)="onFolderClickFromPath(path)" class="btn btn-link text-decoration-none">
+                      @if(isMobile){
+                      <span [dir]="langDir" class="fw-bolder"> {{ path.name | limitTo: '15' }}</span>
+                      } @else {
+                      <span [dir]="langDir" class="fw-bolder"> {{ path.name }} </span>
+                      }
+                    </button>
+                    }
+                    @if(i === paths.length - 1){
+                    <mat-icon class="small-arrow align-middle">arrow_right</mat-icon>
+                    <span [dir]="langDir" matTooltip="{{path.name}}" class="fw-bolder">
+                      @if(isMobile){
+                      {{ path.name | limitTo: '15' }}
+                      } @else {
+                      {{ path.name }}
+                      }
+                    </span>
+                    }
+                    }
+                    }
+                    }
+
+
+                    <!-- @for (path of assignFoldersViewStore.newCategoryPath(); track
+                    path) { @if (!$last) {
+                    <button type="button" [title]="path.name" (click)="onFolderClickFromPath(path)"
+                      class="btn btn-link text-decoration-none">
+                      {{ path.name }}
+                    </button>
+                    <span class="material-icons-outlined small-arrow align-middle">
+                      <mat-icon class="fs-3 medium-icon me-2">arrow_right</mat-icon>
+                    </span>
+                    } @else {
+                    <span class="fw-bolder">
+                      {{ path.name }}
+                    </span>
+                    } } -->
+            </div>
+          </div>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="row">
+          <div class="col">
+            <div class="table-responsive">
+              <div class="grid-height-folderview">
+                <table class="table table-pos table_color">
+                  @let orderBy =
+                  (assignFoldersViewStore.documentResourceParameter() &&
+                  assignFoldersViewStore.documentResourceParameter().orderBy) ?
+                  assignFoldersViewStore.documentResourceParameter().orderBy.split('
+                  ') : ['name', 'asc'];
+                  <thead matSort matSortDisableClear [matSortActive]="orderBy[0]"
+                    [matSortDirection]="orderBy[1] === 'desc' ? 'desc' : 'asc'" (matSortChange)="sortData($event)">
+                    <tr class="grid-header-color">
+                      <th style="width: 50%" mat-sort-header="name" class="text-nowrap">
+                        {{ "NAME" | translate }}
+                      </th>
+                      <th style="width: 5%"></th>
+                      <th style="width: 10%" class="text-nowrap" mat-sort-header="documentNumber">
+                        {{ "DOCUMENT_NO" | translate }}
+                      </th>
+                      <th style="width: 15%" class="text-nowrap" mat-sort-header="createdBy">
+                        {{ "CREATED_BY" | translate }}
+                      </th>
+                      <th style="width: 15%" class="text-nowrap" mat-sort-header="createdDate">
+                        {{ "CREATED_AT" | translate }}
+                      </th>
+                      <th style="width: 5%" class="text-nowrap">
+                        {{ "ACTIONS" | translate }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @if (assignFoldersViewStore.categories() &&
+                    assignFoldersViewStore.categories().length > 0) { @for
+                    (category of assignFoldersViewStore.sortedCategories(); track
+                    $index; let i =$index) {
+                    <tr [ngClass]="{ 'evenRow': i % 2 === 0, 'oldRow': i % 2 !== 0 }">
+                      <td>
+                        <a role="button"
+                          class="d-flex align-items-center pl-3 height-30 text-decoration-none text-nowrap"
+                          (click)="onFolderClick(category)">
+                          @if (!category?.isShared) {
+                          <span class="material-icons folder_shared">
+                            folder
+                          </span>
+                          } @if (category?.isShared) {
+                          <span class="material-icons folder_shared text-nowrap">
+                            <img src="/images/share-icon.svg" class="shared-icon" />
+                          </span>
+                          }
+                          <span class="m-1"> {{ category.name }}</span>
+                        </a>
+                      </td>
+                      <td></td>
+                      <td></td>
+                      <td class="text-nowrap">
+                        <span class="d-flex align-items-center pl-3 height-30 text-nowrap">{{ category.createdUserName
+                          }}</span>
+                      </td>
+                      <td>
+                        <span class="d-flex align-items-center pl-3 height-30 text-nowrap">{{ category.createdDate |
+                          utcToLocalTime : "short" }}
+                        </span>
+                      </td>
+                      <td>
+                        <ng-container>
+                          <button matMiniFab class="primary" *hasClaim="[
+                            'ASSIGNED_SHARE_FOLDER',
+                            'ASSIGNED_ARCHIVE_FOLDER'
+                          ]" [matMenuTriggerFor]="folderMenu">
+                            <mat-icon
+                              class="medium-icon fs-4 d-flex align-items-center justify-content-center">more_vert</mat-icon>
+                          </button>
+                          <mat-menu #folderMenu="matMenu">
+                            <button *hasClaim="'ASSIGNED_SHARE_FOLDER'" mat-menu-item class="btn btn-light btn-sm"
+                              (click)="manageCategoryPermission(category)" type="button">
+                              <mat-icon>share</mat-icon>
+                              {{ "SHARE" | translate }}
+                            </button>
+                            <button *hasClaim="'ASSIGNED_ARCHIVE_FOLDER'" mat-menu-item class="btn btn-light btn-sm"
+                              (click)="archiveFolder(category)" type="button">
+                              <mat-icon>archive</mat-icon>
+                              {{ "ARCHIVE" | translate }}
+                            </button>
+                          </mat-menu>
+                        </ng-container>
+                      </td>
+                    </tr>
+                    } } @if (assignFoldersViewStore.sortedDocuments().length > 0)
+                    { @for (document of assignFoldersViewStore.sortedDocuments();
+                    track document; let i = $index) {
+                    @let folderCount = assignFoldersViewStore.categories().length % 2 + i;
+                    <tr [ngClass]="{ 'evenRow': folderCount % 2 === 0, 'oldRow': folderCount % 2 !== 0 }">
+                      <td>
+                        <a role="button" class="d-flex align-items-center pl-3 text-decoration-none"
+                          (click)="onDocumentView(document)">
+                          <img src="{{ document.extension | imagePath }}" [alt]="document.name" class="me-2 list-img"
+                            loading="lazy" />
+                          {{ document.name }}
+                        </a>
+                      </td>
+                      <td>
+                        <div class="d-flex">
+                          @if (document.workflowsDetail) { @let workflowName =
+                          (document.workflowsDetail | workflowCombine); @if
+                          (workflowName) {
+                          <span matTooltip="{{ 'CURRENT_WORKFLOW' | translate }}-{{
+                            workflowName
+                          }}">
+                            <mat-icon>activity</mat-icon>
+                          </span>
+                          } } @if(document.signBy) {
+                          <span attr.aria-label="{{ 'SIGN_BY' | translate }}" matTooltip="{{ 'SIGN_BY' | translate }}-{{
+                            document.signBy
+                          }}">
+                            <mat-icon class="medium-icon fs-5 align-middle">gesture</mat-icon>
+                          </span>
+                          } @if(document.commentCount && document.commentCount >
+                          0) {
+                          <mat-icon style="cursor: pointer; margin-left: 8px" (click)="addComment(document)"
+                            matBadgeSize="small" matBadge="{{ document.commentCount }}" [attr.aria-hidden]="'false'">
+                            comment
+                          </mat-icon>
+                          } @if(document.isShared) {
+                          <ng-container *hasClaim="[
+                            'ASSIGNED_SHARE_DOCUMENT',
+                            'ASSIGNED_SHARE_FOLDER'
+                          ]">
+                            <mat-icon style="cursor: pointer; margin-left: 8px"
+                              (click)="manageSharePermission(document)">
+                              groups
+                            </mat-icon>
+                          </ng-container>
+                          }
+                        </div>
+                      </td>
+                      <td>
+                        <span class="d-flex align-items-center pl-3 document-number height-30">
+                          {{ document.documentNumber }}
+                          &nbsp;&nbsp;
+                        </span>
+                      </td>
+                      <td>
+                        <span class="d-flex align-items-center pl-3 height-30">
+                          {{ document.createdBy }}</span>
+                      </td>
+                      <td>
+                        <span class="d-flex align-items-center pl-3 height-30">
+                          {{ document.createdDate | utcToLocalTime : "short" }}
+                        </span>
+                      </td>
+                      <td>
+                        <button matMiniFab class="primary" *hasClaim="[
+                          'ASSIGNED_EDIT_DOCUMENT',
+                          'ASSIGNED_START_WORKFLOW',
+                          'ASSIGNED_GET_DOCUMENT_SUMMARY',
+                          'ASSIGNED_ADD_SIGNATURE',
+                          'ASSIGNED_SHARE_DOCUMENT',
+                          'ASSIGNED_CREATE_SHAREABLE_LINK',
+                          'ASSIGNED_DOWNLOAD_DOCUMENT',
+                          'ASSIGNED_UPLOAD_NEW_VERSION',
+                          'ASSIGNED_VIEW_VERSION_HISTORY',
+                          'ASSIGNED_ADD_COMMENT',
+                          'ASSIGNED_ADD_REMINDER',
+                          'ASSIGNED_SEND_EMAIL',
+                          'ASSIGNED_ARCHIVE_DOCUMENT',
+                          'ASSIGNED_MANAGE_INDEXING'
+                        ]" [matMenuTriggerFor]="menu">
+                          <mat-icon
+                            class="medium-icon fs-4 d-flex align-items-center justify-content-center">more_vert</mat-icon>
+                        </button>
+
+                        <mat-menu #menu="matMenu">
+                          <button *hasClaim="'ASSIGNED_EDIT_DOCUMENT'" mat-menu-item class="btn btn-light btn-sm"
+                            (click)="editDocument(document)">
+                            <mat-icon>edit</mat-icon>
+                            {{ "EDIT" | translate }}
+                          </button>
+                          @if(checkWorkflowInstance(document)) {
+                          <button *hasClaim="'ASSIGNED_START_WORKFLOW'" mat-menu-item class="btn btn-light btn-sm"
+                            (click)="manageWorkflowInstance(document)">
+                            <mat-icon>sync_alt</mat-icon>
+                            {{ "START_WORKFLOW" | translate }}
+                          </button>
+                          }
+                          <button *hasClaim="'ASSIGNED_GET_DOCUMENT_SUMMARY'" mat-menu-item
+                            (click)="getDocumentSummary(document)" type="button">
+                            <mat-icon>smart_toy</mat-icon>
+                            {{ "GET_DOCUMENT_SUMMARY" | translate }}
+                          </button>
+                          <button *hasClaim="'ASSIGNED_ADD_SIGNATURE'" mat-menu-item class="btn btn-light btn-sm"
+                            (click)="onDocumentSignatureClick(document)">
+                            <mat-icon>draw</mat-icon>
+                            {{ "DOCUMENT_SIGNATURE" | translate }}
+                          </button>
+                          <button *hasClaim="'ASSIGNED_SHARE_DOCUMENT'" mat-menu-item class="btn btn-light btn-sm"
+                            (click)="manageDocumentPermission(document)" type="button">
+                            <mat-icon>share</mat-icon>
+                            {{ "SHARE" | translate }}
+                          </button>
+                          <button *hasClaim="'ASSIGNED_CREATE_SHAREABLE_LINK'" mat-menu-item
+                            class="btn btn-light btn-sm" (click)="onCreateShareableLink(document)" type="button">
+                            <mat-icon>link</mat-icon>
+                            {{ "GET_SHAREABLE_LINK" | translate }}
+                          </button>
+                          <button class="btn btn-light btn-sm" *hasClaim="'ASSIGNED_DOWNLOAD_DOCUMENT'" mat-menu-item
+                            (click)="downloadDocument(document)" type="button">
+                            <mat-icon>download</mat-icon>
+                            {{ "DOWNLOAD" | translate }}
+                          </button>
+                          <button mat-menu-item class="btn btn-light btn-sm" *hasClaim="'ASSIGNED_UPLOAD_NEW_VERSION'"
+                            (click)="uploadNewVersion(document)" type="button">
+                            <mat-icon>upload</mat-icon>
+                            {{ "UPLOAD_NEW_VERSION_FILE" | translate }}
+                          </button>
+                          <button class="btn btn-light btn-sm" mat-menu-item *hasClaim="'ASSIGNED_VIEW_VERSION_HISTORY'"
+                            (click)="onVersionHistoryClick(document)">
+                            <mat-icon> history</mat-icon>
+                            {{ "VERSION_HISOTRY" | translate }}
+                          </button>
+                          <button class="btn btn-light btn-sm" *hasClaim="'ASSIGNED_ADD_COMMENT'" mat-menu-item
+                            (click)="addComment(document)" type="button">
+                            <mat-icon> chat</mat-icon>
+                            {{ "COMMENT" | translate }}
+                          </button>
+                          <button class="btn btn-light btn-sm" *hasClaim="'ASSIGNED_ADD_REMINDER'" mat-menu-item
+                            (click)="addReminder(document)" type="button">
+                            <mat-icon>notifications</mat-icon>
+                            {{ "ADD_REMINDER" | translate }}
+                          </button>
+                          <button class="btn btn-light btn-sm" *hasClaim="'ASSIGNED_SEND_EMAIL'" mat-menu-item
+                            (click)="sendEmail(document)" type="button">
+                            <mat-icon>forward_to_inbox</mat-icon>
+                            {{ "SEND_EMAIL" | translate }}
+                          </button>
+                          <button *hasClaim="'ASSIGNED_ARCHIVE_DOCUMENT'" mat-menu-item
+                            (click)="archiveDocument(document)" type="button">
+                            <mat-icon>archive</mat-icon>
+                            {{ "ARCHIVE" | translate }}
+                          </button>
+                        </mat-menu>
+                      </td>
+                    </tr>
+                    } } @if(!assignFoldersViewStore.isLoading() &&
+                    assignFoldersViewStore.categories().length === 0 &&
+                    assignFoldersViewStore.documents().length === 0) {
+                    <tr>
+                      <td colspan="6">
+                        <p class="text-danger">
+                          {{ "NO_FILES_OR_FOLDERS_FOUND" | translate }}
+                        </p>
+                      </td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+                @if(assignFoldersViewStore.isLoading()) {
+                <div class="loading-text">Loading...</div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>
+@if(assignFoldersViewStore.isLoading() || isLoadingResults) {
+<div class="spinner-container">
+  <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+  </mat-progress-spinner>
+</div>
+}

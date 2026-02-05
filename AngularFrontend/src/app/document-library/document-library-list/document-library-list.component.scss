@@ -1,0 +1,13 @@
+::ng-depp .ng-dropdown-panel {
+  z-index: 9999 !important;
+  display: absolute !important;
+}
+
+@for $index from 0 through 300 {
+  $size: $index * 1;
+
+  .table-column-#{$size} {
+    // flex: 0 1 #{$size}#{"px"};
+    min-width: #{$size}#{"px"};
+  }
+}

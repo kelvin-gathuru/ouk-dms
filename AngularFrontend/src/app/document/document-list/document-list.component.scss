@@ -1,0 +1,15 @@
+@for $index from 0 through 300 {
+  $size: $index * 1;
+
+  .table-column-#{$size} {
+    // flex: 0 1 #{$size}#{"px"};
+    min-width: #{$size}#{"px"};
+  }
+}
+
+.fixed-table {
+  table-layout: fixed;
+  /* Prevent auto-adjustment */
+  width: 100%;
+  /* Full table width */
+}

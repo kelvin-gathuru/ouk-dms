@@ -1,0 +1,68 @@
+<div class="d-flex flex-column">
+  <ngx-extended-pdf-viewer [zoom]="currentZoom" height="93vh" (pageChange)="onPageChange($event)"
+    (pageRendered)="onPageRendered($event)" (zoomChange)="onZoomChange($event)" (pdfLoaded)="onPdfLoaded($event)"
+    #pdfViewer [customToolbar]="additionalButtons" [page]="pageNumber" [src]="documentNewBlob()"
+    [showUnverifiedSignatures]="true">
+  </ngx-extended-pdf-viewer>
+  <ng-template #additionalButtons>
+    <div id="toolbarViewer">
+      <div id="toolbarViewerLeft">
+        <pdf-toggle-sidebar></pdf-toggle-sidebar>
+        @if(!isFileRequest){
+          <div class="toolbarButtonSpacer"></div>
+        <button class="primary" *hasClaim="['ALL_ADD_SIGNATURE','ASSIGNED_ADD_SIGNATURE']" (click)="addSignature()"
+          matButton="filled" [attr.aria-label]="'Add Signature'">
+          <mat-icon class="medium-icon fs-5 align-middle">edit</mat-icon>
+          {{ "SIGNATURE" | translate }}
+        </button>
+        <div class="toolbarButtonSpacer"></div>
+        @if(isSignatureAdded ){
+        <button class="primary" (click)="saveSignature()" matButton="filled" [attr.aria-label]="'Save Signature'">
+          <mat-icon class="medium-icon fs-5 align-middle">save</mat-icon>
+          {{ "SAVE_SIGNATURE" | translate }}
+        </button>
+        <div class="toolbarButtonSpacer"></div>
+        <button class="primary" (click)="resetSignature()" matButton="filled" [attr.aria-label]="'Add Signature'">
+          <mat-icon class="medium-icon fs-5 align-middle">restore</mat-icon>
+          {{ "RESET" | translate }}
+        </button>
+        <div class="toolbarButtonSpacer"></div>
+        }
+        }
+        <pdf-zoom-in></pdf-zoom-in>
+        <pdf-zoom-dropdown></pdf-zoom-dropdown>
+        <pdf-zoom-out></pdf-zoom-out>
+        <pdf-paging-area></pdf-paging-area>
+      </div>
+      <!-- <pdf-zoom-toolbar></pdf-zoom-toolbar> -->
+      <div id="toolbarViewerRight">
+        <!-- <pdf-open-file></pdf-open-file> -->
+        <pdf-presentation-mode></pdf-presentation-mode>
+        <pdf-print></pdf-print>
+        <!-- <pdf-download></pdf-download> -->
+        <div class="verticalToolbarSeparator hiddenSmallView"></div>
+        <pdf-toggle-secondary-toolbar></pdf-toggle-secondary-toolbar>
+      </div>
+      @if(isSignatureAdded){
+      <div class="floating-signature" cdkDrag [cdkDragFreeDragPosition]="{x: mousePageX, y: mousePageY }"
+        (cdkDragStarted)="startDrag()" (cdkDragEnded)="onDragEnded($event)">
+        <img [src]="signatureUrl" />
+        <div class="sig-meta">
+          <div class="sig-user">Signed by:{{ currentUserName }}</div>
+          <div class="sig-date">{{ today | date:'yyyy-MM-dd hh:mm:ss a' }}</div>
+        </div>
+      </div>
+      }
+    </div>
+
+  </ng-template>
+  <!-- </div> -->
+</div>
+<!-- Floating signature following cursor -->
+
+@if(isLoading){
+<div class="spinner-container">
+  <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+  </mat-progress-spinner>
+</div>
+}

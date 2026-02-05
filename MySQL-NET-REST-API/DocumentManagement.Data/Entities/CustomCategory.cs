@@ -1,0 +1,11 @@
+﻿using System;
+
+namespace DocumentManagement.Data;
+
+public class CustomCategory
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public Guid? ParentId { get; set; }
+    public bool IsArchive { get; set; }
+}

@@ -1,0 +1,95 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
+import { CommonHttpErrorService } from '@core/error-handler/common-http-error.service';
+import { User } from '@core/domain-classes/user';
+import { Observable } from 'rxjs';
+import { CommonError } from '@core/error-handler/common-error';
+import { catchError } from 'rxjs/operators';
+import { UserClaim } from '@core/domain-classes/user-claim';
+import { ResourceParameter } from '@core/domain-classes/resource-parameter';
+
+@Injectable({ providedIn: 'root' })
+export class UserService {
+  constructor(
+    private httpClient: HttpClient,
+    private commonHttpErrorService: CommonHttpErrorService
+  ) { }
+
+  updateUser(user: User): Observable<User | CommonError> {
+    const url = `user/${user.id}`;
+    return this.httpClient
+      .put<User>(url, user)
+      .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
+
+  addUser(user: User): Observable<User | CommonError> {
+    const url = `user`;
+    return this.httpClient
+      .post<User>(url, user)
+      .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
+
+  deleteUser(id: string): Observable<void | CommonError> {
+    const url = `user/${id}`;
+    return this.httpClient
+      .delete<void>(url)
+      .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
+
+  getUser(id: string): Observable<User | CommonError> {
+    const url = `user/${id}`;
+    return this.httpClient
+      .get<User>(url)
+      .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
+
+  getUsers(
+    resource: ResourceParameter
+  ): Observable<HttpResponse<User[]>> {
+    const url = `user`;
+    const customParams = new HttpParams()
+      .set('Fields', resource.fields ?? '')
+      .set('OrderBy', resource.orderBy ?? '')
+      .set('PageSize', resource.pageSize.toString())
+      .set('Skip', resource.skip.toString())
+      .set('SearchQuery', resource.searchQuery ?? '');
+
+    return this.httpClient
+      .get<User[]>(url, {
+        params: customParams,
+        observe: 'response',
+      });
+
+  }
+
+  updateUserClaim(
+    userClaims: UserClaim[],
+    userId: string
+  ): Observable<User | CommonError> {
+    const url = `UserClaim/${userId}`;
+    return this.httpClient
+      .put<User>(url, { userClaims })
+      .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
+
+  resetPassword(user: User): Observable<User | CommonError> {
+    const url = `user/resetpassword`;
+    return this.httpClient
+      .post<User>(url, user)
+      .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
+
+  changePassword(user: User): Observable<User | CommonError> {
+    const url = `user/changepassword`;
+    return this.httpClient
+      .post<User>(url, user)
+      .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
+
+  updateUserProfile(user: User): Observable<User | CommonError> {
+    const url = `user/profile`;
+    return this.httpClient
+      .put<User>(url, user)
+      .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
+}

@@ -1,0 +1,69 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="d-flex mb-2">
+      <div class="me-auto">
+        @if (!currentWorkflow?.id) {
+        <span class="mb-0 page-title">
+          {{ "ADD_WORKFLOW" | translate }}
+          <app-page-help-text code="MANAGE_WORKFLOW"></app-page-help-text>
+        </span>
+        } @if (currentWorkflow?.id) {
+        <span class="mb-0 page-title">
+          {{ "EDIT_WORKFLOW" | translate }}
+          <app-page-help-text code="MANAGE_WORKFLOW"></app-page-help-text>
+        </span>
+        }
+      </div>
+    </div>
+    <!-- Step 1 -->
+    <form [formGroup]="workFormGroup">
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="name" class="form-label">{{
+                  "NAME" | translate
+                  }}</label>
+                <input class="form-control" placeholder="{{ 'ENTER_THE_WORKFLOW_NAME' | translate }}"
+                  formControlName="name" type="text" required />
+                @if (workFormGroup.get('name')?.touched &&
+                workFormGroup.get('name')?.errors?.['required']) {
+                <div class="text-danger">
+                  {{ "NAME_IS_REQUIRED" | translate }}
+                </div>
+                }
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="description" class="form-label">{{
+                  "DESCRIPTION" | translate
+                  }}</label>
+                <input class="form-control" placeholder="{{
+                    'ENTER_THE_WORKFLOW_DESCRIPTION' | translate
+                  }}" formControlName="description" type="text" required />
+                @if (workFormGroup.get('description')?.touched &&
+                workFormGroup.get('description')?.errors?.['required']) {
+                <div class="text-danger">
+                  {{ "DESCRIPTION_IS_REQUIRED" | translate }}
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 mt-2">
+            <button class="success me-2" matButton="filled" (click)="saveWorkflow()" cdkFocusInitial>
+              <mat-icon class="medium-icon fs-5 align-middle">arrow_forward</mat-icon>
+              {{ "NEXT" | translate }}
+            </button>
+            <button type="button" class="error" matButton="filled" [routerLink]="['/workflow-settings']">
+              <mat-icon class="medium-icon align-middle">cancel</mat-icon>
+              {{ "CANCEL" | translate }}
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </form>
+  </div>
+</section>

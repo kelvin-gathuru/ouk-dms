@@ -1,0 +1,96 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using DocumentManagement.Common.UnitOfWork;
+using DocumentManagement.Data.Dto;
+using DocumentManagement.Data.Entities;
+using DocumentManagement.Domain;
+using DocumentManagement.MediatR.Commands;
+using DocumentManagement.Repository;
+using MediatR;
+
+public class DeleteCategoryRolePermissionCommandHandler(
+    ICategoryRolePermissionRepository categoryRolePermissionRepository,
+    IDocumentRepository documentRepository,
+    IMediator mediator,
+    IUnitOfWork<DocumentContext> uow,
+    UserInfoToken userInfo,
+    ICategoryRepository categoryRepository,
+    IDocumentAuditTrailRepository documentAuditTrailRepository
+) : IRequestHandler<DeleteCategoryRolePermissionCommand, CategoryRolePermissionDto>
+{
+    public async Task<CategoryRolePermissionDto> Handle(DeleteCategoryRolePermissionCommand request, CancellationToken cancellationToken)
+    {
+        var entity = await categoryRolePermissionRepository.FindAsync(request.Id);
+        if (entity == null)
+        {
+            return new CategoryRolePermissionDto
+            {
+                StatusCode = 404,
+                Messages = new List<string> { "Not Found" }
+            };
+        }
+        var category = await categoryRepository.FindAsync(entity.CategoryId);
+        if (category == null)
+        {
+            return new CategoryRolePermissionDto
+            {
+                StatusCode = 404,
+                Messages = new List<string> { "Folder Not Found" }
+            };
+        }
+        if (category.ParentId != null)
+        {
+            var command = new CheckShareUserByCategoryCommand()
+            {
+                CategoryId = (Guid)category.ParentId
+            };
+
+            var result = await mediator.Send(command);
+            if (result.Data)
+            {
+                return new CategoryRolePermissionDto
+                {
+                    StatusCode = 422,
+                    Messages = new List<string> { "Parent Folder is shared, permission cannot be deleted." }
+                };
+            }
+        }
+        var affectedCategoryIds = categoryRepository.GetAllChildCategoryIdsUsingRawSql(entity.CategoryId);
+        affectedCategoryIds.Add(entity.CategoryId);
+
+        var permissionsToRemove = categoryRolePermissionRepository.All
+            .Where(p => affectedCategoryIds.Contains(p.CategoryId) && p.RoleId == entity.RoleId)
+            .ToList();
+
+        foreach (var perm in permissionsToRemove)
+        {
+            documentAuditTrailRepository.Add(new DocumentAuditTrail
+            {
+                CategoryId = perm.CategoryId,
+                CreatedBy = userInfo.Id,
+                CreatedDate = DateTime.UtcNow,
+                OperationName = DocumentOperation.Removed_Folder_Permission,
+                AssignToRoleId = perm.RoleId
+            });
+        }
+
+        categoryRolePermissionRepository.RemoveRange(permissionsToRemove);
+        if (await uow.SaveAsync() <= -1)
+        {
+            return new CategoryRolePermissionDto
+            {
+                StatusCode = 500,
+                Messages = new List<string> { "An unexpected fault happened. Try again later." }
+            };
+        }
+        await documentRepository.UpdateDocumentSharingFlagAsync(affectedCategoryIds);
+        return new CategoryRolePermissionDto
+        {
+            StatusCode = 200,
+            Messages = new List<string> { "Permission Deleted Successfully." }
+        };
+    }
+}
