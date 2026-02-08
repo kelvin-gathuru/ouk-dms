@@ -7,44 +7,64 @@ $font-family: 'Poppins', sans-serif;
 .sidebar {
     background: #ffffff !important;
     border-right: 1px solid #f1f5f9;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02) !important;
+    width: 250px !important;
 
-    .sidebar-header {
-        border-bottom: 1px solid #f8fafc;
+    .sidebar-brand {
+        padding: 40px 20px 30px;
+        text-align: center;
+        border-bottom: none !important;
+        background: #ffffff !important;
 
-        .text-teal-primary {
-            color: $teal-primary;
+        .logo-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+
+            .ouk-logo {
+                max-width: 100px;
+                height: auto;
+                background: transparent !important;
+            }
         }
     }
 
     .menu {
         .list {
-            padding: 15px;
+            padding: 10px 15px;
 
             li {
-                margin-bottom: 8px;
+                margin-bottom: 5px;
+                list-style: none;
 
                 a {
-                    border-radius: 24px !important;
-                    padding: 10px 20px !important;
-                    color: $text-muted !important;
+                    display: flex;
+                    align-items: center;
+                    border-radius: 8px !important;
+                    padding: 10px 15px !important;
+                    color: $teal-primary !important; // Enforce teal text for better visibility
                     font-family: $font-family !important;
-                    transition: all 0.2s ease;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    text-decoration: none !important;
 
                     mat-icon {
-                        color: $text-muted !important;
-                        transition: all 0.2s ease;
+                        color: $teal-primary !important;
+                        margin-right: 12px !important;
+                        font-size: 18px;
                     }
 
                     span {
                         font-weight: 500;
+                        font-size: 0.85rem;
+                        color: $teal-primary !important; // Explicitly enforce for span
                     }
 
                     &:hover {
-                        background-color: #f8fafc !important;
+                        background-color: $teal-light !important;
                         color: $teal-primary !important;
 
-                        mat-icon {
+                        mat-icon,
+                        span {
                             color: $teal-primary !important;
                         }
                     }
@@ -55,9 +75,10 @@ $font-family: 'Poppins', sans-serif;
                     a {
                         background-color: $teal-light !important;
                         color: $teal-primary !important;
-                        font-weight: 700 !important;
+                        font-weight: 600 !important;
 
-                        mat-icon {
+                        mat-icon,
+                        span {
                             color: $teal-primary !important;
                         }
                     }
