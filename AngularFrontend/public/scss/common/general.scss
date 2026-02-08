@@ -267,8 +267,7 @@ textarea:-ms-input-placeholder {
 }
 
 .grid-header-color {
-  background-color: #4B5563 !important;
-  //background-color: #3847A3 !important;
+  background-color: #037c91 !important; // OUK Teal
   color: #fff !important;
 }
 
@@ -305,10 +304,18 @@ textarea:-ms-input-placeholder {
     background-color: #edf1ef !important;
     /* white */
   }
+
+  tr {
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(3, 124, 145, 0.05) !important; // Subtle teal hover
+    }
+  }
 }
 
 .table-pos>thead>tr>th {
-  background-color: #4B5563 !important;
+  background-color: #037c91 !important; // OUK Teal
   color: #fff !important;
 }
 

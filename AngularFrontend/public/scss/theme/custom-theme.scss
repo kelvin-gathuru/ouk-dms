@@ -183,14 +183,122 @@ html {
   color: #fff !important;
 }
 
-// Table action buttons (usually gray/blue) -> Coral icons
+// --- Table Action Icons Redefined ---
+// The user wants action icons in tables to be Coral.
+// We target icon-only buttons (mat-icon-button) and individual icons in tables.
+
+.mat-mdc-icon-button,
 .mat-icon-button {
-  &.coral-icon {
-    color: #ff7f50 !important;
+  .mat-icon {
+    color: #ff7f50 !important; // Global Coral for action buttons
   }
+
+  &:hover {
+    background-color: rgba(255, 127, 80, 0.1) !important;
+  }
+}
+
+// Ensure icons in solid "Action" buttons (like matMiniFab primary) are visible.
+// In our case, Primary is Coral, so the icon should be white for contrast.
+.mat-mdc-mini-fab.primary,
+.mat-mdc-button-base.primary {
+  .mat-icon {
+    color: #ffffff !important;
+  }
+}
+
+// Icons in table cells that are not inside solid buttons (e.g., status icons, comment icons)
+td .mat-icon:not(.mat-mdc-button-base .mat-icon):not(.mat-icon-button .mat-icon) {
+  color: #ff7f50 !important;
 }
 
 // Input focus states
 .mat-mdc-form-field-focus-indicator {
   background-color: #037c91 !important;
+}
+
+// --- Creative & Classy Enhancements ---
+
+// 1. Smooth transitions for all interactive elements
+button,
+a,
+input,
+.mat-mdc-card,
+.mat-drawer,
+.sidebar {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+
+// 2. Modern Card Aesthetics
+.mat-mdc-card,
+.mat-card {
+  border-radius: 12px !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  background-color: #ffffff !important;
+  overflow: hidden;
+
+  &:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04) !important;
+  }
+}
+
+// 3. Refined Form Inputs - Modern Minimalist
+.form-control,
+input.mat-mdc-input-element {
+  border-radius: 8px !important;
+  padding: 10px 15px !important;
+  border: 1.5px solid #e2e8f0 !important;
+  font-size: 0.9rem !important;
+  background-color: #f8fafc !important;
+
+  &:focus {
+    border-color: #037c91 !important;
+    box-shadow: 0 0 0 3px rgba(3, 124, 145, 0.1) !important;
+    background-color: #fff !important;
+    outline: none !important;
+  }
+}
+
+// 4. Classy Breadcrumbs & Typography
+.breadcrumb-item,
+.breadcrumb-title,
+.page-title {
+
+  a,
+  span {
+    color: #037c91 !important;
+    font-weight: 500;
+  }
+
+  .mat-icon {
+    vertical-align: middle;
+    margin: 0 4px;
+    font-size: 1.2rem;
+  }
+}
+
+// 5. Scrollbar Styling for a premium feel
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+
+  &:hover {
+    background: #037c91;
+  }
+}
+
+// 6. Header refinement
+.navbar {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03) !important;
+  border-bottom: 1px solid #f1f5f9 !important;
 }
