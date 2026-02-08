@@ -12,19 +12,19 @@
         </button>
         <mat-menu #menu="matMenu" class="p-3">
           <div class="d-flex flex-column gap-2">
-            <button class="primary" matButton="filled" [routerLink]="['/assign/list-view']">
+            <button class="success" matButton="filled" [routerLink]="['/assign/list-view']">
               <mat-icon class="medium-icon fs-5 align-middle">list</mat-icon>
               {{ "DOCUMENT_VIEW" | translate }}
             </button>
-            <button class="error" matButton="filled" (click)="onRefresh()">
+            <button class="success" matButton="filled" (click)="onRefresh()">
               <mat-icon class="medium-icon fs-5 align-middle">refresh</mat-icon>
               {{ "REFRESH" | translate }}
             </button>
-            <button *hasClaim="'CREATE_CATEGORY'" class="success" matButton="filled" (click)="onFoldersOrCategories()">
+            <button *hasClaim="'CREATE_CATEGORY'" class="primary" matButton="filled" (click)="onFoldersOrCategories()">
               <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
               {{ "ADD_FOLDERS_OR_CATEGORY" | translate }}
             </button>
-            <button *hasClaim="'ASSIGNED_CREATE_DOCUMENT'" class="warning" matButton="filled" (click)="
+            <button *hasClaim="'ASSIGNED_CREATE_DOCUMENT'" class="primary" matButton="filled" (click)="
                       onAddDocument(assignFoldersViewStore.selectedCategoryId())
                     ">
               <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
@@ -34,25 +34,25 @@
         </mat-menu>
       </div>
       <div class="d-flex flex-wrap justify-content-end mb-2 d-none d-md-inline-flex gap-2">
-        <button class="primary" matButton="filled" [routerLink]="['/assign/list-view']">
+        <button class="success" matButton="filled" [routerLink]="['/assign/list-view']">
           <mat-icon class="medium-icon fs-5 align-middle">list</mat-icon>
           <span class="d-none d-lg-inline ms-1">{{
             "DOCUMENT_VIEW" | translate
             }}</span>
         </button>
-        <button class="error" matButton="filled" (click)="onRefresh()">
+        <button class="success" matButton="filled" (click)="onRefresh()">
           <mat-icon class="medium-icon fs-5 align-middle">refresh</mat-icon>
           <span class="d-none d-lg-inline ms-1">{{
             "REFRESH" | translate
             }}</span>
         </button>
-        <button *hasClaim="'CREATE_CATEGORY'" class="success" matButton="filled" (click)="onFoldersOrCategories()">
+        <button *hasClaim="'CREATE_CATEGORY'" class="primary" matButton="filled" (click)="onFoldersOrCategories()">
           <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
           <span class="d-none d-lg-inline ms-1">{{
             "ADD_FOLDERS_OR_CATEGORY" | translate
             }}</span>
         </button>
-        <button *hasClaim="'ASSIGNED_CREATE_DOCUMENT'" class="warning" matButton="filled"
+        <button *hasClaim="'ASSIGNED_CREATE_DOCUMENT'" class="primary" matButton="filled"
           (click)="onAddDocument(assignFoldersViewStore.selectedCategoryId())">
           <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
           <span class="d-none d-lg-inline ms-1">{{

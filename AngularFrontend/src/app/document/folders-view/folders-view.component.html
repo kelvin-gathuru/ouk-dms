@@ -12,23 +12,23 @@
         </button>
         <mat-menu [dir]="langDir" #menu="matMenu" class="p-3">
           <div class="d-flex flex-column gap-3">
-            <button matTooltip="{{ 'REFRESH' | translate }}" [dir]="langDir" class="error me-2" matButton="filled"
+            <button matTooltip="{{ 'REFRESH' | translate }}" [dir]="langDir" class="success me-2" matButton="filled"
               (click)="onRefresh()">
               <mat-icon class="medium-icon fs-5 align-middle">refresh</mat-icon>
               {{ "REFRESH" | translate }}
             </button>
-            <button matTooltip="{{ 'DOCUMENT_VIEW' | translate }}" [dir]="langDir" class="primary me-2"
+            <button matTooltip="{{ 'DOCUMENT_VIEW' | translate }}" [dir]="langDir" class="success me-2"
               matButton="filled" [routerLink]="['/documents/list-view']">
               <mat-icon class="medium-icon fs-5 align-middle">list</mat-icon>
               {{ "DOCUMENT_VIEW" | translate }}
             </button>
             <button matTooltip="{{ 'ADD_FOLDERS_OR_CATEGORY' | translate }}" [dir]="langDir"
-              *hasClaim="'CREATE_CATEGORY'" class="success me-2" matButton="filled" (click)="onFoldersOrCategories()">
+              *hasClaim="'CREATE_CATEGORY'" class="primary me-2" matButton="filled" (click)="onFoldersOrCategories()">
               <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
               {{ "ADD_FOLDERS_OR_CATEGORY" | translate }}
             </button>
             <button matTooltip="{{ 'ADD_DOCUMENT' | translate }}" [dir]="langDir" *hasClaim="'ALL_CREATE_DOCUMENT'"
-              class="warning me-2" matButton="filled" [routerLink]="['/documents/add']" [queryParams]="{
+              class="primary me-2" matButton="filled" [routerLink]="['/documents/add']" [queryParams]="{
                     view: 'folders',
                     categoryId: foldersViewStore.selectedCategoryId()
                     }">
@@ -39,23 +39,23 @@
         </mat-menu>
       </div>
       <div class="d-flex  justify-content-end mb-2 d-none d-md-inline-flex">
-        <button matTooltip="{{ 'REFRESH' | translate }}" [dir]="langDir" class="error me-2" matButton="filled"
+        <button matTooltip="{{ 'REFRESH' | translate }}" [dir]="langDir" class="success me-2" matButton="filled"
           (click)="onRefresh()">
           <mat-icon class="medium-icon fs-5 align-middle">refresh</mat-icon>
           <span class="d-none d-lg-inline ms-1">{{ "REFRESH" | translate }}</span>
         </button>
-        <button matTooltip="{{ 'DOCUMENT_VIEW' | translate }}" [dir]="langDir" class="primary me-2" matButton="filled"
+        <button matTooltip="{{ 'DOCUMENT_VIEW' | translate }}" [dir]="langDir" class="success me-2" matButton="filled"
           [routerLink]="['/documents/list-view']">
           <mat-icon class="medium-icon fs-5 align-middle">list</mat-icon>
           <span class="d-none d-lg-inline ms-1">{{ "DOCUMENT_VIEW" | translate }}</span>
         </button>
         <button matTooltip="{{ 'ADD_FOLDERS_OR_CATEGORY' | translate }}" [dir]="langDir" *hasClaim="'CREATE_CATEGORY'"
-          class="success me-2" matButton="filled" (click)="onFoldersOrCategories()">
+          class="primary me-2" matButton="filled" (click)="onFoldersOrCategories()">
           <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
           <span class="d-none d-lg-inline ms-1">{{ "ADD_FOLDERS_OR_CATEGORY" | translate }}</span>
         </button>
         <button matTooltip="{{ 'ADD_DOCUMENT' | translate }}" [dir]="langDir" *hasClaim="'ALL_CREATE_DOCUMENT'"
-          class="warning me-2" matButton="filled" [routerLink]="['/documents/add']" [queryParams]="{
+          class="primary me-2" matButton="filled" [routerLink]="['/documents/add']" [queryParams]="{
                     view: 'folders',
                     categoryId: foldersViewStore.selectedCategoryId()
                     }">

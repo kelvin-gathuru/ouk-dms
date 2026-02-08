@@ -12,20 +12,20 @@
           </button>
           <mat-menu [dir]="langDir" #menu="matMenu" class="p-3">
             <div class="d-flex flex-column gap-3">
-              <button [dir]="langDir" matButton="filled" class="primary me-2" [routerLink]="['/assign/folder-view']">
+              <button [dir]="langDir" matButton="filled" class="success me-2" [routerLink]="['/assign/folder-view']">
                 <mat-icon class="medium-icon fs-5 align-middle">folder</mat-icon>
                 {{ "FOLDER_VIEW" | translate }}
               </button>
-              <button [dir]="langDir" matButton="filled" class="error me-2" (click)="onRefresh()">
+              <button [dir]="langDir" matButton="filled" class="success me-2" (click)="onRefresh()">
                 <mat-icon class="medium-icon fs-5 align-middle">refresh</mat-icon>
                 {{ "REFRESH" | translate }}
               </button>
               <button [dir]="langDir" *hasClaim="'ALL_CREATE_DOCUMENT'" [routerLink]="['/documents/add']"
-                class="success me-2" matButton="filled">
+                class="primary me-2" matButton="filled">
                 <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
                 {{ "ADD_DOCUMENT" | translate }}
               </button>
-              <button [dir]="langDir" (click)="openTableSettings()" class="warning me-2" matButton="filled">
+              <button [dir]="langDir" (click)="openTableSettings()" class="success me-2" matButton="filled">
                 <mat-icon class="medium-icon fs-5 align-middle">settings</mat-icon>
                 {{ "TABLE_SETTINGS" | translate }}
               </button>
@@ -33,20 +33,20 @@
           </mat-menu>
         </div>
         <div class="d-flex  justify-content-end mb-2 d-none d-md-inline-flex">
-          <button [dir]="langDir" matButton="filled" class="primary me-2" [routerLink]="['/assign/folder-view']">
+          <button [dir]="langDir" matButton="filled" class="success me-2" [routerLink]="['/assign/folder-view']">
             <mat-icon class="medium-icon fs-5 align-middle">folder</mat-icon>
             <span class="d-none d-lg-inline ms-1">{{ "FOLDER_VIEW" | translate }}</span>
           </button>
-          <button [dir]="langDir" matButton="filled" class="error me-2" (click)="onRefresh()">
+          <button [dir]="langDir" matButton="filled" class="success me-2" (click)="onRefresh()">
             <mat-icon class="medium-icon fs-5 align-middle">refresh</mat-icon>
             <span class="d-none d-lg-inline ms-1">{{ "REFRESH" | translate }}</span>
           </button>
           <button [dir]="langDir" *hasClaim="'ALL_CREATE_DOCUMENT'" [routerLink]="['/documents/add']"
-            class="success me-2" matButton="filled">
+            class="primary me-2" matButton="filled">
             <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
             <span class="d-none d-lg-inline ms-1">{{ "ADD_DOCUMENT" | translate }}</span>
           </button>
-          <button [dir]="langDir" (click)="openTableSettings()" class="warning me-2" matButton="filled">
+          <button [dir]="langDir" (click)="openTableSettings()" class="success me-2" matButton="filled">
             <mat-icon class="medium-icon fs-5 align-middle">settings</mat-icon>
             <span class="d-none d-lg-inline ms-1">{{ "TABLE_SETTINGS" | translate }}</span>
           </button>
@@ -85,7 +85,7 @@
                   <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
                   @for (category of allCategories; track category) {
                   <mat-option [value]="category">
-                     <div class="country-item" [ngStyle]="{
+                    <div class="country-item" [ngStyle]="{
                         'margin-left.px': (category.deafLevel ?? 0) * 20
                       }">
                       @if(category.deafLevel == 0) {

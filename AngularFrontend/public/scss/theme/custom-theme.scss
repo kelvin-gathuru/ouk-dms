@@ -21,12 +21,16 @@ html {
       row-item-outline-color: #e5e7eb,
       row-item-container-height:35px));
 
+  // OUK Brand Colors
+  --ouk-teal: #037c91;
+  --ouk-coral: #ff7f50;
+
   // OUK Teal Table Headers
   th,
   .mat-header-cell {
-    background-color: #037b90 !important;
+    background-color: var(--ouk-teal) !important;
     color: #ffffff !important;
-    font-weight: 600 !important;
+    font-weight: 500 !important;
     text-transform: uppercase !important;
     font-size: 0.75rem !important;
     letter-spacing: 0.5px !important;
@@ -67,7 +71,7 @@ html {
 
 .primary {
 
-  @include mat.button-overrides((filled-container-color: #ff7f50, // background
+  @include mat.button-overrides((filled-container-color: #ff7f50, // coral background
       filled-label-text-color: #fff, // text
       filled-container-shape: 4px));
 
@@ -153,14 +157,40 @@ html {
 }
 
 .success {
-  @include mat.button-overrides((filled-container-color: map.get(mat.$spring-green-palette, 50), // background
-      filled-label-text-color: map.get(mat.$spring-green-palette, 100), // text
+  @include mat.button-overrides((filled-container-color: #037c91, // teal background
+      filled-label-text-color: #fff, // text
       filled-container-shape: 4px));
 
-  @include mat.snack-bar-overrides((container-color: map.get(mat.$spring-green-palette, 40), // background
-      supporting-text-color: map.get(mat.$spring-green-palette, 100),
-      button-color : map.get(mat.$spring-green-palette, 100))); // text
+  @include mat.snack-bar-overrides((container-color: #037c91, // background
+      supporting-text-color: #fff,
+      button-color : #fff)); // text
 
-  @include mat.fab-overrides((small-container-color: map.get(mat.$spring-green-palette, 50),
-      small-foreground-color: map.get(mat.$spring-green-palette, 100)));
+  @include mat.fab-overrides((small-container-color: #037c91,
+      small-foreground-color: #fff));
+}
+
+// Global button overrides for Teal and Coral
+.btn-primary {
+  background-color: #ff7f50 !important; // Coral for primary actions
+  border-color: #ff7f50 !important;
+  color: #fff !important;
+}
+
+.btn-info,
+.btn-success {
+  background-color: #037c91 !important; // Teal for secondary/info actions
+  border-color: #037c91 !important;
+  color: #fff !important;
+}
+
+// Table action buttons (usually gray/blue) -> Coral icons
+.mat-icon-button {
+  &.coral-icon {
+    color: #ff7f50 !important;
+  }
+}
+
+// Input focus states
+.mat-mdc-form-field-focus-indicator {
+  background-color: #037c91 !important;
 }

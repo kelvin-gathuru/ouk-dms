@@ -11,13 +11,13 @@ $font-family: 'Poppins', sans-serif;
     width: 250px !important;
 
     .sidebar-brand {
-        padding: 40px 20px 30px;
+        padding: 20px 20px 20px; // Reduced padding to move logo up
         text-align: center;
         border-bottom: none !important;
         background: #ffffff !important;
 
         .logo-container {
-            margin-bottom: 20px;
+            margin-bottom: 15px; // Reduced bottom margin
             display: flex;
             justify-content: center;
 
@@ -75,11 +75,39 @@ $font-family: 'Poppins', sans-serif;
                     a {
                         background-color: $teal-light !important;
                         color: $teal-primary !important;
-                        font-weight: 600 !important;
+                        font-weight: 500 !important; // Normal weight even when active
 
                         mat-icon,
                         span {
                             color: $teal-primary !important;
+                        }
+                    }
+                }
+
+                // Sub-menu specific styling
+                .ml-menu {
+                    padding-left: 0;
+                    background: transparent !important;
+
+                    li {
+                        margin-bottom: 2px;
+
+                        a {
+                            padding: 8px 15px 8px 45px !important;
+                            color: $teal-primary !important;
+                            font-size: 0.8rem !important;
+                            font-weight: 400 !important;
+
+                            &:hover {
+                                background-color: rgba(3, 124, 145, 0.05) !important;
+                                color: $teal-primary !important;
+                            }
+                        }
+
+                        &.active a {
+                            background-color: transparent !important;
+                            color: $teal-primary !important;
+                            font-weight: 500 !important;
                         }
                     }
                 }

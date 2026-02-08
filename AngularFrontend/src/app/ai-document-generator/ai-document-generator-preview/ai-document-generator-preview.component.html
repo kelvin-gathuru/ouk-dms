@@ -22,13 +22,7 @@
       </div>
       <div class="row">
         <div class="m-top-10 col-md-12 mt-2">
-          <button
-            [dir]="langDir"
-            type="button"
-            class="success"
-            matButton="filled"
-            (click)="generateDocument()"
-          >
+          <button [dir]="langDir" type="button" class="primary" matButton="filled" (click)="generateDocument()">
             <mat-icon class="medium-icon">save</mat-icon>
             {{ "SAVE_AS_PDF" | translate }}
           </button>
@@ -37,13 +31,8 @@
       <div style="position: absolute; left: -15420px">
         <div style="width: 100%; display: flex">
           <div id="pdfDocument">
-            <div
-              class="container"
-              style="width: 95%; margin-right: auto; margin-left: auto"
-            >
-              <div
-                innerHTML="{{ aiEditorForm.get('editorData')?.value }}"
-              ></div>
+            <div class="container" style="width: 95%; margin-right: auto; margin-left: auto">
+              <div innerHTML="{{ aiEditorForm.get('editorData')?.value }}"></div>
             </div>
           </div>
         </div>
