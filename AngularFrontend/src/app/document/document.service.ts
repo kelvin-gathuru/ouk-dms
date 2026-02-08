@@ -37,7 +37,9 @@ export class DocumentService {
     const url = `document`;
     const formData = new FormData();
     formData.append('files', document.file ?? '');
-    formData.append('name', document.name ?? '');
+    // Use filename as fallback if name is not provided
+    const documentName = document.name || (document.file as File)?.name || 'Untitled Document';
+    formData.append('name', documentName);
     formData.append('categoryId', document.categoryId ?? '');
     formData.append('documentStatusId', document.documentStatusId ?? '');
     formData.append('clientId', document.clientId ?? '');

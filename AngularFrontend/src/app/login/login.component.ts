@@ -88,9 +88,13 @@ export class LoginComponent extends BaseComponent implements OnInit, AfterViewIn
         },
         error: (err: any) => {
           this.isLoading = false;
-          err.error.messages.forEach((msg: string) => {
-            this.toastr.error(msg);
-          });
+          if (err?.error?.messages && Array.isArray(err.error.messages)) {
+            err.error.messages.forEach((msg: string) => {
+              this.toastr.error(msg);
+            });
+          } else {
+            this.toastr.error(this.translationService.getValue('ERROR_FROM_SERVICE'));
+          }
         },
       });
     }

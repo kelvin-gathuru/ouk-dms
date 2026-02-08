@@ -1,31 +1,183 @@
-/* Structure */
+// Teal Theme Variables
+$teal-primary: #037c91;
+$teal-light: rgba(3, 124, 145, 0.08);
 
-.p-2 {
-    padding: 0.5rem !important;
+// Coral Theme Variables (Local Override/Addition)
+$coral-primary: #FF7F50;
+$coral-light: rgba(255, 127, 80, 0.1);
+$coral-gradient-start: #FF7F50;
+$coral-gradient-end: #FF6347;
+
+.welcome-text {
+    letter-spacing: -0.5px;
 }
 
-.widget-column {
-    flex          : 1 1 15%;
-    text-align    : center;
-    padding       : 15px;
-    display       : flex;
-    color         : #fff;
-    flex-direction: column;
-    border-radius : 5px;
-    cursor        : pointer;
+.dash-card {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 16px;
+    transition: all 0.3s ease;
 
-    .count {
-        font-size    : 35px;
-        margin-bottom: 12px;
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
+    }
+}
+
+// Stats Card Specific Styles
+.stat-card {
+    position: relative;
+    overflow: hidden;
+
+    // Default White Card with Coral Accents
+    &.bg-white {
+        .icon-circle-lg {
+            background-color: $coral-light;
+            color: $coral-primary;
+        }
     }
 
-    .column-text {
-        font-size: 20px;
-        color    : #fff;
+    // Solid Coral Card (First Item)
+    &.bg-coral-solid {
+        background: linear-gradient(135deg, $coral-gradient-start 0%, $coral-gradient-end 100%);
+        color: white;
+        border: none;
+
+        h6,
+        h2,
+        span,
+        mat-icon {
+            color: white !important;
+        }
+
+        .text-muted {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        .icon-circle-lg {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .stat-badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
     }
 }
 
-.chart-div {
-    height: 60vh;
+.icon-circle-lg {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+    }
 }
 
+.stat-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+
+    .icon-xs {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+    }
+}
+
+// Chart Containers
+.chart-container {
+    width: 100%;
+}
+
+// Quick Actions
+.gap-3 {
+    gap: 1rem;
+}
+
+.icon-circle-lg {
+    transition: all 0.2s ease;
+
+    &:hover {
+        transform: scale(1.1);
+        background-color: #eee !important;
+    }
+}
+
+// Table Styles
+.table {
+    th {
+        background-color: #037b90 !important;
+        color: #ffffff !important;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+        border-top: none;
+    }
+
+    td {
+        padding: 1rem 0.75rem;
+        vertical-align: middle;
+    }
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+// Workflow Transition Buttons (Blue Pills)
+.workflow_primary,
+.workflow_info,
+.workflow_success {
+    background-color: #037c91 !important;
+    color: white !important;
+    border-radius: 50px !important;
+    padding: 0 15px !important;
+    font-size: 12px !important;
+    height: 32px !important;
+    line-height: 32px !important;
+}
+
+.workflow_danger,
+.workflow_warn {
+    background-color: #ff6347 !important;
+    color: white !important;
+    border-radius: 50px !important;
+    padding: 0 15px !important;
+    font-size: 12px !important;
+    height: 32px !important;
+    line-height: 32px !important;
+}
+
+// OUK Teal Text Utility
+.text-teal-primary {
+    color: #037c91 !important;
+}
+
+.text-teal-500 {
+    color: #037c91;
+}
+
+.text-coral-500 {
+    color: #ff7f50;
+}
+
+.bg-coral-light {
+    background-color: rgba(255, 127, 80, 0.1);
+}
+
+.bg-white-20 {
+    background-color: rgba(255, 255, 255, 0.2);
+}

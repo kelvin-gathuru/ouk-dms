@@ -1,26 +1,223 @@
 <section class="content">
   <div class="container-fluid">
-    <div class="row d-flex">
-      <div class="col-md-12 mb-4">
-        @defer (on viewport) {
-        <app-document-by-category-chart />
-        } @placeholder {
-        <div class="text-center p-5 border rounded bg-light">
-          <span class="spinner-border spinner-border-sm"></span>
-          Loading Document by Category...
-        </div>
-        }
-      </div>
-      <div class="col-md-12 mb-4">
-        @defer (on viewport) {
-        <app-calender-view />
-        } @placeholder {
-        <div class="text-center p-5 border rounded bg-light">
-          <span class="spinner-border spinner-border-sm"></span>
-          Loading Calendar View...
-        </div>
-        }
+    <!-- ✅ Welcome Section -->
+    <div class="row mb-4 animate__animated animate__fadeIn">
+      <div class="col-12">
+        <h4 class="welcome-text mb-1 text-teal-primary font-weight-bold">Welcome, {{ firstName }}!</h4>
+        <p class="text-muted">Here's what's happening in your DMS today.</p>
       </div>
     </div>
+
+    <!-- ✅ Stats Cards (Coral Border, Coral Text) -->
+    <div class="row mb-4">
+      @for (stat of stats; track stat) {
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="dash-card stat-card shadow-sm h-100 py-4 px-4"
+          [ngClass]="{'bg-coral-solid': stat.type === 'solid', 'bg-white': stat.type !== 'solid'}">
+
+          <!-- Top Row: Title & Icon -->
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <h6 class="text-uppercase mb-0 font-weight-bold"
+              [ngClass]="{'text-white': stat.type === 'solid', 'text-muted': stat.type !== 'solid'}">
+              {{ stat.label | translate }}
+            </h6>
+            <div class="icon-circle-lg shadow-sm"
+              [ngClass]="{'bg-white-20': stat.type === 'solid', 'bg-coral-light': stat.type !== 'solid'}">
+              <mat-icon [ngClass]="{'text-white': stat.type === 'solid', 'text-coral-500': stat.type !== 'solid'}">
+                {{ stat.icon }}
+              </mat-icon>
+            </div>
+          </div>
+
+          <!-- Middle: Value -->
+          <div class="d-flex align-items-baseline mb-3">
+            <h2 class="mb-0 font-weight-bold display-5"
+              [ngClass]="{'text-white': stat.type === 'solid', 'text-dark': stat.type !== 'solid'}">
+              {{ stat.value }}
+            </h2>
+          </div>
+
+          <!-- Bottom: Details Pill -->
+          <div class="d-flex align-items-center">
+            <div class="stat-badge"
+              [ngClass]="{'bg-white-20 text-white': stat.type === 'solid', 'bg-green-100 text-green-600': stat.type !== 'solid'}">
+              <mat-icon class="icon-xs me-1">trending_up</mat-icon>
+              <span>{{ stat.trendLabel }}</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      }
+    </div>
+
+    <!-- ✅ Charts Row (Renamed Bar Chart) -->
+    <div class="row mb-4">
+      <!-- 🍩 Documents by Folder (Doughnut) -->
+      <div class="col-lg-4 mb-4 mb-lg-0">
+        <div class="dash-card p-4 shadow-sm h-100">
+          <h5 class="mb-4 font-weight-bold text-dark">Folder Distribution</h5>
+          <div echarts [options]="folderChartOptions" class="chart-container" style="height: 350px;"></div>
+        </div>
+      </div>
+
+      <!-- 📊 Documents by Category (Bar Chart) -->
+      <div class="col-lg-8">
+        <div class="dash-card p-4 shadow-sm h-100">
+          <h5 class="mb-4 font-weight-bold text-dark">Documents by Folder</h5>
+          <div echarts [options]="categoryChartOptions" class="chart-container" style="height: 300px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ Trend & Quick Actions Row -->
+    <div class="row mb-4">
+      <!-- 📈 Document Trend -->
+      <div class="col-lg-8 mb-4">
+        <div class="dash-card p-4 shadow-sm h-100">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="mb-0 font-weight-bold text-dark">Document Activity (Trend)</h5>
+          </div>
+          <div echarts [options]="documentTrendOptions" class="chart-container" style="height: 350px;"></div>
+        </div>
+      </div>
+
+      <!-- ⚡ Quick Actions (Right of Trend) -->
+      <div class="col-lg-4 mb-4">
+        <div class="dash-card p-4 shadow-sm h-100">
+          <h5 class="mb-4 font-weight-bold text-dark">Quick Launch</h5>
+          <div class="d-flex justify-content-around flex-wrap gap-3">
+            <!-- View My Documents -->
+            <a routerLink="/assign/list-view"
+              class="d-flex flex-column align-items-center text-decoration-none text-dark">
+              <div class="icon-circle-lg bg-light shadow-sm mb-2 d-flex align-items-center justify-content-center"
+                style="width: 60px; height: 60px; border-radius: 50%;">
+                <mat-icon class="text-primary fs-2">folder_shared</mat-icon>
+              </div>
+              <span class="font-weight-medium">My Docs</span>
+            </a>
+
+            <!-- AI Docs -->
+            <a routerLink="/ai-document-generator-list"
+              class="d-flex flex-column align-items-center text-decoration-none text-dark">
+              <div class="icon-circle-lg bg-light shadow-sm mb-2 d-flex align-items-center justify-content-center"
+                style="width: 60px; height: 60px; border-radius: 50%;">
+                <mat-icon class="text-accent fs-2">auto_awesome</mat-icon>
+              </div>
+              <span class="font-weight-medium">AI Docs</span>
+            </a>
+
+            <!-- OCR Extractor -->
+            <a routerLink="/documents/ocr_content_extractor"
+              class="d-flex flex-column align-items-center text-decoration-none text-dark">
+              <div class="icon-circle-lg bg-light shadow-sm mb-2 d-flex align-items-center justify-content-center"
+                style="width: 60px; height: 60px; border-radius: 50%;">
+                <mat-icon class="text-warn fs-2">document_scanner</mat-icon>
+              </div>
+              <span class="font-weight-medium">OCR</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 📋 Assigned Tasks List -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="dash-card p-4 shadow-sm">
+          <h5 class="mb-4 font-weight-bold text-dark">Assigned Tasks</h5>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead>
+                <tr>
+                  <th>Document</th>
+                  <th>Workflow</th>
+                  <th>Step</th>
+                  <th>Initiated By</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (task of assignedWorkflows; track task.workflowInstanceId) {
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="icon-circle bg-light me-2 text-primary">
+                        <mat-icon>description</mat-icon>
+                      </div>
+                      <div class="d-flex flex-column">
+                        <a (click)="onDocumentView(task)" class="fw-bold text-dark text-decoration-none cursor-pointer">
+                          {{ task.documentName }}
+                        </a>
+                        <span class="text-muted small">#{{ task.documentNumber }}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <a (click)="viewVisualWorkflow(task)" class="text-teal-600 text-decoration-none cursor-pointer">
+                      {{ task.workflowName }}
+                    </a>
+                  </td>
+                  <td>
+                    <span class="badge rounded-pill px-3 py-2" [workflowstatuscolor]="task.workflowInstanceStatus">
+                      {{ task.workflowStepName }}
+                    </span>
+                  </td>
+                  <td class="text-muted">{{ task.initiatedBy }}</td>
+                  <td class="text-muted">{{ task.workflowInitiatedDate | date: "mediumDate" }}</td>
+                  <td>
+                    <div class="d-flex flex-column gap-2">
+                      <div class="d-flex align-items-center gap-2">
+                        @if (task.workflowInstanceStatus !== WorkflowInstanceStatus.Cancelled) {
+                        <div class="d-flex flex-column align-items-start">
+                          <label class="fw-bold small mb-1 text-muted"> {{ "PERFORM_TRANSITION" | translate }}</label>
+                          <div class="d-flex flex-wrap gap-2">
+                            <button mat-mini-fab matTooltip="{{'VIEW_WORKFLOW_DETAIL' | translate}}"
+                              [matTooltipPosition]="positionOptions[0]" style="background-color: #ff7f50; color: white;"
+                              (click)="viewVisualWorkflow(task)">
+                              <mat-icon class="fs-5">visibility</mat-icon>
+                            </button>
+                            @for (transition of task.workflowTransitions; track $index) {
+                            @if (transition.allowRoleToPerformTransition || transition.allowUserToPerformTransition) {
+                            <button mat-raised-button matTooltip="{{transition?.comment}}"
+                              [matTooltipPosition]="positionOptions[0]" (click)="performTransition(transition, task)"
+                              [ngClass]="'workflow_' + transition.color" class="btn-sm">
+                              {{ transition.name }} ({{ transition.fromToStepName }})
+                            </button>
+                            }
+                            }
+                          </div>
+                        </div>
+                        }
+                        <button mat-icon-button [matMenuTriggerFor]="menu" class="text-muted ms-auto">
+                          <mat-icon>more_vert</mat-icon>
+                        </button>
+                      </div>
+                      <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="manageWorkflowInstance(task)">
+                          <mat-icon>settings_applications</mat-icon>
+                          <span>Manage Workflow</span>
+                        </button>
+                        <button mat-menu-item (click)="onDocumentView(task)">
+                          <mat-icon>visibility</mat-icon>
+                          <span>View Document</span>
+                        </button>
+                        <button mat-menu-item (click)="downloadDocument(task)">
+                          <mat-icon>download</mat-icon>
+                          <span>Download</span>
+                        </button>
+                      </mat-menu>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>

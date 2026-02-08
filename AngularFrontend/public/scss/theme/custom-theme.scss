@@ -18,9 +18,19 @@ html {
     ));
 
   @include mat.table-overrides((header-headline-color: #fff,
-      // row-item-outline-color:#e5e7eb,
       row-item-outline-color: #e5e7eb,
       row-item-container-height:35px));
+
+  // OUK Teal Table Headers
+  th,
+  .mat-header-cell {
+    background-color: #037b90 !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.5px !important;
+  }
 
   @include mat.progress-bar-overrides((active-indicator-color: map.get(theme-colors.$primary-palette, 10),
       track-color: map.get(theme-colors.$primary-palette, 70)));
@@ -57,8 +67,8 @@ html {
 
 .primary {
 
-  @include mat.button-overrides((filled-container-color: map.get(theme-colors.$primary-palette, 20), // background
-      filled-label-text-color: map.get(theme-colors.$primary-palette, 100), // text
+  @include mat.button-overrides((filled-container-color: #ff7f50, // background
+      filled-label-text-color: #fff, // text
       filled-container-shape: 4px));
 
   @include mat.card-overrides(( // border color

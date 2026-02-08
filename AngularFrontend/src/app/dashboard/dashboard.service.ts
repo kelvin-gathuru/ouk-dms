@@ -6,6 +6,8 @@ import { catchError } from 'rxjs/operators';
 import { CommonError } from '@core/error-handler/common-error';
 import { CommonHttpErrorService } from '@core/error-handler/common-http-error.service';
 import { CalenderReminderDto } from '@core/domain-classes/calender-reminder';
+import { DashboardStats } from '@core/domain-classes/dashboard-stats';
+import { DashboardChartData } from '@core/domain-classes/dashboard-chart-data';
 
 
 @Injectable({ providedIn: 'root' })
@@ -16,6 +18,21 @@ export class DashboradService {
   getDocumentByCategory(): Observable<DocumentByCategory[]> {
     const url = `Dashboard/GetDocumentByCategory`;
     return this.httpClient.get<DocumentByCategory[]>(url);
+  }
+
+  getDashboardStats(): Observable<DashboardStats> {
+    const url = `Dashboard/GetDashboardStats`;
+    return this.httpClient.get<DashboardStats>(url);
+  }
+
+  getDocumentActivity(): Observable<DashboardChartData[]> {
+    const url = `Dashboard/GetDocumentActivity`;
+    return this.httpClient.get<DashboardChartData[]>(url);
+  }
+
+  getAssignedWorkflows(): Observable<any[]> {
+    const url = `WorkflowInstance/CurrentWorkflowInstances`;
+    return this.httpClient.get<any[]>(url);
   }
 
   getDailyReminders(month: number | null, year: number | null): Observable<CalenderReminderDto[] | CommonError> {

@@ -1,0 +1,77 @@
+// OUK Theme - White Capsule Sidebar
+$teal-primary: #037c91;
+$teal-light: #e0f2f4;
+$text-muted: #64748b;
+$font-family: 'Poppins', sans-serif;
+
+.sidebar {
+    background: #ffffff !important;
+    border-right: 1px solid #f1f5f9;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+
+    .sidebar-header {
+        border-bottom: 1px solid #f8fafc;
+
+        .text-teal-primary {
+            color: $teal-primary;
+        }
+    }
+
+    .menu {
+        .list {
+            padding: 15px;
+
+            li {
+                margin-bottom: 8px;
+
+                a {
+                    border-radius: 24px !important;
+                    padding: 10px 20px !important;
+                    color: $text-muted !important;
+                    font-family: $font-family !important;
+                    transition: all 0.2s ease;
+
+                    mat-icon {
+                        color: $text-muted !important;
+                        transition: all 0.2s ease;
+                    }
+
+                    span {
+                        font-weight: 500;
+                    }
+
+                    &:hover {
+                        background-color: #f8fafc !important;
+                        color: $teal-primary !important;
+
+                        mat-icon {
+                            color: $teal-primary !important;
+                        }
+                    }
+                }
+
+                &.active,
+                &.active-top {
+                    a {
+                        background-color: $teal-light !important;
+                        color: $teal-primary !important;
+                        font-weight: 700 !important;
+
+                        mat-icon {
+                            color: $teal-primary !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Deep overrides for Angular Material items if needed
+:ng-deep {
+    #leftsidebar {
+        .mat-icon {
+            vertical-align: middle;
+        }
+    }
+}

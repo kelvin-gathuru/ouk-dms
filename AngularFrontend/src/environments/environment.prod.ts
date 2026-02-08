@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://ouk-dms-api.topdev.co.ke/',
+  apiUrl: 'https://ouk-dms-api.topdev.co.ke/',
   allowExtesions: [
     {
       type: 'office',

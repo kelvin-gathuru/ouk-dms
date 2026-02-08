@@ -26,6 +26,22 @@ namespace DocumentManagement.API.Controllers.Chart
             return Ok(response);
         }
 
+        [HttpGet("GetDashboardStats")]
+        public async Task<IActionResult> GetDashboardStats()
+        {
+            var query = new GetDashboardStatsQuery();
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
+        [HttpGet("GetDocumentActivity")]
+        public async Task<IActionResult> GetDocumentActivity()
+        {
+            var query = new GetDocumentActivityQuery();
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
         /// <summary>
         /// Gets the daily reminders.
         /// </summary>

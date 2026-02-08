@@ -98,6 +98,6 @@ ILoggerFactory loggerFactory = app.Services.GetRequiredService<ILoggerFactory>()
 startup.Configure(app, app.Environment, loggerFactory);
 
 JobService jobService = app.Services.GetRequiredService<JobService>();
-jobService.StartScheduler();
+// jobService.StartScheduler();
 
 app.Run();

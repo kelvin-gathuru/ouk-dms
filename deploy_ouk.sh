@@ -21,17 +21,18 @@ cd - > /dev/null
 # 2. Build Frontend
 echo "--- Building Frontend ---"
 cd "$FRONTEND_DIR"
-# Skip npm install if node_modules exists to save time, unless forced (can add flag later)
+rm -rf dist/
+# Skip npm install if node_modules exists to save time
 if [ ! -d "node_modules" ]; then
     npm install
 fi
-# Fix for possible memory issues or clean build
 ng build --configuration production
 cd - > /dev/null
 
 # 3. Prepare Remote Directory
 echo "--- Preparing Server Directories ---"
-sshpass -p "$SERVER_PASS" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "echo '$SERVER_PASS' | sudo -S mkdir -p $REMOTE_DIR/api $REMOTE_DIR/frontend"
+# Purge existing directories to ensure no old files persist
+sshpass -p "$SERVER_PASS" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "echo '$SERVER_PASS' | sudo -S rm -rf $REMOTE_DIR/api $REMOTE_DIR/frontend && sudo -S mkdir -p $REMOTE_DIR/api $REMOTE_DIR/frontend/browser"
 sshpass -p "$SERVER_PASS" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "echo '$SERVER_PASS' | sudo -S chown -R $SERVER_USER:$SERVER_USER $REMOTE_DIR"
 
 # 4. Transfer Files
@@ -39,7 +40,12 @@ echo "--- Transferring Backend Files ---"
 sshpass -p "$SERVER_PASS" scp -o StrictHostKeyChecking=no -r "$BACKEND_DIR/publish/"* $SERVER_USER@$SERVER_IP:$REMOTE_DIR/api/
 
 echo "--- Transferring Frontend Files ---"
-sshpass -p "$SERVER_PASS" scp -o StrictHostKeyChecking=no -r "$FRONTEND_DIR/dist/document-management/"* $SERVER_USER@$SERVER_IP:$REMOTE_DIR/frontend/
+# Ensure we capture all built files into the 'browser' subfolder as expected by Apache
+if [ -d "$FRONTEND_DIR/dist/document-management/browser" ]; then
+    sshpass -p "$SERVER_PASS" scp -o StrictHostKeyChecking=no -r "$FRONTEND_DIR/dist/document-management/browser/"* $SERVER_USER@$SERVER_IP:$REMOTE_DIR/frontend/browser/
+else
+    sshpass -p "$SERVER_PASS" scp -o StrictHostKeyChecking=no -r "$FRONTEND_DIR/dist/document-management/"* $SERVER_USER@$SERVER_IP:$REMOTE_DIR/frontend/browser/
+fi
 
 echo "--- Transferring Apache Config ---"
 sshpass -p "$SERVER_PASS" scp -o StrictHostKeyChecking=no ouk-dms.conf $SERVER_USER@$SERVER_IP:/tmp/ouk-dms.conf
@@ -70,7 +76,7 @@ KillSignal=SIGINT
 SyslogIdentifier=ouk-dms-api
 User=www-data
 Environment=ASPNETCORE_ENVIRONMENT=Production
-Environment=ASPNETCORE_URLS=http://localhost:5005
+Environment=ASPNETCORE_URLS=http://localhost:5001
 [Install]
 WantedBy=multi-user.target
 SERVICE
