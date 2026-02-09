@@ -31,9 +31,11 @@ cd - > /dev/null
 
 # 3. Prepare Remote Directory
 echo "--- Preparing Server Directories ---"
-# Purge existing directories to ensure no old files persist
-sshpass -p "$SERVER_PASS" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "echo '$SERVER_PASS' | sudo -S rm -rf $REMOTE_DIR/api $REMOTE_DIR/frontend && sudo -S mkdir -p $REMOTE_DIR/api $REMOTE_DIR/frontend/browser"
-sshpass -p "$SERVER_PASS" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "echo '$SERVER_PASS' | sudo -S chown -R $SERVER_USER:$SERVER_USER $REMOTE_DIR"
+# Create directories if they don't exist
+sshpass -p "$SERVER_PASS" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "echo '$SERVER_PASS' | sudo -S mkdir -p $REMOTE_DIR/api $REMOTE_DIR/frontend/browser"
+
+# Change ownership to allow kelvin to transfer files
+sshpass -p "$SERVER_PASS" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "echo '$SERVER_PASS' | sudo -S chown -R $SERVER_USER:$SERVER_USER $REMOTE_DIR/api $REMOTE_DIR/frontend"
 
 # 4. Transfer Files
 echo "--- Transferring Backend Files ---"
