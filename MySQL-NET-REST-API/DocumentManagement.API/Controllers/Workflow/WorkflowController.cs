@@ -26,7 +26,11 @@ public class WorkflowController(IMediator _mediator) : BaseController
     public async Task<IActionResult> CreateWorkflow(AddWorkflowCommand command)
     {
         var result = await _mediator.Send(command);
-        return GenerateResponse(result);
+        if (!result.Success)
+        {
+            return StatusCode(result.StatusCode, result.Errors);
+        }
+        return Ok(result.Data);
     }
 
     /// <summary>
@@ -40,8 +44,13 @@ public class WorkflowController(IMediator _mediator) : BaseController
     // [ClaimCheck("edit_workflow_settings")]
     public async Task<IActionResult> UpdateWorkflow(Guid id, UpdateWorkflowCommand command)
     {
+        command.Id = id;
         var result = await _mediator.Send(command);
-        return GenerateResponse(result);
+        if (!result.Success)
+        {
+            return StatusCode(result.StatusCode, result.Errors);
+        }
+        return Ok(result.Data);
     }
 
     // <summary>
@@ -55,7 +64,11 @@ public class WorkflowController(IMediator _mediator) : BaseController
     {
         var query = new DeleteWorkflowCommand { Id = id };
         var result = await _mediator.Send(query);
-        return GenerateResponse(result);
+        if (!result.Success)
+        {
+            return StatusCode(result.StatusCode, result.Errors);
+        }
+        return Ok(result.Data);
     }
 
     [HttpGet("ReqDocument/Workflows")]

@@ -2,11 +2,11 @@
   <div class="container-fluid">
     <div class="d-flex mb-2">
       <div class="me-auto">
-        @if(workflowTransitions.length == 0) {
+        @if(workflowTransitions().length == 0) {
         <span class="mb-0 page-title">{{ "ADD_WORKFLOW_TRANSITIONS" | translate
           }}<app-page-help-text code="MANAGE_WORKFLOW"></app-page-help-text>
         </span>
-        } @if(workflowTransitions.length > 0) {
+        } @if(workflowTransitions().length > 0) {
         <span class="mb-0 page-title">{{ "EDIT_WORKFLOW_TRANSITIONS" | translate
           }}<app-page-help-text code="MANAGE_WORKFLOW"></app-page-help-text>
         </span>
@@ -20,7 +20,7 @@
           <mat-card appearance="outlined">
             <mat-card-content>
               <div formArrayName="transitions">
-                @if(workflowInstances.length == 0) {
+                @if(workflowInstances().length == 0) {
                 <div class="d-flex justify-content-end mb-2">
                   <button type="button" (click)="addTransition()" class="primary me-2" matButton="filled">
                     <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
@@ -68,7 +68,7 @@
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
-                                @let filterWorkFlowsteps = workflowSteps |
+                                @let filterWorkFlowsteps = workflowSteps() |
                                 filter_workflow_step : transitions.value : i;
                                 <label class="form-lable text-danger">{{ "FROM_STEP" | translate }}
                                   <sup>*</sup></label>
@@ -108,7 +108,7 @@
                                   class="form-control" placeholder="{{
                                     'SELECT_TO_STEP' | translate
                                   }}" (selectionChange)="filterSteps(i)">
-                                  @for(step of workflowSteps; track step.id) {
+                                  @for(step of workflowSteps(); track step.id) {
                                   <mat-option [value]="step.id">
                                     {{ step.stepName }}
                                   </mat-option>
@@ -276,7 +276,7 @@
                           <div class="row">
                             <div class="col-md-12">
                               <div class="form-group">
-                                @if(workflowInstances.length == 0) {
+                                @if(workflowInstances().length == 0) {
                                 <button type="button" mat-icon-button color="warn" (click)="removeTransition(i)">
                                   <mat-icon class="text-danger">delete</mat-icon>
                                 </button>
@@ -285,7 +285,7 @@
                             </div>
                           </div>
                           <div class="d-flex gap-1 mt-4">
-                            @if(workflowInstances.length == 0){
+                            @if(workflowInstances().length == 0){
                             <button type="button" (click)="addTransition()" class="primary me-2" matButton="filled">
                               <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
                               {{ "ADD_ANOTHER_TRANSITION" | translate }}

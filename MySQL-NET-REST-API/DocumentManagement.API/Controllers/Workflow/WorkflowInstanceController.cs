@@ -28,7 +28,11 @@ public class WorkflowInstanceController(IMediator _mediator) : BaseController
     public async Task<IActionResult> CreateWorkflowInstance(AddWorkflowInstanceCommand command)
     {
         var result = await _mediator.Send(command);
-        return GenerateResponse(result);
+        if (!result.Success)
+        {
+            return StatusCode(result.StatusCode, result.Errors);
+        }
+        return Ok(result.Data);
     }
 
     /// <summary>
@@ -41,8 +45,13 @@ public class WorkflowInstanceController(IMediator _mediator) : BaseController
     [Produces("application/json", "application/xml", Type = typeof(WorkflowInstanceDto))]
     public async Task<IActionResult> UpdateWorkflowInstance(Guid id, UpdateWorkflowInstanceCommand command)
     {
+        command.Id = id;
         var result = await _mediator.Send(command);
-        return GenerateResponse(result);
+        if (!result.Success)
+        {
+            return StatusCode(result.StatusCode, result.Errors);
+        }
+        return Ok(result.Data);
     }
 
     // <summary>
@@ -55,7 +64,11 @@ public class WorkflowInstanceController(IMediator _mediator) : BaseController
     {
         var query = new DeleteWorkflowInstanceCommand { Id = id };
         var result = await _mediator.Send(query);
-        return GenerateResponse(result);
+        if (!result.Success)
+        {
+            return StatusCode(result.StatusCode, result.Errors);
+        }
+        return Ok(result.Data);
     }
 
     /// <summary>

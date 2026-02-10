@@ -35,9 +35,9 @@ export class WorkflowTransitionService {
   ): Observable<WorkflowTransition[]> {
     const url = `WorkflowTransition`;
     return this.httpClient
-      .post<ServiceResponse<WorkflowTransition[]>>(url, {
+      .post<WorkflowTransition[]>(url, {
         workflowTransitions: transitions,
-      }).pipe(map((response) => response.data));
+      });
 
   }
 
@@ -46,8 +46,7 @@ export class WorkflowTransitionService {
   ): Observable<WorkflowTransition[]> {
     const url = `WorkflowTransition`;
     return this.httpClient
-      .put<ServiceResponse<WorkflowTransition[]>>(url, { workflowTransitions: transitions })
-      .pipe(map((response) => response.data));
+      .put<WorkflowTransition[]>(url, { workflowTransitions: transitions });
 
   }
 

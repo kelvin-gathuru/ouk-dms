@@ -5,11 +5,11 @@ import { ManageStepComponent } from './manage-step/manage-step.component';
 import { ManageTransitionComponent } from './manage-transition/manage-transition.component';
 export const WORKFLOW_ROUTES: Routes = [
   {
-    path: 'manage-steps',
+    path: 'manage-steps/:id',
     component: ManageStepComponent,
   },
   {
-    path: 'manage-transitions',
+    path: 'manage-transitions/:id',
     component: ManageTransitionComponent,
   },
   {

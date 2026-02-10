@@ -21,18 +21,15 @@ public class WorkflowStepController(IMediator _mediator) : BaseController
     /// <param name="command">The command.</param>
     /// <returns></returns>
     [HttpPost]
+    [Consumes("application/json")]
     public async Task<IActionResult> CreateWorkflowStep(AddWorkflowStepCommand command)
     {
         var result = await _mediator.Send(command);
-        return GenerateResponse(result);
-
-    }
-
-    [HttpGet("test")]
-    [AllowAnonymous]
-    public IActionResult Test()
-    {
-        return Ok("WorkflowStepController is working");
+        if (!result.Success)
+        {
+            return StatusCode(result.StatusCode, result.Errors);
+        }
+        return Ok(result.Data);
     }
 
     /// <summary>
@@ -46,20 +43,23 @@ public class WorkflowStepController(IMediator _mediator) : BaseController
     public async Task<IActionResult> UpdateWorkflowStep(UpdateWorkflowStepCommand command)
     {
         var result = await _mediator.Send(command);
-        return GenerateResponse(result);
+        if (!result.Success)
+        {
+            return StatusCode(result.StatusCode, result.Errors);
+        }
+        return Ok(result.Data);
     }
 
-    // <summary>
-    /// Deletes the workflow step.
-    /// </summary>
-    /// <param name="id">The identifier.</param>
-    /// <returns></returns>
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteWorkflowStep(Guid id)
     {
         var query = new DeleteWorkflowStepCommand { Id = id };
         var result = await _mediator.Send(query);
-        return GenerateResponse(result);
+        if (!result.Success)
+        {
+            return StatusCode(result.StatusCode, result.Errors);
+        }
+        return Ok(result.Data);
     }
 
     /// <summary>
@@ -79,7 +79,7 @@ public class WorkflowStepController(IMediator _mediator) : BaseController
     /// Get all document status
     /// </summary>
     /// <returns></returns>
-    [HttpGet(Name = "GetWorkflowSteps ")]
+    [HttpGet(Name = "GetWorkflowSteps")]
     [Produces("application/json", "application/xml", Type = typeof(List<WorkflowStepDto>))]
     public async Task<IActionResult> GetWorkflowSteps()
     {

@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import { Component, computed, effect, inject, OnInit } from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -12,7 +12,7 @@ import { RouterModule } from '@angular/router';
 import { WorkflowStep } from '@core/domain-classes/workflow-step';
 import { TranslateModule } from '@ngx-translate/core';
 import { WorkflowStore } from '../../workflow-store';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { ToastrService } from '@core/services/toastr-service';
 import { TranslationService } from '@core/services/translation.service';
@@ -42,13 +42,15 @@ export class ManageStepComponent implements OnInit {
   private translationService = inject(TranslationService);
   private router = inject(Router);
 
+  private route = inject(ActivatedRoute);
+
   stepFormGroup: FormGroup;
   isLoading = false;
   currentStep = 1;
-  currentWorkflow = this.workflowStore.currentWorkflow();
-  workflowSteps = this.currentWorkflow?.workflowSteps ?? [];
-  workflowInstances = this.currentWorkflow?.workflowInstances ?? [];
-  isWorkflowSetup = this.currentWorkflow?.isWorkflowSetup;
+  currentWorkflow = computed(() => this.workflowStore.currentWorkflow());
+  workflowSteps = computed(() => this.currentWorkflow()?.workflowSteps ?? []);
+  workflowInstances = computed(() => this.currentWorkflow()?.workflowInstances ?? []);
+  isWorkflowSetup = computed(() => this.currentWorkflow()?.isWorkflowSetup);
 
   get steps(): FormArray {
     return this.stepFormGroup.get('steps') as FormArray;
@@ -66,23 +68,33 @@ export class ManageStepComponent implements OnInit {
         }
       }
     });
+
+    effect(() => {
+      const steps = this.workflowSteps();
+      if (steps.length === 0 && this.steps.length === 0) {
+        this.addStep(null);
+        this.addStep(null);
+      } else if (steps.length > 0 && this.steps.length === 0) {
+        steps.forEach((step: WorkflowStep) => {
+          this.addStep(step);
+        });
+      }
+    });
+
   }
 
   ngOnInit(): void {
+    const workflowId = this.route.snapshot.paramMap.get('id');
+    if (workflowId && !this.currentWorkflow()?.id) {
+      this.workflowStore.getWorkflowById(workflowId);
+    }
+
     this.workflowStore.setCurrentStep(1);
     this.createStepFormGroup();
-    if (this.workflowSteps && this.workflowSteps?.length === 0) {
-      this.addStep(null);
-      this.addStep(null);
-    } else {
-      this.workflowSteps.forEach((step: WorkflowStep) => {
-        this.addStep(step);
-      });
-    }
   }
 
   goToWorkflowTransitions() {
-    this.router.navigate(['/workflow-settings/manage/manage-transitions']);
+    this.router.navigate(['/workflow-settings/manage/manage-transitions', this.currentWorkflow()?.id]);
   }
 
   checkUniqueStepName(index: number) {
@@ -145,14 +157,14 @@ export class ManageStepComponent implements OnInit {
     this.isLoading = true;
     const stepsData: WorkflowStep[] = this.steps.value.map((step: any) => ({
       ...step,
-      workflowId: this.currentWorkflow?.id ?? '',
+      workflowId: this.currentWorkflow()?.id ?? this.route.snapshot.paramMap.get('id') ?? '',
     }));
     // if (this.isWorkflowSetup) {
     //   this.workflowStore.updateWorkflowStep(stepsData);
     // } else {
     //   this.workflowStore.addWorkflowStep(stepsData);
     // }
-    if (this.workflowInstances.length > 0) {
+    if (this.workflowInstances().length > 0) {
       this.workflowStore.updateWorkflowStep(stepsData);
     } else {
       this.workflowStore.addWorkflowStep(stepsData);
@@ -160,6 +172,6 @@ export class ManageStepComponent implements OnInit {
   }
   onPreviousClick(): void {
     this.workflowStore.setCurrentStep(0);
-    this.router.navigate(['/workflow-settings/manage', this.currentWorkflow?.id ?? '']);
+    this.router.navigate(['/workflow-settings/manage', this.currentWorkflow()?.id ?? this.route.snapshot.paramMap.get('id') ?? '']);
   }
 }

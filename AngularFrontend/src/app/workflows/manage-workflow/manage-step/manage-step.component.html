@@ -2,10 +2,10 @@
   <div class="container-fluid">
     <div class="d-flex mb-2">
       <div class="me-auto">
-        @if(workflowSteps.length == 0){
+        @if(workflowSteps().length == 0){
         <span class="mb-0 page-title">{{ "ADD_WORKFLOW_STEP" | translate
           }}<app-page-help-text code="MANAGE_WORKFLOW"></app-page-help-text></span>
-        } @if(workflowSteps.length > 0){
+        } @if(workflowSteps().length > 0){
         <span class="mb-0 page-title">{{ "EDIT_WORKFLOW_STEP" | translate
           }}<app-page-help-text code="MANAGE_WORKFLOW"></app-page-help-text></span>
         }
@@ -17,7 +17,7 @@
         <mat-card appearance="outlined">
           <mat-card-content>
             <div formArrayName="steps">
-              @if(this.workflowInstances.length == 0) {
+              @if(this.workflowInstances().length == 0) {
               <div class="d-flex justify-content-end mb-2">
                 <button (click)="addStep(null)" class="primary me-2" matButton="filled">
                   <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
@@ -48,7 +48,7 @@
                       </div>
                     </div>
                   </div>
-                  @if (workflowInstances.length == 0 && i > 1) {
+                  @if (workflowInstances().length == 0 && i > 1) {
                   <div class="col-md-1">
                     <div class="form-group">
                       @if (steps.length > 2) {

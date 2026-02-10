@@ -38,9 +38,9 @@ export class WorkflowStepService {
   ): Observable<WorkflowStep[]> {
     const url = `WorkflowStep`;
     return this.httpClient
-      .post<ServiceResponse<WorkflowStep[]>>(url, {
+      .post<WorkflowStep[]>(url, {
         workflowSteps: steps,
-      }).pipe(map((response) => response.data));
+      });
   }
 
   updateWorkflowStep(
@@ -48,8 +48,7 @@ export class WorkflowStepService {
   ): Observable<WorkflowStep[]> {
     const url = `WorkflowStep`;
     return this.httpClient
-      .put<ServiceResponse<WorkflowStep[]>>(url, { workflowSteps: steps })
-      .pipe(map((response) => response.data));
+      .put<WorkflowStep[]>(url, { workflowSteps: steps });
 
   }
 

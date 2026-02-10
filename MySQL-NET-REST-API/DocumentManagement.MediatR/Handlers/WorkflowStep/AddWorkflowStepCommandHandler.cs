@@ -29,11 +29,18 @@ public class AddWorkflowStepCommandHandler(
 {
     public async Task<ServiceResponse<List<WorkflowStepDto>>> Handle(AddWorkflowStepCommand request, CancellationToken cancellationToken)
     {
-        var workflowId = request.WorkflowSteps.FirstOrDefault().WorkflowId;
+        var firstStep = request.WorkflowSteps.FirstOrDefault();
+        if (firstStep == null)
+        {
+            return ServiceResponse<List<WorkflowStepDto>>.Return404("WorkflowSteps list is empty.");
+        }
+
+        var workflowId = firstStep.WorkflowId;
+
         var workflowExist = await _workflowRepository.FindBy(c => c.Id == workflowId).FirstOrDefaultAsync();
         if (workflowExist == null)
         {
-            return ServiceResponse<List<WorkflowStepDto>>.Return404();
+            return ServiceResponse<List<WorkflowStepDto>>.Return404($"Workflow with ID {workflowId} not found.");
         }
 
         var entities = _mapper.Map<List<WorkflowStep>>(request.WorkflowSteps);

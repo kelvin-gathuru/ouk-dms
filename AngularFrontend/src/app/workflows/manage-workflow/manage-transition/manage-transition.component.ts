@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, effect, inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, inject, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -6,7 +6,7 @@ import {
   FormArray,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
@@ -48,16 +48,17 @@ export class ManageTransitionComponent implements OnInit, AfterViewInit {
   private clonerService = inject(ClonerService);
   private router = inject(Router);
 
+  private route = inject(ActivatedRoute);
   transitionFormGroup: FormGroup;
   isLoading = false;
   currentStep = 2;
   nodes: Node[] = [];
   links: any[] = [];
 
-  currentWorkflow = this.workflowStore.currentWorkflow();
-  workflowSteps = this.currentWorkflow?.workflowSteps ?? [];
-  workflowTransitions = this.currentWorkflow?.workflowTransitions ?? [];
-  workflowInstances = this.currentWorkflow?.workflowInstances ?? [];
+  currentWorkflow = computed(() => this.workflowStore.currentWorkflow());
+  workflowSteps = computed(() => this.currentWorkflow()?.workflowSteps ?? []);
+  workflowTransitions = computed(() => this.currentWorkflow()?.workflowTransitions ?? []);
+  workflowInstances = computed(() => this.currentWorkflow()?.workflowInstances ?? []);
   @ViewChild('graph') graph: any;
 
   constructor() {
@@ -72,6 +73,27 @@ export class ManageTransitionComponent implements OnInit, AfterViewInit {
         }
       }
     });
+
+    effect(() => {
+      const steps = this.workflowSteps();
+      if (steps.length > 0) {
+        this.nodes = steps.map((step: any) => ({
+          id: step.id ?? '',
+          label: step.stepName,
+          data: step,
+        }));
+      }
+
+      const transitions = this.workflowTransitions();
+      if (transitions.length === 0 && this.transitions.length === 0) {
+        this.initialTransition();
+      } else if (transitions.length > 0 && this.transitions.length === 0) {
+        for (let i = 0; i < transitions.length; i++) {
+          this.addTransition(transitions[i]);
+        }
+        this.addAllLink();
+      }
+    });
   }
 
   get transitions(): FormArray {
@@ -83,25 +105,14 @@ export class ManageTransitionComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.nodes = this.workflowSteps?.map((step: any) => ({
-      id: step.id ?? '',
-      label: step.stepName,
-      data: step,
-    }));
+    const workflowId = this.route.snapshot.paramMap.get('id');
+    if (workflowId && !this.currentWorkflow()?.id) {
+      this.workflowStore.getWorkflowById(workflowId);
+    }
 
     this.transitionFormGroup = this.fb.group({
       transitions: this.fb.array([]),
     });
-
-    if (this.workflowTransitions && this.workflowTransitions?.length === 0) {
-      this.initialTransition();
-    } else {
-      for (let i = 0; i < this.workflowTransitions.length; i++) {
-        this.addTransition(this.workflowTransitions[i]);
-      }
-      // this.workflowTransitions.forEach((transition) => this.addTransition(transition));
-      this.addAllLink();
-    }
   }
   ngAfterViewInit() {
     setTimeout(() => {
@@ -208,7 +219,7 @@ export class ManageTransitionComponent implements OnInit, AfterViewInit {
           isFirstTransaction: [transition?.isFirstTransaction || false],
           isUploadDocumentVersion: [transition?.isUploadDocumentVersion || false],
           isSignatureRequired: [transition?.isSignatureRequired || false],
-          workflowId: [this.currentWorkflow?.id || null,],
+          workflowId: [this.currentWorkflow()?.id || this.route.snapshot.paramMap.get('id') || null,],
           days: [transition?.days || 0],
           hours: [transition?.hours || 0],
           minutes: [transition?.minutes || 0],
@@ -241,9 +252,9 @@ export class ManageTransitionComponent implements OnInit, AfterViewInit {
     this.isLoading = true;
     const transitionsData: WorkflowTransition[] = this.transitions.getRawValue().map((transition: any) => ({
       ...transition,
-      workflowId: this.currentWorkflow?.id ?? '',
+      workflowId: this.currentWorkflow()?.id ?? this.route.snapshot.paramMap.get('id') ?? '',
     }));
-    
+
     if (transitionsData[0].id) {
       transitionsData[0].isFirstTransaction = true;
       this.workflowStore.updateWorkflowTransition(transitionsData);
@@ -254,7 +265,7 @@ export class ManageTransitionComponent implements OnInit, AfterViewInit {
   }
   onPreviousClick() {
     this.workflowStore.setCurrentStep(1);
-    this.router.navigate(['/workflow-settings/manage/manage-steps']);
+    this.router.navigate(['/workflow-settings/manage/manage-steps', this.currentWorkflow()?.id ?? this.route.snapshot.paramMap.get('id') ?? '']);
   }
 
 }

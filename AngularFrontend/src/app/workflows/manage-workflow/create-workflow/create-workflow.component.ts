@@ -1,4 +1,4 @@
-import { Component, ContentChild, effect, inject, OnInit } from '@angular/core';
+import { Component, computed, ContentChild, effect, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -31,24 +31,27 @@ export class CreateWorkflowComponent implements OnInit {
   private router = inject(Router);
   workFormGroup: FormGroup;
   isLoading = false;
-  currentWorkflow = this.workflowStore.currentWorkflow();
-  currentStep = 0;
+  currentWorkflow = computed(() => this.workflowStore.currentWorkflow());
+  currentStep = computed(() => this.workflowStore.currentStep());
   @ContentChild(ManageStepComponent) manageStepComponent!: ManageStepComponent;
   @ContentChild(ManageTransitionComponent) manageTransitionComponent!: ManageTransitionComponent;
 
   constructor() {
     effect(() => {
       const nextStep = this.workflowStore.currentStep();
-      if (nextStep !== this.currentStep) {
-        this.currentStep = nextStep;
-        this.goToWorkflowStep();
+      const currentWorkflow = this.workflowStore.currentWorkflow();
+      if (nextStep === 1 && currentWorkflow && currentWorkflow.id) {
+        this.router.navigate(['/workflow-settings/manage/manage-steps', currentWorkflow.id]);
       }
     });
   }
+
+  // goToWorkflowStep logic moved to effect
+
   ngOnInit(): void {
     this.createFirstFormGroup();
-    if (this.currentWorkflow) {
-      this.workFormGroup.patchValue(this.currentWorkflow);
+    if (this.currentWorkflow()?.id) {
+      this.workFormGroup.patchValue(this.currentWorkflow() as any);
     }
   }
 
@@ -58,10 +61,6 @@ export class CreateWorkflowComponent implements OnInit {
       name: ['', Validators.required],
       description: ['', Validators.required],
     });
-  }
-
-  goToWorkflowStep() {
-    this.router.navigate(['/workflow-settings/manage/manage-steps']);
   }
 
   saveWorkflow(): void {
@@ -85,7 +84,7 @@ export class CreateWorkflowComponent implements OnInit {
       isWorkflowSetup: false,
       workflowSteps: [],
       workflowTransitions: [],
-      workflowInstances:[]
+      workflowInstances: []
     };
   }
 

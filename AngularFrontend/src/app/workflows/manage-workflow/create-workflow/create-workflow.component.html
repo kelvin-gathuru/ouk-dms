@@ -2,12 +2,12 @@
   <div class="container-fluid">
     <div class="d-flex mb-2">
       <div class="me-auto">
-        @if (!currentWorkflow?.id) {
+        @if (!currentWorkflow()?.id) {
         <span class="mb-0 page-title">
           {{ "ADD_WORKFLOW" | translate }}
           <app-page-help-text code="MANAGE_WORKFLOW"></app-page-help-text>
         </span>
-        } @if (currentWorkflow?.id) {
+        } @if (currentWorkflow()?.id) {
         <span class="mb-0 page-title">
           {{ "EDIT_WORKFLOW" | translate }}
           <app-page-help-text code="MANAGE_WORKFLOW"></app-page-help-text>

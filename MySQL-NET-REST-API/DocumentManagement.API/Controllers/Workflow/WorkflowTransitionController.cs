@@ -24,8 +24,11 @@ public class WorkflowTransitionController(IMediator _mediator) : BaseController
     public async Task<IActionResult> CreateWorkflowTransition(AddWorkflowTransitionCommand command)
     {
         var result = await _mediator.Send(command);
-        return GenerateResponse(result);
-
+        if (!result.Success)
+        {
+            return StatusCode(result.StatusCode, result.Errors);
+        }
+        return Ok(result.Data);
     }
 
     /// <summary>
@@ -39,7 +42,11 @@ public class WorkflowTransitionController(IMediator _mediator) : BaseController
     public async Task<IActionResult> UpdateWorkflowTransition(UpdateWorkflowTransitionCommand command)
     {
         var result = await _mediator.Send(command);
-        return GenerateResponse(result);
+        if (!result.Success)
+        {
+            return StatusCode(result.StatusCode, result.Errors);
+        }
+        return Ok(result.Data);
     }
 
     // <summary>
@@ -52,7 +59,11 @@ public class WorkflowTransitionController(IMediator _mediator) : BaseController
     {
         var query = new DeleteWorkflowTransitionCommand { Id = id };
         var result = await _mediator.Send(query);
-        return GenerateResponse(result);
+        if (!result.Success)
+        {
+            return StatusCode(result.StatusCode, result.Errors);
+        }
+        return Ok(result.Data);
     }
 
     /// <summary>

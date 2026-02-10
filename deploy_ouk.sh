@@ -88,6 +88,10 @@ SERVICE
     # Start/Restart API Service
     echo '$SERVER_PASS' | sudo -S systemctl daemon-reload
     echo '$SERVER_PASS' | sudo -S systemctl enable ouk-dms-api.service
+
+    # Fix permissions before restart
+    echo '$SERVER_PASS' | sudo -S chown -R www-data:www-data $REMOTE_DIR/api
+    
     echo '$SERVER_PASS' | sudo -S systemctl restart ouk-dms-api.service
 
     # Certbot SSL Setup
