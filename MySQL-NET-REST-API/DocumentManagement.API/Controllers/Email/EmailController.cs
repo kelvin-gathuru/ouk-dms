@@ -28,6 +28,10 @@ public class EmailController : BaseController
     public async Task<IActionResult> SendEmail(SendEmailCommand sendEmailCommand)
     {
         var result = await _mediator.Send(sendEmailCommand);
-        return Ok(result);
+        if (!result)
+        {
+            return BadRequest("Failed to send email");
+        }
+        return Ok();
     }
 }
