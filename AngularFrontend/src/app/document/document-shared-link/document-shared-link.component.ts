@@ -141,7 +141,7 @@ export class DocumentSharedLinkComponent
         id: [''],
         isLinkExpiryTime: [false],
         linkExpiryDate: [currentDate],
-        linkExpiryTime: ['12:00'],
+        linkExpiryTime: ['23:59'],
         isPassword: [false],
         password: [''],
         linkCode: [''],

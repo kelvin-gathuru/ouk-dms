@@ -36,10 +36,18 @@ public class CreateDocumentShareableLinkCommandHandler
     }
     public async Task<ServiceResponse<DocumentShareableLinkDto>> Handle(CreateDocumentShareableLinkCommand request, CancellationToken cancellationToken)
     {
+        var logMsg = $"Update/Create Link - ID: {request.Id} | Expiry: {request.LinkExpiryTime} | IsAllowDownload: {request.IsAllowDownload}\n";
+        System.IO.File.AppendAllText("/tmp/link_create_debug.txt", logMsg);
+
         DocumentShareableLink sharableLInk;
         if (request.Id.HasValue)
         {
             sharableLInk = _mapper.Map<DocumentShareableLink>(request);
+            if (sharableLInk.LinkExpiryTime.HasValue)
+            {
+                 sharableLInk.LinkExpiryTime = sharableLInk.LinkExpiryTime.Value.ToUniversalTime();
+            }
+
             if (!string.IsNullOrWhiteSpace(sharableLInk.Password))
             {
                 var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(sharableLInk.Password);
@@ -51,6 +59,12 @@ public class CreateDocumentShareableLinkCommandHandler
         {
             sharableLInk = _mapper.Map<DocumentShareableLink>(request);
             sharableLInk.LinkCode = Guid.NewGuid().ToString();
+            
+            if (sharableLInk.LinkExpiryTime.HasValue)
+            {
+                 sharableLInk.LinkExpiryTime = sharableLInk.LinkExpiryTime.Value.ToUniversalTime();
+            }
+
             if (!string.IsNullOrWhiteSpace(sharableLInk.Password))
             {
                 var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(sharableLInk.Password);
