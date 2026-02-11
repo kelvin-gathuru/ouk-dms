@@ -72,41 +72,14 @@
               </div>
             </div>
             @if(!isEditMode) {
-            <div class="col-md-6">
-              <div class="form-group">
-                <label class="form-label text-danger">{{ "PASSWORD" | translate }} <sup>*</sup></label>
-                <input autocomplete="new-password" formControlName="password" class="form-control" type="password" />
-                @if( userForm.get('password')?.touched &&
-                userForm.get('password')?.errors ){
-                <div class="text-danger">
-                  @if(userForm.get('password')?.errors?.['required']){
-                  {{ "PASSWORD_IS_REQUIRED" | translate }}
-                  } @if(userForm.get('password')?.errors?.['minlength']){
-                  <div>
-                    {{ "YOU_HAVE_TO_ENTER_AT_LEAST_DIGIT" | translate }}
-                  </div>
-                  }
-                </div>
-                }
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label class="form-label text-danger">{{ "CONFIRM_PASSWORD" | translate }} <sup>*</sup></label>
-                <input autocomplete="new-password" formControlName="confirmPassword" class="form-control"
-                  type="password" />
-                @if(userForm.get('confirmPassword')?.touched &&
-                userForm.get('confirmPassword')?.errors &&
-                userForm.get('confirmPassword')?.errors?.['required']){
-                <div class="text-danger">
-                  {{ "CONFIRM_PASSWORD_IS_REQUIRED" | translate }}
-                </div>
-                } @if(userForm.get('confirmPassword')?.touched &&
-                userForm.hasError('notSame')){
-                <div class="text-danger">
-                  {{ "PASSWORDS_DO_NOT_MATCH" | translate }}
-                </div>
-                }
+            <div class="col-md-12">
+              <div class="d-flex align-items-center rounded-1 p-3 mb-3"
+                style="background-color: #e3f2fd; border-left: 4px solid #2196f3;">
+                <span class="material-icons me-2" style="color: #2196f3;">info</span>
+                <span style="color: #1976d2;">
+                  <strong>{{ "AUTO_PASSWORD_INFO" | translate }}</strong><br>
+                  A temporary 6-character password will be automatically generated and sent to the user's email address.
+                </span>
               </div>
             </div>
             }

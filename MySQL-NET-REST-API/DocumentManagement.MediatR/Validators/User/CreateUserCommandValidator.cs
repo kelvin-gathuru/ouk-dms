@@ -12,7 +12,6 @@ namespace DocumentManagement.MediatR.Validators
             RuleFor(c => c.LastName).NotEmpty().WithMessage("Please enter lastname.");
             RuleFor(c => c.Email).NotEmpty().WithMessage("Please enter email .");
             RuleFor(c => c.Email).EmailAddress().WithMessage("Email in right format.");
-            RuleFor(c => c.Password).NotEmpty().WithMessage("Please enter password.");
         }
     }
 }

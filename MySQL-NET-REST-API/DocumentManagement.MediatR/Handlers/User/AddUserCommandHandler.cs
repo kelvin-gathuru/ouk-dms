@@ -7,10 +7,15 @@ using DocumentManagement.Helper;
 using DocumentManagement.MediatR.Commands;
 using DocumentManagement.Repository;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,18 +27,40 @@ public class AddUserCommandHandler : IRequestHandler<AddUserCommand, UserDto>
     private readonly IUserRepository _userRepository;
     readonly IUnitOfWork<DocumentContext> _uow;
     private readonly IMapper _mapper;
+    private readonly EmailHelper _emailHelper;
+    private readonly IConfiguration _configuration;
+    private readonly ILogger<AddUserCommandHandler> _logger;
+    private readonly IWebHostEnvironment _hostingEnvironment;
+
     public AddUserCommandHandler(
         IMapper mapper,
         UserManager<User> userManager,
-        IUserRepository userRepository
-,
-        IUnitOfWork<DocumentContext> uow)
+        IUserRepository userRepository,
+        IUnitOfWork<DocumentContext> uow,
+        EmailHelper emailHelper,
+        IConfiguration configuration,
+        ILogger<AddUserCommandHandler> logger,
+        IWebHostEnvironment hostingEnvironment)
     {
         _mapper = mapper;
         _userManager = userManager;
         _userRepository = userRepository;
         _uow = uow;
+        _emailHelper = emailHelper;
+        _configuration = configuration;
+        _logger = logger;
+        _hostingEnvironment = hostingEnvironment;
     }
+
+    private string GeneratePassword()
+    {
+        const string chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
+        var random = new Random();
+        return new string(Enumerable.Range(0, 6)
+            .Select(_ => chars[random.Next(chars.Length)])
+            .ToArray());
+    }
+
     public async Task<UserDto> Handle(AddUserCommand request, CancellationToken cancellationToken)
     {
         var allUser = await _userRepository.All.IgnoreQueryFilters().ToListAsync();
@@ -59,6 +86,10 @@ public class AddUserCommandHandler : IRequestHandler<AddUserCommand, UserDto>
             };
             return errorDto;
         }
+
+        // Generate random password
+        var generatedPassword = GeneratePassword();
+
         var entity = _mapper.Map<User>(request);
         entity.Id = Guid.NewGuid();
         entity.ClientId = Guid.NewGuid().ToString();
@@ -74,20 +105,66 @@ public class AddUserCommandHandler : IRequestHandler<AddUserCommand, UserDto>
             };
             return errorDto;
         }
-        if (!string.IsNullOrEmpty(request.Password))
-        {
 
-            string code = await _userManager.GeneratePasswordResetTokenAsync(entity);
-            IdentityResult passwordResult = await _userManager.ResetPasswordAsync(entity, code, request.Password);
-            if (!passwordResult.Succeeded)
+        // Set the generated password
+        string code = await _userManager.GeneratePasswordResetTokenAsync(entity);
+        IdentityResult passwordResult = await _userManager.ResetPasswordAsync(entity, code, generatedPassword);
+        if (!passwordResult.Succeeded)
+        {
+            var errorDto = new UserDto
             {
-                var errorDto = new UserDto
+                StatusCode = 500,
+                Messages = new List<string> { "An unexpected fault happened. Try again later." }
+            };
+            return errorDto;
+        }
+
+        // Send welcome email with credentials
+        try
+        {
+            var smtpHost = _configuration["SmtpSettings:Host"];
+            var smtpPort = _configuration.GetValue<int>("SmtpSettings:Port");
+            var smtpUserName = _configuration["SmtpSettings:UserName"];
+            var smtpPassword = _configuration["SmtpSettings:Password"];
+            var smtpEncryptionType = _configuration["SmtpSettings:EncryptionType"];
+            var smtpFromEmail = _configuration["SmtpSettings:FromEmail"];
+            var smtpFromName = _configuration["SmtpSettings:FromName"];
+            var loginUrl = _configuration["JwtSettings:issuer"];
+
+            if (!string.IsNullOrEmpty(smtpHost) && !string.IsNullOrEmpty(entity.Email))
+            {
+                var emailTemplatePath = Path.Combine(_hostingEnvironment.WebRootPath, "EmailTemplates", "WelcomeEmail.html");
+                var emailTemplateContent = System.IO.File.ReadAllText(emailTemplatePath);
+
+                var emailBody = emailTemplateContent
+                    .Replace("##USER_NAME##", $"{entity.FirstName} {entity.LastName}")
+                    .Replace("##EMAIL##", entity.Email)
+                    .Replace("##PASSWORD##", generatedPassword)
+                    .Replace("##LOGIN_URL##", loginUrl);
+
+                var emailSpec = new SendEmailSpecification
                 {
-                    StatusCode = 500,
-                    Messages = new List<string> { "An unexpected fault happened. Try again later." }
+                    UserName = smtpUserName,
+                    Password = smtpPassword,
+                    FromAddress = smtpFromEmail,
+                    ToAddress = entity.Email,
+                    Body = emailBody,
+                    Host = smtpHost,
+                    Port = smtpPort,
+                    Subject = "Welcome to OUK DMS - Your Account Credentials",
+                    CCAddress = "",
+                    EncryptionType = smtpEncryptionType,
+                    FromName = smtpFromName
                 };
-                return errorDto;
+
+                await _emailHelper.SendEmail(emailSpec);
+                _logger.LogInformation($"Welcome email sent successfully to {entity.Email} with password: {generatedPassword}");
             }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Failed to send welcome email to {entity.Email}. Generated password: {generatedPassword}");
+            // Don't fail user creation if email fails - password is logged
         }
 
         return _mapper.Map<UserDto>(entity);

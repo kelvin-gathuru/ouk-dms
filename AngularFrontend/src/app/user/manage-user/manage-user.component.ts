@@ -70,14 +70,6 @@ export class ManageUserComponent extends BaseComponent implements OnInit {
           emailControl.disable();
         }
       } else {
-        const passwordControl = this.userForm.get('password');
-        if (passwordControl) {
-          passwordControl.setValidators([Validators.required, Validators.minLength(6)]);
-        }
-        const confirmPasswordControl = this.userForm.get('confirmPassword');
-        if (confirmPasswordControl) {
-          confirmPasswordControl.setValidators([Validators.required]);
-        }
         const emailControl = this.userForm.get('email');
         if (emailControl) {
           emailControl.enable();
@@ -101,19 +93,11 @@ export class ManageUserComponent extends BaseComponent implements OnInit {
       lastName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', [Validators.required]],
-      isSuperAdmin: [false],
-      password: [''],
-      confirmPassword: [''],
-    }, {
-      validators: this.checkPasswords
+      isSuperAdmin: [false]
     });
   }
 
-  checkPasswords(group: FormGroup) {
-    let pass = group.get('password')?.value;
-    let confirmPass = group.get('confirmPassword')?.value;
-    return pass === confirmPass ? null : { notSame: true }
-  }
+
 
   private markFormGroupTouched(formGroup: FormGroup) {
     (<any>Object).values(formGroup.controls).forEach((control: any) => {
@@ -152,7 +136,6 @@ export class ManageUserComponent extends BaseComponent implements OnInit {
       lastName: this.userForm.get('lastName')?.value,
       email: this.userForm.get('email')?.value,
       phoneNumber: this.userForm.get('phoneNumber')?.value,
-      password: this.userForm.get('password')?.value,
       isSuperAdmin: this.userForm.get('isSuperAdmin')?.value,
       userName: this.userForm.get('email')?.value,
       userRoles: this.getSelectedRoles()
