@@ -8,7 +8,9 @@ using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Mscc.GenerativeAI;
+using OpenAI.Chat;
+using OpenAI;
+using System.ClientModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -171,8 +173,10 @@ public class GetDocumentSummaryCommandHandler(
     private async Task<string> extractSummaryOfDocumentUsingGemini(string documentText, CompanyProfile companyProfile)
     {
         var apiKey = pathHelper.GEMINI_APIKEY;
-        var googleAI = new GoogleAI(apiKey: apiKey);
-        var model = googleAI.GenerativeModel(model: Model.Gemini15Flash);
+        var selectedModel = "google/gemini-flash-1.5";
+        
+        OpenAIClientOptions options = new OpenAIClientOptions { Endpoint = new Uri("https://openrouter.ai/api/v1") };
+        ChatClient chatClient = new ChatClient(selectedModel, new ApiKeyCredential(apiKey), options);
 
         int chunkSize = 16000;
 
@@ -183,8 +187,8 @@ public class GetDocumentSummaryCommandHandler(
                 using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(60));
                 // 🔹 Small document → single API call
                 string prompt = $"Please summarize the following document briefly:\n\n{documentText}";
-                var response = await model.GenerateContent(prompt, cancellationToken: cts.Token);
-                return response.Text.Trim();
+                var response = await chatClient.CompleteChatAsync(new ChatMessage[] { ChatMessage.CreateUserMessage(prompt) }, cancellationToken: cts.Token);
+                return response.Value.Content[0].Text?.Trim() ?? string.Empty;
             }
             catch (Exception ex)
             {
@@ -205,8 +209,8 @@ public class GetDocumentSummaryCommandHandler(
             var summaryTasks = chunks.Select(async chunk =>
             {
                 string prompt = $"Summarize this part of the document briefly:\n\n{chunk}";
-                var response = await model.GenerateContent(prompt);
-                return response.Text?.Trim() ?? "";
+                var response = await chatClient.CompleteChatAsync(new ChatMessage[] { ChatMessage.CreateUserMessage(prompt) });
+                return response.Value.Content[0].Text?.Trim() ?? "";
             }).ToArray();
 
             string combinedSummaries = string.Join("\n\n",
@@ -216,9 +220,9 @@ public class GetDocumentSummaryCommandHandler(
             // 🔹 Combine chunk summaries and get final summary
 
             string finalPrompt = $"Here are summaries of different parts of a document:\n\n{combinedSummaries}\n\nPlease create a single concise summary of the entire document.";
-            var finalResponse = await model.GenerateContent(finalPrompt);
+            var finalResponse = await chatClient.CompleteChatAsync(new ChatMessage[] { ChatMessage.CreateUserMessage(finalPrompt) });
 
-            return finalResponse.Text.Trim();
+            return finalResponse.Value.Content[0].Text?.Trim() ?? string.Empty;
         }
         catch (Exception ex)
         {

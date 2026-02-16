@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ClientModel;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -15,9 +14,9 @@ using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Mscc.GenerativeAI;
-using OpenAI.Chat;
 using OpenAI;
+using OpenAI.Chat;
+using System.ClientModel;
 
 namespace DocumentManagement.MediatR.Handlers;
 public class GetUserOpenaiMsgByIdQueryHandler(
@@ -43,7 +42,7 @@ public class GetUserOpenaiMsgByIdQueryHandler(
         // Use GEMINI_APIKEY from appsettings as the OpenRouter Key
         if (string.IsNullOrEmpty(pathHelper.GEMINI_APIKEY))
         {
-            return ServiceResponse<bool>.ReturnFailed(404, "Configure OpenRouter APIKey in appsettings.json (GEMINI_APIKEY).");
+            return ServiceResponse<bool>.ReturnFailed(404, "Configure Gemini APIKey in appsettings.json (GEMINI_APIKEY).");
         }
 
         var prompt = userOpenaiMsg.PromptInput;
@@ -68,9 +67,9 @@ public class GetUserOpenaiMsgByIdQueryHandler(
 
         string response = await streamOpenRouterResponse(userOpenaiMsg.Id, prompt, userOpenaiMsg.SelectedModel, pathHelper.GEMINI_APIKEY);
 
-        if (string.IsNullOrEmpty(response))
+        if (string.IsNullOrEmpty(response) || response.StartsWith("ERROR:"))
         {
-            return ServiceResponse<bool>.Return404("Error While generting message");
+            return ServiceResponse<bool>.ReturnFailed(404, response ?? "Error While Generating message");
         }
         userOpenaiMsg.AiResponse = response;
         userOpenaiMsgRepository.Update(userOpenaiMsg);
@@ -90,36 +89,54 @@ public class GetUserOpenaiMsgByIdQueryHandler(
     public async Task<string> streamOpenRouterResponse(Guid msgId, string message, string model, string apiKey)
     {
         string finalResponse = string.Empty;
+        string selectedModel = "google/gemini-flash-1.5"; // Default for OpenRouter
         try 
         {
-            var options = new OpenAIClientOptions { Endpoint = new Uri("https://openrouter.ai/api/v1") };
-            var openAiClient = new OpenAIClient(new ApiKeyCredential(apiKey), options);
-            var client = openAiClient.GetChatClient(model);
-
-            AsyncCollectionResult<StreamingChatCompletionUpdate> completionUpdates = client.CompleteChatStreamingAsync(message);
-
-            await foreach (StreamingChatCompletionUpdate completionUpdate in completionUpdates)
+            // Map frontend model selection to OpenRouter models if necessary
+            if (!string.IsNullOrEmpty(model))
             {
-                if (completionUpdate.ContentUpdate.Count > 0)
+                if (model.Contains("pro", StringComparison.OrdinalIgnoreCase))
                 {
-                    var content = completionUpdate.ContentUpdate[0].Text;
-                    content = content.Replace("\r\n", "<br/>")
-                              .Replace("\r", "<br/>")
-                              .Replace("\n", "<br/>");
+                    selectedModel = "google/gemini-pro-1.5";
+                }
+                else if (model.Contains("flash", StringComparison.OrdinalIgnoreCase))
+                {
+                    selectedModel = "google/gemini-flash-1.5";
+                }
+                else 
+                {
+                    selectedModel = model; // Use the value directly if it's already an OpenRouter identifier
+                }
+            }
 
-                    finalResponse += content;
-                    if (string.IsNullOrEmpty(content))
+            OpenAIClientOptions options = new OpenAIClientOptions { Endpoint = new Uri("https://openrouter.ai/api/v1") };
+            ChatClient chatClient = new ChatClient(selectedModel, new ApiKeyCredential(apiKey), options);
+
+            var responseStream = chatClient.CompleteChatStreamingAsync(new ChatMessage[] { ChatMessage.CreateUserMessage(message) });
+
+            await foreach (var chunk in responseStream)
+            {
+                if (chunk.ContentUpdate != null && chunk.ContentUpdate.Count > 0)
+                {
+                    foreach (var part in chunk.ContentUpdate)
                     {
-                        continue;
-                    }
-                    var userInfonew = connectionMappingRepository.GetUserInfoById(userInfoToken.Id);
-                    if (userInfonew != null)
-                    {
-                        var connectionId = userInfonew.ConnectionId;
-                        if (connectionId != null)
+                         var content = part.Text;
+                         if (string.IsNullOrEmpty(content)) continue;
+
+                         content = content.Replace("\r\n", "<br/>")
+                                  .Replace("\r", "<br/>")
+                                  .Replace("\n", "<br/>");
+
+                        finalResponse += content;
+                        
+                        var userInfonew = connectionMappingRepository.GetUserInfoById(userInfoToken.Id);
+                        if (userInfonew != null)
                         {
-                            await hubContext.Clients.Client(connectionId).SendAiPromptResponse(msgId, content);
-                            await Task.Delay(10); // Reduced delay for smoother streaming
+                            var connectionId = userInfonew.ConnectionId;
+                            if (connectionId != null)
+                            {
+                                await hubContext.Clients.Client(connectionId).SendAiPromptResponse(msgId, content);
+                            }
                         }
                     }
                 }
@@ -137,9 +154,10 @@ public class GetUserOpenaiMsgByIdQueryHandler(
         }
         catch (Exception ex)
         {
+             var logMsg = $"Error during OpenRouter streaming with model {selectedModel}: {ex.Message} | StackTrace: {ex.StackTrace}\n";
+             System.IO.File.AppendAllText("/tmp/ai_error.txt", logMsg);
              Console.WriteLine($"Error during streaming: {ex.Message}");
-             // Return empty string to trigger 404 in caller, or handle better
-             return string.Empty;
+             return $"ERROR: {ex.Message}";
         }
 
         return finalResponse;
