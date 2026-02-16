@@ -89,8 +89,17 @@ SERVICE
     echo '$SERVER_PASS' | sudo -S systemctl daemon-reload
     echo '$SERVER_PASS' | sudo -S systemctl enable ouk-dms-api.service
 
+    # Create required application directories
+    echo '$SERVER_PASS' | sudo -S mkdir -p $REMOTE_DIR/api/wwwroot/Signatures
+    echo '$SERVER_PASS' | sudo -S mkdir -p $REMOTE_DIR/api/wwwroot/Documents
+    echo '$SERVER_PASS' | sudo -S mkdir -p $REMOTE_DIR/api/wwwroot/FileRequestDocument
+    echo '$SERVER_PASS' | sudo -S mkdir -p $REMOTE_DIR/api/wwwroot/SearchIndex
+    echo '$SERVER_PASS' | sudo -S mkdir -p $REMOTE_DIR/api/wwwroot/OCRTemp
+    echo '$SERVER_PASS' | sudo -S mkdir -p $REMOTE_DIR/api/wwwroot/summary
+    
     # Fix permissions before restart
     echo '$SERVER_PASS' | sudo -S chown -R www-data:www-data $REMOTE_DIR/api
+    echo '$SERVER_PASS' | sudo -S chmod -R 775 $REMOTE_DIR/api/wwwroot
     
     echo '$SERVER_PASS' | sudo -S systemctl restart ouk-dms-api.service
 
