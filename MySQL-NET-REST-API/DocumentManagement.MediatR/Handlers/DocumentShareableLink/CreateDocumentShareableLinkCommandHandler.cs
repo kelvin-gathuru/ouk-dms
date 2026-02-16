@@ -36,9 +36,6 @@ public class CreateDocumentShareableLinkCommandHandler
     }
     public async Task<ServiceResponse<DocumentShareableLinkDto>> Handle(CreateDocumentShareableLinkCommand request, CancellationToken cancellationToken)
     {
-        var logMsg = $"Update/Create Link - ID: {request.Id} | Expiry: {request.LinkExpiryTime} | IsAllowDownload: {request.IsAllowDownload}\n";
-        System.IO.File.AppendAllText("/tmp/link_create_debug.txt", logMsg);
-
         DocumentShareableLink sharableLInk;
         if (request.Id.HasValue)
         {
