@@ -1,0 +1,25 @@
+<div class="p-4 text-center">
+    <div class="mb-4">
+        <div class="icon-circle-lg bg-coral-light mx-auto mb-3"
+            style="width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <mat-icon class="text-coral-500"
+                style="font-size: 40px; height: 40px; width: 40px;">assignment_late</mat-icon>
+        </div>
+        <h3 class="font-weight-bold text-dark">Pending Workflow Tasks</h3>
+        <p class="text-muted mb-0">
+            You have internal tasks waiting for your action. Please review them on the workflows page to keep the
+            process moving.
+        </p>
+    </div>
+
+    <div class="d-grid gap-2">
+        <button mat-raised-button color="primary" class="py-2 fw-bold" style="background-color: #037c91; color: white;"
+            (click)="onViewWorkflows()">
+            <mat-icon class="me-2">play_circle_filled</mat-icon>
+            View My Workflows
+        </button>
+        <button mat-button class="text-muted" (click)="onClose()">
+            Later
+        </button>
+    </div>
+</div>

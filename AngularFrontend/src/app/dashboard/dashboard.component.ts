@@ -119,10 +119,22 @@ export class DashboardComponent extends BaseComponent implements OnInit {
     // 3. Assigned Workflows
     this.dashboardService.getAssignedWorkflows().subscribe(data => {
       this.assignedWorkflows = data;
+      // ✅ Trigger popup if tasks are pending
+      if (this.assignedWorkflows && this.assignedWorkflows.length > 0) {
+        this.showWorkflowAlert();
+      }
     });
 
     // 4. Categories for Charts (Doughnut & Bar)
     this.getCategoryChartData();
+  }
+
+  async showWorkflowAlert() {
+    const { WorkflowAlertComponent } = await import('./workflow-alert/workflow-alert.component');
+    this.dialog.open(WorkflowAlertComponent, {
+      width: '400px',
+      panelClass: 'custom-alert-dialog'
+    });
   }
 
   updateStats(data: DashboardStats) {
