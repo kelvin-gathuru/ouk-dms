@@ -4,25 +4,44 @@ $teal-light: #e0f2f4;
 $text-muted: #64748b;
 $font-family: 'Poppins', sans-serif;
 
+:host-context(.submenu-closed) {
+    .sidebar-brand {
+        display: none;
+    }
+
+    .sidebar {
+        width: 60px;
+
+        // Hide text when collapsed to prevent overflow/color issues
+        .menu .list {
+
+            li a span,
+            li .menu-toggle span {
+                display: none;
+            }
+        }
+    }
+}
+
 .sidebar {
     background: #ffffff !important;
     border-right: 1px solid #f1f5f9;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02) !important;
-    width: 250px !important;
+    width: 250px;
 
     .sidebar-brand {
-        padding: 20px 20px 20px; // Reduced padding to move logo up
+        padding: 10px 20px 0; // Reduced top padding and removed bottom padding to move logo up
         text-align: center;
         border-bottom: none !important;
         background: #ffffff !important;
 
         .logo-container {
-            margin-bottom: 15px; // Reduced bottom margin
+            margin-bottom: 5px; // Reduced bottom margin to move logo up
             display: flex;
             justify-content: center;
 
             .ouk-logo {
-                max-width: 100px;
+                max-width: 80px; // Made smaller
                 height: auto;
                 background: transparent !important;
             }
