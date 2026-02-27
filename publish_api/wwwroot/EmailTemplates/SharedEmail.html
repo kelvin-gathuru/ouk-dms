@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      text-align: center;
+      background-color: #007bff;
+      color: white;
+      padding: 10px 0;
+      border-radius: 10px 10px 0 0;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .content {
+      padding: 20px;
+      color: #333;
+    }
+    .content p {
+      margin-bottom: 15px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    .content a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .content a:hover {
+      text-decoration: underline;
+    }
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Document Shared with You</h1>
+    </div>
+    <div class="content">
+      <p>Dear ##TO_NAME##,</p>
+      <p>This document has been shared with you by <strong>##FROM_NAME##</strong>.</p>
+      <p>You can access the document by clicking the link below:</p>
+      <p><a href="##LINK##" target="_blank">View Document</a></p>
+      <p>If you have any questions, feel free to reach out.</p>
+      <p>Best regards,</p>
+      <p>##FROM_NAME##</p>
+    </div>
+  </div>
+</body>
+</html>

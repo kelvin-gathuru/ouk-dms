@@ -30,7 +30,8 @@ public class PerformWorkflowTransitionToNextTransitionCommandHandler(
     IDocumentRepository documentRepository,
     IUserNotificationRepository userNotificationRepository,
     IWorkflowInstanceEmailSenderRepository workflowInstanceEmailSenderRepository,
-    IHubContext<UserHub, IHubClient> _hubContext
+    IHubContext<UserHub, IHubClient> _hubContext,
+    IDocumentUserPermissionRepository documentUserPermissionRepository
    )
     : IRequestHandler<PerformWorkflowTransitionToNextTransitionCommand, ServiceResponse<bool>>
 {
@@ -153,6 +154,43 @@ public class PerformWorkflowTransitionToNextTransitionCommandHandler(
         if (lstNotificationWorkflow.Count > 0)
         {
             userNotificationRepository.createWorkflowInstanceNotifications(lstNotificationWorkflow);
+            
+            // Set document status to shared
+            document.IsShared = true;
+            documentRepository.Update(document);
+
+            var autoGrantUserIds = new List<Guid>();
+
+            // Auto-grant document access to assigned users
+            foreach (var notification in lstNotificationWorkflow)
+            {
+                // Check if user already has permission
+                var existingPermission = await documentUserPermissionRepository
+                    .FindBy(p => p.DocumentId == document.Id && p.UserId == notification.UserId)
+                    .FirstOrDefaultAsync();
+                
+                if (existingPermission == null)
+                {
+                    var documentUserPermission = new DocumentUserPermission
+                    {
+                        Id = Guid.NewGuid(),
+                        DocumentId = document.Id,
+                        UserId = notification.UserId,
+                        IsTimeBound = false,
+                        IsAllowDownload = true,
+                        CreatedBy = userInfoToken.Id,
+                        CreatedDate = DateTime.UtcNow
+                    };
+                    documentUserPermissionRepository.Add(documentUserPermission);
+                    autoGrantUserIds.Add(notification.UserId);
+                }
+            }
+
+            if (autoGrantUserIds.Count > 0)
+            {
+                // Create SHARE_USER notifications to ensure document appears in "My Documents"
+                userNotificationRepository.CreateUsersDocumentNotifiction(autoGrantUserIds, document.Id);
+            }
         }
 
         if (await uow.SaveAsync() <= 0)
