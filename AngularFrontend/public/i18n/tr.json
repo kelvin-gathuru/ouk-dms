@@ -837,6 +837,7 @@
   "180_DAYS": "180 Gün",
   "365_DAYS": "365 Gün",
   "SELECT_RETENTION_PERIOD": "Saklama Süresi Seçin",
+    "ACCESSIBLE_ON_INTRANET": "İntranet üzerinden erişilebilir",
   "ARCHIVE_RETENTION_PERIOD": "Arşiv Saklama Süresi",
   "RETENTION_ENABLED": "Saklama Etkinleştirildi",
   "ARCHIVE_RETENTION_PERIOD_UPDATED_SUCCESSFULLY": "Arşiv saklama süresi başarıyla güncellendi",

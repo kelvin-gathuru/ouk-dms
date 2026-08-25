@@ -49,6 +49,7 @@ export interface DocumentInfo {
   mediaType?: number;
   isShared?: boolean;
   isAssignUser?: boolean;
+  isIntranetAccessible?: boolean;
   retentionPeriodInDays?: number;
   onExpiryAction?: RETENTION_ACTION_ENUM;
   documentContent?: string;

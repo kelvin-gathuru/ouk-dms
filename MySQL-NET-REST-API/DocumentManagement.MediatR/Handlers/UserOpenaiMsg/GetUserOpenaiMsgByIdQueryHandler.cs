@@ -89,7 +89,7 @@ public class GetUserOpenaiMsgByIdQueryHandler(
     public async Task<string> streamOpenRouterResponse(Guid msgId, string message, string model, string apiKey)
     {
         string finalResponse = string.Empty;
-        string selectedModel = "google/gemini-flash-1.5"; // Default for OpenRouter
+        string selectedModel = "google/gemini-2.5-flash"; // Default for OpenRouter
         try 
         {
             // Map frontend model selection to OpenRouter models if necessary
@@ -97,11 +97,11 @@ public class GetUserOpenaiMsgByIdQueryHandler(
             {
                 if (model.Contains("pro", StringComparison.OrdinalIgnoreCase))
                 {
-                    selectedModel = "google/gemini-pro-1.5";
+                    selectedModel = "google/gemini-2.5-pro";
                 }
                 else if (model.Contains("flash", StringComparison.OrdinalIgnoreCase))
                 {
-                    selectedModel = "google/gemini-flash-1.5";
+                    selectedModel = "google/gemini-2.5-flash";
                 }
                 else 
                 {
@@ -112,7 +112,12 @@ public class GetUserOpenaiMsgByIdQueryHandler(
             OpenAIClientOptions options = new OpenAIClientOptions { Endpoint = new Uri("https://openrouter.ai/api/v1") };
             ChatClient chatClient = new ChatClient(selectedModel, new ApiKeyCredential(apiKey), options);
 
-            var responseStream = chatClient.CompleteChatStreamingAsync(new ChatMessage[] { ChatMessage.CreateUserMessage(message) });
+            var chatOptions = new ChatCompletionOptions
+            {
+                MaxOutputTokenCount = 2048,
+            };
+
+            var responseStream = chatClient.CompleteChatStreamingAsync(new ChatMessage[] { ChatMessage.CreateUserMessage(message) }, chatOptions);
 
             await foreach (var chunk in responseStream)
             {

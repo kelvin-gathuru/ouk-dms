@@ -836,6 +836,7 @@
   "180_DAYS": "180日",
   "365_DAYS": "365日",
   "SELECT_RETENTION_PERIOD": "保存期間を選択",
+    "ACCESSIBLE_ON_INTRANET": "イントラネットでアクセス可能",
   "ARCHIVE_RETENTION_PERIOD": "アーカイブの保存期間",
   "RETENTION_ENABLED": "保存が有効",
   "ARCHIVE_RETENTION_PERIOD_UPDATED_SUCCESSFULLY": "アーカイブ保存期間が正常に更新されました",

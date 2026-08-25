@@ -21,4 +21,5 @@ public class AddDocumentToMeCommand : IRequest<ServiceResponse<DocumentDto>>
     public IFormFileCollection Files { get; set; } = new FormFileCollection();
     public int? RetentionPeriodInDays { get; set; }
     public RETENTION_ACTION_ENUM OnExpiryAction { get; set; }
+    public bool IsIntranetAccessible { get; set; }
 }

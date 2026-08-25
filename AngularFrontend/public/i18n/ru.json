@@ -836,6 +836,7 @@
   "180_DAYS": "180 дней",
   "365_DAYS": "365 дней",
   "SELECT_RETENTION_PERIOD": "Выберите период хранения",
+    "ACCESSIBLE_ON_INTRANET": "Доступно во внутренней сети",
   "ARCHIVE_RETENTION_PERIOD": "Период хранения архива",
   "RETENTION_ENABLED": "Хранение включено",
   "ARCHIVE_RETENTION_PERIOD_UPDATED_SUCCESSFULLY": "Период хранения архива успешно обновлен",

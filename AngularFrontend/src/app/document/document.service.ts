@@ -49,6 +49,7 @@ export class DocumentService {
     formData.append('extension', document.extension ?? '');
     formData.append('retentionPeriodInDays', document.retentionPeriodInDays ? document.retentionPeriodInDays?.toString() : '0');
     formData.append('onExpiryAction', document.onExpiryAction ? document.onExpiryAction?.toString() : '0');
+    formData.append('isIntranetAccessible', document.isIntranetAccessible ? 'true' : 'false');
     formData.append(
       'documentMetaDataString',
       JSON.stringify(document.documentMetaDatas)
@@ -84,7 +85,8 @@ export class DocumentService {
       documentMetaDataString: JSON.stringify(document.documentMetaDatas),
       documentRolePermissionString: JSON.stringify(document.documentRolePermissions ?? []),
       documentUserPermissionString: JSON.stringify(document.documentUserPermissions ?? []),
-      isAssignToMe: document.isAssignToMe
+      isAssignToMe: document.isAssignToMe,
+      isIntranetAccessible: document.isIntranetAccessible
     }
     return this.httpClient
       .post<DocumentInfo>(url, documentObj);

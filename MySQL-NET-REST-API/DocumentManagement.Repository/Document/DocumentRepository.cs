@@ -72,6 +72,12 @@ public class DocumentRepository : GenericRepository<Document, DocumentContext>,
 
         collectionBeforePaging = collectionBeforePaging.Where(c => c.IsArchive == documentResource.IsArchive && c.IsAllChunkUploaded);
 
+        if (documentResource.IsIntranetAccessible.HasValue)
+        {
+            collectionBeforePaging = collectionBeforePaging
+                .Where(c => c.IsIntranetAccessible == documentResource.IsIntranetAccessible.Value);
+        }
+
 
 
         if (!string.IsNullOrWhiteSpace(documentResource.Name))

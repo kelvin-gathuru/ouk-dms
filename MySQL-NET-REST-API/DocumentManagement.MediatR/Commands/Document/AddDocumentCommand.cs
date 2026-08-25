@@ -27,4 +27,5 @@ public class AddDocumentCommand : IRequest<ServiceResponse<DocumentDto>>
     public Guid? ClientId { get; set; }
     public int? RetentionPeriodInDays { get; set; }
     public RETENTION_ACTION_ENUM? OnExpiryAction { get; set; }
+    public bool IsIntranetAccessible { get; set; }
 }

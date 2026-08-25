@@ -25,4 +25,5 @@ public class AddDocumentChunkCommand : IRequest<ServiceResponse<DocumentDto>>
     public bool IsAssignToMe { get; set; } = false;
     public int? RetentionPeriodInDays { get; set; }
     public RETENTION_ACTION_ENUM OnExpiryAction { get; set; }
+    public bool IsIntranetAccessible { get; set; }
 }

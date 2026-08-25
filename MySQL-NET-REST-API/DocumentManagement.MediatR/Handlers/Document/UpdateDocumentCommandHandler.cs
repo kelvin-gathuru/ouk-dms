@@ -72,6 +72,7 @@ public class UpdateDocumentCommandHandler(
         entity.ClientId = request.ClientId;
         entity.RetentionPeriodInDays = request.RetentionPeriodInDays;
         entity.OnExpiryAction = request.OnExpiryAction;
+        entity.IsIntranetAccessible = request.IsIntranetAccessible;
 
         if (entity.OnExpiryAction != null && entity.RetentionPeriodInDays != null && entity.RetentionPeriodInDays > 0)
         {

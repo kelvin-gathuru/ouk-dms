@@ -837,6 +837,7 @@
   "180_DAYS": "180 dni",
   "365_DAYS": "365 dni",
   "SELECT_RETENTION_PERIOD": "Wybierz okres przechowywania",
+    "ACCESSIBLE_ON_INTRANET": "Dostępny w intranecie",
   "ARCHIVE_RETENTION_PERIOD": "Okres przechowywania archiwum",
   "RETENTION_ENABLED": "Przechowywanie włączone",
   "ARCHIVE_RETENTION_PERIOD_UPDATED_SUCCESSFULLY": "Okres przechowywania archiwum został pomyślnie zaktualizowany",

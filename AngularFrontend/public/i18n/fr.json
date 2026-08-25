@@ -836,6 +836,7 @@
   "180_DAYS": "180 jours",
   "365_DAYS": "365 jours",
   "SELECT_RETENTION_PERIOD": "Sélectionner la période de conservation",
+    "ACCESSIBLE_ON_INTRANET": "Accessible sur l'intranet",
   "ARCHIVE_RETENTION_PERIOD": "Période de conservation de l’archive",
   "RETENTION_ENABLED": "Conservation activée",
   "ARCHIVE_RETENTION_PERIOD_UPDATED_SUCCESSFULLY": "La période de conservation de l’archive a été mise à jour avec succès",

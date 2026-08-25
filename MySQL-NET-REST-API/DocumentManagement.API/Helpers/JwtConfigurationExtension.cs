@@ -1,5 +1,6 @@
 ﻿using DocumentManagement.Data;
 using DocumentManagement.Data.Dto;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -60,7 +61,9 @@ public static class JwtAuthenticationConfigurationExtension
                     return Task.CompletedTask;
                 }
             };
-        });
+        })
+        .AddScheme<AuthenticationSchemeOptions, IntranetApiKeyAuthenticationHandler>(
+            IntranetApiKeyAuthenticationHandler.SchemeName, null);
         services.AddAuthorization();
     }
 }

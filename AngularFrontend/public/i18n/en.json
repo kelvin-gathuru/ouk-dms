@@ -840,6 +840,7 @@
   "3_YEARS": "3 Years",
   "5_YEARS": "5 Years",
   "SELECT_RETENTION_PERIOD": "Select Retention Period",
+    "ACCESSIBLE_ON_INTRANET": "Accessible on Intranet",
   "ARCHIVE_RETENTION_PERIOD": "Archive Retention Period",
   "RETENTION_ENABLED": " Retention Enabled",
   "ARCHIVE_RETENTION_PERIOD_UPDATED_SUCCESSFULLY": "Archive retention period updated successfully",

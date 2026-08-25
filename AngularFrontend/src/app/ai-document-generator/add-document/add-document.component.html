@@ -352,13 +352,25 @@
                 {{ "SELECT_RETENTION_PERIOD" | translate }}
               </div>
               }
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="mt-2 col-md-12">
-        <button
-          [dir]="langDir"
+</div>
+           </div>
+         </div>
+         <div class="row">
+           <div class="col-md-6">
+             <div class="form-group">
+               <mat-checkbox
+                 color="primary"
+                 formControlName="isIntranetAccessible"
+               >
+                 {{ "ACCESSIBLE_ON_INTRANET" | translate }}
+               </mat-checkbox>
+             </div>
+           </div>
+         </div>
+       </div>
+       <div class="mt-2 col-md-12">
+         <button
+           [dir]="langDir"
           class="success me-2"
           matButton="filled"
           (click)="saveDocument()"

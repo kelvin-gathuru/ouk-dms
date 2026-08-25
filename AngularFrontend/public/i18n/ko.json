@@ -836,6 +836,7 @@
   "180_DAYS": "180일",
   "365_DAYS": "365일",
   "SELECT_RETENTION_PERIOD": "보존 기간 선택",
+    "ACCESSIBLE_ON_INTRANET": "인트라넷에서 액세스 가능",
   "ARCHIVE_RETENTION_PERIOD": "보관 보존 기간",
   "RETENTION_ENABLED": "보존 활성화됨",
   "ARCHIVE_RETENTION_PERIOD_UPDATED_SUCCESSFULLY": "보관 보존 기간이 성공적으로 업데이트되었습니다",

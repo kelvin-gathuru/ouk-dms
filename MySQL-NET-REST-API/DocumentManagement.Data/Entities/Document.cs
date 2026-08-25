@@ -48,6 +48,7 @@ public class Document : BaseEntity
     public bool IsChunk { get; set; }
     public bool IsAllChunkUploaded { get; set; }
     public bool IsShared { get; set; }
+    public bool IsIntranetAccessible { get; set; }
     public Guid? ArchiveById { get; set; }
     [ForeignKey("ArchiveById")]
     public User ArchiveBy { get; set; }

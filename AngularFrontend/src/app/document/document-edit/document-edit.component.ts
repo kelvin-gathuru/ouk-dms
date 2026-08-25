@@ -33,6 +33,7 @@ import { HasClaimDirective } from '@shared/has-claim.directive';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { retentionValidator } from '@shared/retention-validator';
@@ -53,6 +54,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatDatepickerModule,
     MatCardModule,
     MatButtonModule,
+    MatCheckboxModule,
     MatIconModule,
     NgStyle,
     MatTooltipModule
@@ -167,6 +169,7 @@ export class DocumentEditComponent extends BaseComponent implements OnInit {
       clientId: this.data.document.clientId,
       retentionPeriodInDays: this.data.document.retentionPeriodInDays ? this.data.document.retentionPeriodInDays.toString() : null,
       onExpiryAction: this.data.document.onExpiryAction,
+      isIntranetAccessible: this.data.document.isIntranetAccessible ?? false,
     });
   }
 
@@ -180,6 +183,7 @@ export class DocumentEditComponent extends BaseComponent implements OnInit {
       documentMetaTags: this.fb.array([]),
       retentionPeriodInDays: ['0'],
       onExpiryAction: ['0'],
+      isIntranetAccessible: [false],
     }, { validators: retentionValidator });
   }
 
@@ -252,6 +256,7 @@ export class DocumentEditComponent extends BaseComponent implements OnInit {
       documentMetaDatas: [...this.buildMetaTagObject()],
       retentionPeriodInDays: this.documentForm.get('retentionPeriodInDays')?.value,
       onExpiryAction: this.documentForm.get('onExpiryAction')?.value,
+      isIntranetAccessible: this.documentForm.get('isIntranetAccessible')?.value ?? false,
     };
     return document;
   }

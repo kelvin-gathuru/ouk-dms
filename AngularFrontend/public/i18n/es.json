@@ -836,6 +836,7 @@
   "180_DAYS": "180 días",
   "365_DAYS": "365 días",
   "SELECT_RETENTION_PERIOD": "Seleccionar período de retención",
+    "ACCESSIBLE_ON_INTRANET": "Accesible en la intranet",
   "ARCHIVE_RETENTION_PERIOD": "Período de retención de archivos",
   "RETENTION_ENABLED": "Retención habilitada",
   "ARCHIVE_RETENTION_PERIOD_UPDATED_SUCCESSFULLY": "El período de retención del archivo se actualizó correctamente",

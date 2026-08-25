@@ -129,7 +129,7 @@ public class AddUserCommandHandler : IRequestHandler<AddUserCommand, UserDto>
             var smtpEncryptionType = _configuration["SmtpSettings:EncryptionType"];
             var smtpFromEmail = _configuration["SmtpSettings:FromEmail"];
             var smtpFromName = _configuration["SmtpSettings:FromName"];
-            var loginUrl = _configuration["JwtSettings:issuer"];
+            var loginUrl = _configuration["JwtSettings:clientUrl"] ?? _configuration["JwtSettings:issuer"];
 
             if (!string.IsNullOrEmpty(smtpHost) && !string.IsNullOrEmpty(entity.Email))
             {

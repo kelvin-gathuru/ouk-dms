@@ -835,6 +835,7 @@
   "180_DAYS": "180 يومًا",
   "365_DAYS": "365 يومًا",
   "SELECT_RETENTION_PERIOD": "اختر فترة الاحتفاظ",
+    "ACCESSIBLE_ON_INTRANET": "متاح على الشبكة الداخلية",
   "ARCHIVE_RETENTION_PERIOD": "فترة الاحتفاظ بالأرشيف",
   "RETENTION_ENABLED": "تم تفعيل الاحتفاظ",
   "ARCHIVE_RETENTION_PERIOD_UPDATED_SUCCESSFULLY": "تم تحديث فترة الاحتفاظ بالأرشيف بنجاح",

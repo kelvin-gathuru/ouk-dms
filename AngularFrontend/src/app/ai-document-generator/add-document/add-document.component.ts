@@ -51,6 +51,7 @@ import { retentionValidator } from '@shared/retention-validator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BaseComponent } from '../../base.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   imports: [
@@ -67,7 +68,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     NgStyle,
     MatCardModule,
     MatProgressSpinnerModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatCheckboxModule
   ],
   templateUrl: './add-document.component.html',
   styleUrl: './add-document.component.scss',
@@ -174,6 +176,7 @@ export class AddDocumentComponent extends BaseComponent implements OnInit {
         documentContent: [this.data?.documentContent || ''],
         retentionPeriodInDays: ['0'],
         onExpiryAction: ['0'],
+        isIntranetAccessible: [false],
       },
       { validators: retentionValidator }
     );
@@ -257,6 +260,8 @@ export class AddDocumentComponent extends BaseComponent implements OnInit {
       retentionPeriodInDays:
         this.documentForm.get('retentionPeriodInDays')?.value ?? null,
       onExpiryAction: this.documentForm.get('onExpiryAction')?.value ?? null,
+      isIntranetAccessible:
+        this.documentForm?.get('isIntranetAccessible')?.value ?? false,
     };
     return document;
   }

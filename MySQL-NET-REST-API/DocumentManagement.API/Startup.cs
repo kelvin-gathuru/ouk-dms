@@ -153,6 +153,39 @@ public class Startup
                 Title = "Document Management API"
             });
 
+            c.SwaggerDoc("intranet", new OpenApiInfo
+            {
+                Version = "1.0",
+                Title = "OUK DMS — Intranet Integration API",
+                Description = "Read-only API for the external intranet application. \r\n\r\n" +
+                    "**Base URL:** `https://srv2.ouk.ac.ke/api/intranet` \r\n\r\n" +
+                    "**Authentication:** Every request must include the intranet API key in the " +
+                    "`X-Api-Key` request header. \r\n\r\n" +
+                    "```\r\nX-Api-Key: <your-intranet-api-key>\r\n``` \r\n\r\n" +
+                    "Only documents that have been explicitly flagged as \"Accessible on Intranet\" " +
+                    "in the DMS are exposed. Non-flagged documents return `404 Not Found` regardless " +
+                    "of their id. Missing or invalid keys return `401 Unauthorized`.",
+                TermsOfService = new Uri("https://srv2.ouk.ac.ke"),
+                Contact = new OpenApiContact
+                {
+                    Name = "OUK ICT",
+                    Email = "ict@ouk.ac.ke",
+                    Url = new Uri("https://srv2.ouk.ac.ke")
+                }
+            });
+
+            // The intranet document only contains the intranet endpoints, so it
+            // can be shared cleanly with the intranet development team.
+            c.DocInclusionPredicate((docName, apiDescription) =>
+            {
+                if (docName == "v1")
+                {
+                    return true;
+                }
+                var relativePath = apiDescription.RelativePath ?? string.Empty;
+                return relativePath.StartsWith("api/intranet", StringComparison.OrdinalIgnoreCase);
+            });
+
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
@@ -175,10 +208,30 @@ public class Startup
                 }
               });
 
+            c.AddSecurityDefinition(IntranetApiKeyAuthenticationHandler.SchemeName, new OpenApiSecurityScheme
+            {
+                Description = "API key used by the intranet application. Enter the key in the text input below.\r\n\r\nExample: \"my-intranet-key\"",
+                Name = IntranetApiKeyAuthenticationHandler.ApiKeyHeaderName,
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey
+            });
+
+            // Intranet operations always use the X-Api-Key scheme, regardless of
+            // the document they appear in.
+            c.OperationFilter<IntranetSwaggerSecurityOperationFilter>();
+
             //Set the comments path for the Swagger JSON and UI.
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             c.IncludeXmlComments(xmlPath);
+
+            // Include DTO documentation (DocumentManagement.Data) so schemas are
+            // described in the generated JSON and UI.
+            var dataXmlPath = Path.Combine(AppContext.BaseDirectory, "DocumentManagement.Data.xml");
+            if (File.Exists(dataXmlPath))
+            {
+                c.IncludeXmlComments(dataXmlPath);
+            }
         });
 
 
@@ -220,7 +273,9 @@ public class Startup
         app.UseSwaggerUI(c =>
         {
             c.DefaultModelsExpandDepth(-1);
-            c.SwaggerEndpoint($"v1/swagger.json", "Document Management");
+            c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.List);
+            c.SwaggerEndpoint($"v1/swagger.json", "Document Management API");
+            c.SwaggerEndpoint($"intranet/swagger.json", "Intranet Integration API");
             c.RoutePrefix = "swagger";
         });
         app.UseStaticFiles();

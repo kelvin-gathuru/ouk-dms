@@ -62,6 +62,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { NgStyle } from '@angular/common';
 import { ManageAssignCategoryComponent } from '../folders-view/manage-assign-category/manage-assign-category.component';
 import { ManageClientComponent } from '../../client/manage-client/manage-client.component';
@@ -90,6 +91,7 @@ import { MatDividerModule } from "@angular/material/divider";
     MatTooltipModule,
     MatIconModule,
     MatCardModule,
+    MatCheckboxModule,
     NgStyle,
     HasClaimDirective
 
@@ -257,6 +259,7 @@ export class AddDocumentComponent extends BaseComponent implements OnInit {
         documentMetaTags: this.fb.array([]),
         retentionPeriodInDays: ['0'],
         onExpiryAction: ['0'],
+        isIntranetAccessible: [false],
       },
       { validators: retentionValidator }
     );
@@ -547,6 +550,8 @@ export class AddDocumentComponent extends BaseComponent implements OnInit {
       retentionPeriodInDays:
         this.documentForm?.get('retentionPeriodInDays')?.value ?? null,
       onExpiryAction: this.documentForm?.get('onExpiryAction')?.value ?? null,
+      isIntranetAccessible:
+        this.documentForm?.get('isIntranetAccessible')?.value ?? false,
     };
     return document;
   }
