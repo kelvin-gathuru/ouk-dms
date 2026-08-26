@@ -72,6 +72,19 @@ export class SecurityService {
         })
       );
   }
+
+  googleLogin(idToken: string): Observable<UserAuth> {
+    this.resetSecurityObject();
+    return this.http
+      .post<UserAuth>('user/google-login', { idToken })
+      .pipe(
+        tap((resp) => {
+          this.securityObject = this.clonerService.deepClone<UserAuth>(resp);
+          localStorage.setItem('auth_user', JSON.stringify(this.securityObject));
+          this.securityObject$.next(resp);
+        })
+      );
+  }
   refreshToken(): Observable<UserAuth | CommonError> {
     return this.http
       .get<UserAuth>('user/refresh_token')

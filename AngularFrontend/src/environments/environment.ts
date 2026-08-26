@@ -1,6 +1,7 @@
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:5050/',
+  googleClientId: '108062092006-ahql2ipfn12sct7uohlmn7eev1fi8o83.apps.googleusercontent.com',
   allowExtesions: [
     {
       type: 'office',

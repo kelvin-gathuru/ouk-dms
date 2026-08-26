@@ -25,6 +25,7 @@
     <PackageReference Include="PdfPig" Version="0.1.10" />
     <PackageReference Include="SkiaSharp" Version="3.116.1" />
     <PackageReference Include="Tesseract" Version="5.2.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DocumentManagement.Common\DocumentManagement.Common.csproj" />

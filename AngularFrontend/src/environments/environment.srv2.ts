@@ -1,6 +1,7 @@
 export const environment = {
   production: true,
   apiUrl: 'https://srv2.ouk.ac.ke/',
+  googleClientId: '108062092006-ahql2ipfn12sct7uohlmn7eev1fi8o83.apps.googleusercontent.com',
   allowExtesions: [
     {
       type: 'office',

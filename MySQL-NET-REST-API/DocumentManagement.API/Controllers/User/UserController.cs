@@ -127,6 +127,23 @@ public class UserController : BaseController
         }
         return Ok(result);
     }
+    /// <summary>
+    /// Google SSO Login
+    /// </summary>
+    /// <param name="googleLoginCommand"></param>
+    /// <returns></returns>
+    [HttpPost("google-login")]
+    [AllowAnonymous]
+    [Produces("application/json", "application/xml", Type = typeof(UserAuthDto))]
+    public async Task<IActionResult> GoogleLogin(GoogleLoginCommand googleLoginCommand)
+    {
+        var result = await _mediator.Send(googleLoginCommand);
+        if (result.StatusCode != 200)
+        {
+            return StatusCode(result.StatusCode, result);
+        }
+        return Ok(result);
+    }
     [HttpPost("login/secret")]
     [AllowAnonymous]
     [Produces("application/json", "application/xml", Type = typeof(UserAuthDto))]
