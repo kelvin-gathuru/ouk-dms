@@ -197,10 +197,12 @@ export class HeaderComponent extends BaseComponent implements OnInit {
       this.commonService.setSideMenuStatus(false);
       this.renderer.removeClass(this.document.body, 'side-closed');
       this.renderer.removeClass(this.document.body, 'submenu-closed');
+      this.renderer.removeClass(this.document.body, 'side-closed-hover');
       localStorage.setItem('collapsed_menu', 'false');
     } else {
       this.renderer.addClass(this.document.body, 'side-closed');
       this.renderer.addClass(this.document.body, 'submenu-closed');
+      this.renderer.removeClass(this.document.body, 'side-closed-hover');
       localStorage.setItem('collapsed_menu', 'true');
       this.commonService.setSideMenuStatus(true);
     }

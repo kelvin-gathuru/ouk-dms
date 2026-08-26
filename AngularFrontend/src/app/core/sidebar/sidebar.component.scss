@@ -1,145 +1,199 @@
-// OUK Theme - White Capsule Sidebar
-$teal-primary: #037c91;
-$teal-light: #e0f2f4;
-$text-muted: #64748b;
+// Vercel-inspired neutral sidebar — keeps the teal brand accent (theme untouched)
+$brand: #037c91;
+$text: #1f2937;
+$text-muted: #6b7280;
+$hover-bg: #f4f4f5;
+$active-bg: #f4f4f5;
+$border: #ededed;
 $font-family: 'Poppins', sans-serif;
 
 :host-context(.submenu-closed) {
-    .sidebar-brand {
-        display: none;
-    }
+  .sidebar-brand {
+    display: none;
+  }
 
-    .sidebar {
-        width: 60px;
+  .sidebar {
+    width: 60px;
 
-        // Hide text when collapsed to prevent overflow/color issues
-        .menu .list {
+    .menu .list {
+      li {
+        a {
+          justify-content: center !important;
+          padding: 11px 0 !important;
+          gap: 0 !important;
 
-            li a span,
-            li .menu-toggle span {
-                display: none;
-            }
+          mat-icon {
+            font-size: 24px !important;
+            width: 24px !important;
+            height: 24px !important;
+            margin: 0 !important;
+          }
+
+          span {
+            display: none !important;
+          }
         }
+      }
+
+      .ml-menu,
+      .ml-menu-2 {
+        display: none !important;
+      }
     }
+  }
 }
 
 .sidebar {
+  background: #ffffff !important;
+  border-right: 1px solid $border;
+  box-shadow: none !important;
+  width: 248px;
+  display: flex;
+  flex-direction: column;
+
+  .sidebar-brand {
+    flex: 0 0 auto;
+    padding: 10px 20px 8px;
+    border-bottom: 1px solid $border;
     background: #ffffff !important;
-    border-right: 1px solid #f1f5f9;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02) !important;
-    width: 250px;
 
-    .sidebar-brand {
-        padding: 10px 20px 0; // Reduced top padding and removed bottom padding to move logo up
-        text-align: center;
-        border-bottom: none !important;
-        background: #ffffff !important;
+    .logo-container {
+      display: flex;
+      justify-content: center;
 
-        .logo-container {
-            margin-bottom: 5px; // Reduced bottom margin to move logo up
-            display: flex;
-            justify-content: center;
-
-            .ouk-logo {
-                max-width: 80px; // Made smaller
-                height: auto;
-                background: transparent !important;
-            }
-        }
+      .ouk-logo {
+        max-width: 96px;
+        height: auto;
+        background: transparent !important;
+      }
     }
 
-    .menu {
-        .list {
-            padding: 10px 15px;
-
-            li {
-                margin-bottom: 5px;
-                list-style: none;
-
-                a {
-                    display: flex;
-                    align-items: center;
-                    border-radius: 8px !important;
-                    padding: 10px 15px !important;
-                    color: $teal-primary !important; // Enforce teal text for better visibility
-                    font-family: $font-family !important;
-                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                    text-decoration: none !important;
-
-                    mat-icon {
-                        color: $teal-primary !important;
-                        margin-right: 12px !important;
-                        font-size: 18px;
-                    }
-
-                    span {
-                        font-weight: 500;
-                        font-size: 0.85rem;
-                        color: $teal-primary !important; // Explicitly enforce for span
-                    }
-
-                    &:hover {
-                        background-color: $teal-light !important;
-                        color: $teal-primary !important;
-
-                        mat-icon,
-                        span {
-                            color: $teal-primary !important;
-                        }
-                    }
-                }
-
-                &.active,
-                &.active-top {
-                    a {
-                        background-color: $teal-light !important;
-                        color: $teal-primary !important;
-                        font-weight: 500 !important; // Normal weight even when active
-
-                        mat-icon,
-                        span {
-                            color: $teal-primary !important;
-                        }
-                    }
-                }
-
-                // Sub-menu specific styling
-                .ml-menu {
-                    padding-left: 0;
-                    background: transparent !important;
-
-                    li {
-                        margin-bottom: 2px;
-
-                        a {
-                            padding: 8px 15px 8px 45px !important;
-                            color: $teal-primary !important;
-                            font-size: 0.8rem !important;
-                            font-weight: 400 !important;
-
-                            &:hover {
-                                background-color: rgba(3, 124, 145, 0.05) !important;
-                                color: $teal-primary !important;
-                            }
-                        }
-
-                        &.active a {
-                            background-color: transparent !important;
-                            color: $teal-primary !important;
-                            font-weight: 500 !important;
-                        }
-                    }
-                }
-            }
-        }
+    .brand-title {
+      margin-top: 6px;
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      color: $brand;
     }
+  }
+
+  .menu {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+
+    ng-scrollbar {
+      flex: 1 1 auto;
+      min-height: 0;
+      height: 100% !important;
+    }
+
+    .list {
+      padding: 8px 12px;
+
+      li {
+        margin-bottom: 1px;
+        list-style: none;
+
+        a {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          border-radius: 6px !important;
+          padding: 7px 12px !important;
+          color: $text !important;
+          font-family: $font-family !important;
+          font-size: 0.875rem;
+          font-weight: 500;
+          text-decoration: none !important;
+          transition: background-color 0.15s ease, color 0.15s ease;
+
+          mat-icon {
+            color: $text-muted !important;
+            margin: 0 !important;
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+          }
+
+          span {
+            color: $text !important;
+            font-weight: 500;
+          }
+
+          &:hover {
+            background-color: $hover-bg !important;
+            color: $text !important;
+
+            mat-icon,
+            span {
+              color: $text !important;
+            }
+          }
+        }
+
+        &.active,
+        &.active-top {
+          a {
+            background-color: $active-bg !important;
+            color: $brand !important;
+            font-weight: 600 !important;
+
+            mat-icon,
+            span {
+              color: $brand !important;
+            }
+          }
+        }
+
+        // First level sub-menu
+        .ml-menu {
+          padding-left: 12px;
+          background: transparent !important;
+
+          li {
+            margin-bottom: 1px;
+
+            a {
+              padding: 6px 8px !important;
+              color: $text-muted !important;
+              font-size: 0.825rem !important;
+              font-weight: 400 !important;
+
+              &:hover {
+                background-color: $hover-bg !important;
+                color: $text !important;
+              }
+            }
+
+            &.active a {
+              background-color: transparent !important;
+              color: $brand !important;
+              font-weight: 600 !important;
+            }
+          }
+
+          // Second level sub-menu
+          .ml-menu-2 {
+            padding-left: 12px;
+
+            li a {
+              padding: 5px 8px !important;
+              font-size: 0.8rem !important;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
-// Deep overrides for Angular Material items if needed
 :ng-deep {
-    #leftsidebar {
-        .mat-icon {
-            vertical-align: middle;
-        }
+  #leftsidebar {
+    .mat-icon {
+      vertical-align: middle;
     }
+  }
 }

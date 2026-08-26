@@ -47,6 +47,16 @@ export class SidebarComponent implements OnInit {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.renderer.removeClass(this.document.body, 'overlay-open');
+
+        // If the rail was opened by a click while collapsed, snap back to mini
+        const body = this.document.body;
+        if (
+          body.classList.contains('side-closed') &&
+          body.classList.contains('side-closed-hover')
+        ) {
+          this.renderer.removeClass(body, 'side-closed-hover');
+          this.renderer.addClass(body, 'submenu-closed');
+        }
       }
     });
   }
@@ -63,8 +73,19 @@ export class SidebarComponent implements OnInit {
   }
   callToggleMenu(event: Event, length: number) {
     if (length > 0) {
-      const parentElement = (event.target as HTMLInputElement).closest('li');
+      const parentElement = (event.target as HTMLElement).closest('li');
       const activeClass = parentElement?.classList.contains('active');
+
+      // Collapsed (mini) rail: expand it so the child menu is reachable,
+      // then open this parent's submenu. Click (not hover) driven.
+      if (this.document.body.classList.contains('submenu-closed')) {
+        this.renderer.addClass(this.document.body, 'side-closed-hover');
+        this.renderer.removeClass(this.document.body, 'submenu-closed');
+        if (!activeClass) {
+          this.renderer.addClass(parentElement, 'active');
+        }
+        return;
+      }
 
       if (activeClass) {
         this.renderer.removeClass(parentElement, 'active');

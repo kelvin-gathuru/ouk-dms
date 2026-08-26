@@ -34,7 +34,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   ]
 })
 export class LoginComponent extends BaseComponent implements OnInit, AfterViewInit {
-  logoUrl = '/images/ouk-logo.png';
+  logoUrl = '/images/logo.png';
   loginFormGroup: UntypedFormGroup;
   isLoading = false;
   lat: number;
@@ -184,7 +184,7 @@ export class LoginComponent extends BaseComponent implements OnInit, AfterViewIn
 
   getCompanyProfile(): void {
     this.securityService.companyProfile.subscribe((c) => {
-      this.logoUrl = '/images/ouk-logo.png';
+      this.logoUrl = '/images/logo.png';
       this.setBackgroundImage('/images/ouk-banner.jpg');
     });
   }
