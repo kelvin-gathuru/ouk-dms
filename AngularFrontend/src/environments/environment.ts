@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:44313/',
+  apiUrl: 'http://localhost:5050/',
   allowExtesions: [
     {
       type: 'office',
