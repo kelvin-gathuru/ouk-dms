@@ -63,7 +63,7 @@ export class LoginComponent extends BaseComponent implements OnInit, AfterViewIn
   }
 
   ngAfterViewInit(): void {
-    this.setBackgroundImage('/images/ouk-banner.jpg');
+    this.setBackgroundImage('/images/banner.jpg');
     this.initGoogleSignIn();
   }
 
@@ -185,7 +185,7 @@ export class LoginComponent extends BaseComponent implements OnInit, AfterViewIn
   getCompanyProfile(): void {
     this.securityService.companyProfile.subscribe((c) => {
       this.logoUrl = '/images/logo.png';
-      this.setBackgroundImage('/images/ouk-banner.jpg');
+      this.setBackgroundImage('/images/banner.jpg');
     });
   }
 

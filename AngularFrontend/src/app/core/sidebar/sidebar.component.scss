@@ -88,6 +88,8 @@ $font-family: 'Poppins', sans-serif;
       flex: 1 1 auto;
       min-height: 0;
       height: 100% !important;
+      --scrollbar-thumb-color: #037b90;
+      --scrollbar-thumb-hover-color: #037b90;
     }
 
     .list {
@@ -194,6 +196,31 @@ $font-family: 'Poppins', sans-serif;
   #leftsidebar {
     .mat-icon {
       vertical-align: middle;
+    }
+
+    // Sidebar scrollbar thumb -> teal #037b90 (instead of system blue)
+    ng-scrollbar {
+      --scrollbar-thumb-color: #037b90;
+      --scrollbar-thumb-hover-color: #037b90;
+    }
+
+    .ng-scroll-viewport {
+      scrollbar-color: #037b90 transparent;
+      scrollbar-width: thin;
+    }
+
+    .ng-scroll-viewport::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    .ng-scroll-viewport::-webkit-scrollbar-thumb {
+      background-color: #037b90;
+      border-radius: 8px;
+    }
+
+    .ng-scroll-viewport::-webkit-scrollbar-track {
+      background: transparent;
     }
   }
 }
